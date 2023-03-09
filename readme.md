@@ -115,7 +115,8 @@ All properties are optional, they can be removed from your configuration and wil
 	"check_ticket": {
 		"infer_ticket": true,
 		"confirm_ticket": true,
-		"add_to_title": true
+		"add_to_title": true,
+    "append_hashtag": false
 	},
 	"commit_title": {
 		"max_size": 70

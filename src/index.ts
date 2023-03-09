@@ -117,7 +117,9 @@ async function main(config: z.infer<typeof Config>) {
       const found: string[] = [branch.match(REGEX_SLASH_TAG), branch.match(REGEX_SLASH_NUM) , branch.match(REGEX_START_TAG), branch.match(REGEX_START_NUM)]
       .filter(v => v != null)
       .map(v => v && v.length >= 2 ?  v[1] : '')
-      commit_state.ticket = found.length ? found[0] : ''
+      if (found.length && found[0]) {
+        commit_state.ticket = config.check_ticket.append_hashtag ? '#' + found[0] : found[0]
+      }
     } catch(err: any) {
       // Can't find branch, fail silently
     }
