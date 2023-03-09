@@ -2,7 +2,7 @@
 
 A CLI to write better commits, written with Typescript | ZOD | Clack
 
-GIF
+https://user-images.githubusercontent.com/14320878/224050591-c6035ac5-1120-40c8-97b0-c33ebcb11b3e.mov
 
 ## ✨ Features
 - Follows the conventional commit guidelines
