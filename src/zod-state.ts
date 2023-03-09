@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { DEFAULT_SCOPE_OPTIONS, DEFAULT_TYPE_OPTIONS, FOOTER_OPTION_VALUES, Z_FOOTER_OPTIONS } from "./utils"
 
+
 // TODO: add "Ref", "Fixes", ability to change phrase "Closes/closes/closes:"
 export const Config = z.object({
    check_status: z.boolean().default(true),

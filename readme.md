@@ -68,15 +68,15 @@ All properties are optional, they can be removed from your configuration and wil
 				"value": "docs",
 				"label": "docs"
 			},
-      {
+			{
 				"value": "refactor",
 				"label": "refactor"
 			},
-      {
+			{
 				"value": "perf",
 				"label": "perf"
 			},
-      {
+			{
 				"value": "test",
 				"label": "test"
 			},
@@ -102,7 +102,7 @@ All properties are optional, they can be removed from your configuration and wil
 				"value": "server",
 				"label": "server"
 			},
-      {
+			{
 				"value": "tools",
 				"label": "tools"
 			},
@@ -116,7 +116,7 @@ All properties are optional, they can be removed from your configuration and wil
 		"infer_ticket": true,
 		"confirm_ticket": true,
 		"add_to_title": true,
-    "append_hashtag": false
+		"append_hashtag": false
 	},
 	"commit_title": {
 		"max_size": 70
