@@ -1,0 +1,49 @@
+{
+  "name": "better-commits",
+  "private": false,
+  "version": "0.0.0-development",
+  "description": "A CLI for creating better commits following the conventional commit guidelines",
+  "author": "Erik Verduin (https://github.com/everduin94)",
+  "keywords": [
+    "typescript",
+    "cli",
+    "git",
+    "commit"
+  ],
+  "main": "dist/index.js",
+  "bin": {
+    "better-commits-init": "./dist/init.js",
+    "better-commits": "./dist/index.js",
+    "git-bc": "./dist/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@clack/core": "^0.3.1",
+    "@clack/prompts": "^0.6.2",
+    "picocolors": "^1.0.0",
+    "simple-git": "^3.16.1",
+    "zod": "^3.21.3",
+    "zod-validation-error": "^1.0.1"
+  },
+  "scripts": {
+    "start": "jiti ./src/index.ts",
+    "init": "jiti ./src/init.ts",
+    "build": "tsup ./src/",
+    "commit": "jiti ./src/index.ts",
+    "semantic-release": "semantic-release"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.5",
+    "jiti": "^1.17.0",
+    "semantic-release": "^20.1.1",
+    "tsup": "^6.6.3",
+    "tsx": "^3.12.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Everduin94/temp.git"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
