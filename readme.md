@@ -55,7 +55,7 @@ All properties are optional, they can be removed from your configuration and wil
 	"commit_type": {
 		"enable": true,
 		"initial_value": "feat",
-    "infer_type_from_branch": true,
+		"infer_type_from_branch": true,
 		"options": [
 			{
 				"value": "feat",
