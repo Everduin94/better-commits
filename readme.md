@@ -38,12 +38,12 @@ To modify, these prompts, see `configuration`.
 
 ## ⚙️ Configuration
  
-Your first time running `better-commits`, a default config will be generated in your `$HOME` directory. -- This is your global config, it will be used if a repository-specific config cannot be found.
+Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`. -- This is your global config, it will be used if a repository-specific config cannot be found.
 
 To create a **repository-specific config**, navigate to the root of your project.
 - run `better-commits-init`
 
-This will create a config with all of the defaults. From there, you can modify it to suit your needs.
+This will create a config named `.better-commits.json` with all of the defaults. From there, you can modify it to suit your needs.
 
 All properties are optional, they can be removed from your configuration and will be replaced by the defaults at run-time.
 
