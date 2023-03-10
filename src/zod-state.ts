@@ -8,6 +8,7 @@ export const Config = z.object({
    commit_type: z.object({
      enable: z.boolean().default(true),
      initial_value: z.string().default('feat'),
+     infer_type_from_branch: z.boolean().default(true),
      options: z.array(z.object({
       value: z.string(),
       label: z.string().optional(),

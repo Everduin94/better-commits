@@ -8,7 +8,8 @@ import { execSync } from 'child_process';
 import { z } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS } from './utils';
+import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch } from './utils';
+
 
 main(load_setup());
 
@@ -90,10 +91,16 @@ async function main(config: z.infer<typeof Config>) {
   }
 
   if (config.commit_type.enable) {
+    let initial_value = config.commit_type.initial_value 
+    if (config.commit_type.infer_type_from_branch) {
+      const options = config.commit_type.options.map(o => o.value)
+      const type_from_branch = infer_type_from_branch(options)
+      if (type_from_branch) initial_value = type_from_branch
+    }
     const commit_type = await p.select(
         {
           message: `Select a commit type`,
-          initialValue: config.commit_type.initial_value,
+          initialValue: initial_value,
           options: config.commit_type.options,
         }
     ) as string
