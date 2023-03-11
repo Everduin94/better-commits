@@ -120,7 +120,7 @@ async function main(config: z.infer<typeof Config>) {
 
   if (config.check_ticket.infer_ticket) {
     try {
-      const branch = execSync('git rev-parse --abbrev-ref HEAD', {stdio : 'pipe' }).toString();
+      const branch = execSync('git branch --show-current', {stdio : 'pipe' }).toString();
       const found: string[] = [branch.match(REGEX_SLASH_TAG), branch.match(REGEX_SLASH_NUM) , branch.match(REGEX_START_TAG), branch.match(REGEX_START_NUM)]
       .filter(v => v != null)
       .map(v => v && v.length >= 2 ?  v[1] : '')

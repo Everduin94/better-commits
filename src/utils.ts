@@ -41,7 +41,7 @@ export const FOOTER_OPTION_VALUES: FOOTER_OPTIONS[] = ['closes', 'breaking-chang
 export function infer_type_from_branch(types: string[]): string {
   let branch = ''
   try {
-    branch = execSync('git rev-parse --abbrev-ref HEAD', {stdio : 'pipe' }).toString();
+    branch = execSync('git branch --show-current', {stdio : 'pipe' }).toString();
   } catch (err) {
     return ''
   }
