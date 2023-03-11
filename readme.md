@@ -181,6 +181,10 @@ To simplify the CLI, some rules are enforced at runtime to make sure the program
 - if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
 - [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
 
+## ❓ Troubleshooting
+
+`TTY initialization failed: uv_tty_init returned EBADF (bad file descriptor)`. This may happen because you're running something like git-bash on Windows. Try another terminal/command-prompt or `winpty` to see if its still an issue.
+
 ## Alternatives
 - Commitizen
 
