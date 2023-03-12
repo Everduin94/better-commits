@@ -1,5 +1,10 @@
 # 📝 Better Commits
 
+![better commits is enabled](https://img.shields.io/badge/better--commits-enabled-brightgreen)
+[![downloads](https://img.shields.io/npm/dt/better-commits.svg)](https://www.npmjs.com/package/better-commits)
+[![install size](https://packagephobia.com/badge?p=better-commits)](https://packagephobia.com/result?p=better-commits)
+![GitHub issues](https://img.shields.io/github/issues-raw/everduin94/better-commits)
+
 A CLI for writing better commits, following the conventional commit guidelines, written with Typescript | ZOD | Clack
 
 https://user-images.githubusercontent.com/14320878/224050591-c6035ac5-1120-40c8-97b0-c33ebcb11b3e.mov
@@ -180,6 +185,7 @@ To simplify the CLI, some rules are enforced at runtime to make sure the program
   - `USER/TYPE/TICKET-description`
 - if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
 - [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
+- `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
 
 ## ❓ Troubleshooting
 
