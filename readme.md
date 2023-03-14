@@ -1,9 +1,9 @@
-# 📝 Better Commits
+# Better Commits
 
-![better commits is enabled](https://img.shields.io/badge/better--commits-enabled-brightgreen)
-[![downloads](https://img.shields.io/npm/dt/better-commits.svg)](https://www.npmjs.com/package/better-commits)
-[![install size](https://packagephobia.com/badge?p=better-commits)](https://packagephobia.com/result?p=better-commits)
-![GitHub issues](https://img.shields.io/github/issues-raw/everduin94/better-commits)
+[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
+[![downloads](https://img.shields.io/npm/dt/better-commits.svg?style=for-the-badge&logo=npm&color=74c7ec&logoColor=D9E0EE&labelColor=302D41)](https://www.npmjs.com/package/better-commits)
+<a href="https://github.com/everduin94/better-commits/issues">
+		<img alt="Issues" src="https://img.shields.io/github/issues/everduin94/better-commits?style=for-the-badge&logo=gitbook&color=cba6f7&logoColor=D9E0EE&labelColor=302D41"></a>
 
 A CLI for writing better commits, following the conventional commit guidelines, written with Typescript | ZOD | Clack
 
@@ -43,12 +43,17 @@ To modify, these prompts, see `configuration`.
 
 ## ⚙️ Configuration
  
-Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`. -- This is your global config, it will be used if a repository-specific config cannot be found.
+ 
+### Global
+
+Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
+- This config will be used if a repository-specific config cannot be found.
+
+### Repository
 
 To create a **repository-specific config**, navigate to the root of your project.
 - run `better-commits-init`
-
-This will create a config named `.better-commits.json` with all of the defaults. From there, you can modify it to suit your needs.
+- This will create a default config named `.better-commits.json`
 
 All properties are optional, they can be removed from your configuration and will be replaced by the defaults at run-time.
 
@@ -176,6 +181,8 @@ To simplify the CLI, some rules are enforced at runtime to make sure the program
 - `commit_footer` options are supplied from a fixed list, because they have specific functionality
   - thus, you can remove from that list, but you can't add custom values to it
 
+TODO: Add table explaining properties
+
 #### 🔎 Inference
 
 `better-commits` will attempt to infer the ticket/issue and the type from your branch name. It will auto populate the corresponding field if found. 
@@ -203,6 +210,14 @@ To simplify the CLI, some rules are enforced at runtime to make sure the program
 - if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
 - [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
 - `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
+- You can add this badge to your repository to display that you're using a better-commits repository config 
+```
+[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
+```
+
+[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
+
+
 
 ## ❓ Troubleshooting
 
