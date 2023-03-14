@@ -19,27 +19,43 @@ https://user-images.githubusercontent.com/14320878/224050591-c6035ac5-1120-40c8-
 - Pretty prints preview in color
 - Validates config at runtime
 
-## 📦 Installation
- 
-```sh
-npm install -g better-commits
-```
-
 ## 🚀 Usage
 
 When you're ready to commit. To run the CLI in your terminal:
 
+There are 2 methods you can use; global install or direct use.
+
+### 🌏 Global Install
+
+Recommended for often usage purpose.
+
 ```sh
-better-commits
+## 📦 Installation
+npm install -g better-commits
 # or
+yarn global add better-commits
+# or
+pnpm install -g better-commits
+
+# then execute
+better-commits
+```
+
+### 💘 Direct Use
+
+Recommended for trial purpose.
+
+```sh
 npx better-commits
+# or
+pnpm dlx better-commits
 ```
 
 It will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
 
 To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
 
-To modify, these prompts, see `configuration`.
+To modify, these prompts, see (configuration)[https://github.com/Everduin94/better-commits#%EF%B8%8F-configuration].
 
 ## ⚙️ Configuration
  
