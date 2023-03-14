@@ -137,7 +137,8 @@ All properties are optional, they can be removed from your configuration and wil
 		"options": [
 			"closes",
 			"breaking-change",
-			"deprecated"
+			"deprecated",
+			"custom"
 		]
 	},
 	"breaking_change": {
