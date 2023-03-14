@@ -1,0 +1,27 @@
+{
+	"commit_scope": {
+		"enable": true,
+		"initial_value": "main",
+		"options": [
+			{
+				"value": "main",
+				"label": "main"
+			},
+			{
+				"value": "init",
+				"label": "init"
+			},
+      {
+				"value": "util",
+				"label": "util"
+			},
+			{
+				"value": "",
+				"label": "none"
+			}
+		]
+	},
+	"check_ticket": {
+		"append_hashtag": true
+	}
+}

@@ -27,16 +27,15 @@ export const DEFAULT_SCOPE_OPTIONS = [
     { value: 'tools', label: 'tools' },
     { value: '', label: 'none'},
 ]
-export type FOOTER_OPTIONS = 'closes' | 'breaking-change' | 'deprecated'
 export const COMMIT_FOOTER_OPTIONS = [
   { value: 'closes', label: 'closes <issue/ticket>', hint: 'Attempts to infer ticket from branch'},
   { value: 'breaking-change', label: 'breaking change', hint: 'Add breaking change'},
   { value: 'deprecated', label: 'deprecated', hint: 'Add deprecated change'},
+  { value: 'custom', label: 'custom', hint: 'Add a custom footer'},
 ]
 
-// TODO: This could be better
-export const Z_FOOTER_OPTIONS = z.enum(['closes', 'breaking-change', 'deprecated'])
-export const FOOTER_OPTION_VALUES: FOOTER_OPTIONS[] = ['closes', 'breaking-change', 'deprecated']
+export const Z_FOOTER_OPTIONS = z.enum(['closes', 'breaking-change', 'deprecated', 'custom'])
+export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = ['closes', 'breaking-change', 'deprecated', 'custom']
 
 export function infer_type_from_branch(types: string[]): string {
   let branch = ''
