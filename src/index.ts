@@ -102,7 +102,7 @@ async function main(config: z.infer<typeof Config>) {
           initialValue: initial_value,
           options: config.commit_type.options,
         }
-    ) as string
+    )
     if (p.isCancel(commit_type)) process.exit(0)
     commit_state.type = commit_type;
   }
@@ -112,7 +112,7 @@ async function main(config: z.infer<typeof Config>) {
       message: 'Select a commit scope',
       initialValue: config.commit_scope.initial_value,
       options: config.commit_scope.options
-    }) as string
+    })
     if (p.isCancel(commit_scope)) process.exit(0)
     commit_state.scope = commit_scope;
   }
@@ -130,14 +130,14 @@ async function main(config: z.infer<typeof Config>) {
       // Can't find branch, fail silently
     }
   }
+
   if (config.check_ticket.confirm_ticket) {
     const user_commit_ticket = await p.text({
-      message: commit_state.ticket ?  `Ticket / issue infered from branch ${color.dim('(confirm / edit)')}`: `Add ticket / issue ${OPTIONAL_PROMPT}`,
+      message: commit_state.ticket ?  `Ticket / issue inferred from branch ${color.dim('(confirm / edit)')}`: `Add ticket / issue ${OPTIONAL_PROMPT}`,
+      placeholder: '',
       initialValue: commit_state.ticket,
-    }) as string
+    })
     if (p.isCancel(user_commit_ticket)) process.exit(0)
-    // TODO: Symbol can be null. Would be ideal if it just returned empty string. 
-    // Seems like a bug that it only returns undefined if previously set.
     commit_state.ticket = user_commit_ticket ?? '';
   }
 
@@ -154,8 +154,7 @@ async function main(config: z.infer<typeof Config>) {
 					},
           
       }
-  ) as string
-
+  )
   if (p.isCancel(commit_title)) process.exit(0)
   commit_state.title = clean_commit_title(commit_title);
 
@@ -167,9 +166,9 @@ async function main(config: z.infer<typeof Config>) {
               if (config.commit_body.required && !val) return 'Please enter a description' 
             }
         
-    }) as string
+    })
     if (p.isCancel(commit_body)) process.exit(0)
-    commit_state.body = commit_body;
+    commit_state.body = commit_body ?? '';
   }
 
   if (config.commit_footer.enable) {
@@ -188,11 +187,13 @@ async function main(config: z.infer<typeof Config>) {
               validate: (value) => {
                 if (!value) return 'Please enter a title / summary'
               }
-      }) as string
+      })
+      if (p.isCancel(breaking_changes_title)) process.exit(0)
       const breaking_changes_body = await p.text({
               message: `Breaking Changes: Write a description & migration instructions ${OPTIONAL_PROMPT}`,
               placeholder: '',
-      }) as string
+      })
+      if (p.isCancel(breaking_changes_body)) process.exit(0)
       commit_state.breaking_title = breaking_changes_title;
       commit_state.breaking_body = breaking_changes_body;
     }
@@ -204,11 +205,13 @@ async function main(config: z.infer<typeof Config>) {
               validate: (value) => {
                 if (!value) return 'Please enter a title / summary'
               }
-      }) as string
+      })
+      if (p.isCancel(deprecated_title)) process.exit(0)
       const deprecated_body = await p.text({
               message: `Deprecated: Write a description ${OPTIONAL_PROMPT}`,
               placeholder: '',
-      }) as string
+      })
+      if (p.isCancel(deprecated_body)) process.exit(0)
       commit_state.deprecates_body = deprecated_body;
       commit_state.deprecates_title = deprecated_title;
     }
@@ -221,7 +224,8 @@ async function main(config: z.infer<typeof Config>) {
       const custom_footer = await p.text({
               message: 'Write a custom footer',
               placeholder: '',
-      }) as string
+      })
+      if (p.isCancel(custom_footer)) process.exit(0)
       commit_state.custom_footer = custom_footer;
     }
   }
