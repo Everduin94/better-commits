@@ -8,8 +8,7 @@ import { execSync } from 'child_process';
 import { z } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch } from './utils';
-
+import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, FooterOptions } from './utils';
 
 main(load_setup());
 
@@ -133,7 +132,7 @@ async function main(config: z.infer<typeof Config>) {
   }
   if (config.check_ticket.confirm_ticket) {
     const user_commit_ticket = await p.text({
-      message: commit_state.ticket ?  'Ticket / issue infered from branch (confirm / edit)': `Add ticket / issue ${OPTIONAL_PROMPT}`,
+      message: commit_state.ticket ?  `Ticket / issue infered from branch ${color.dim('(confirm / edit)')}`: `Add ticket / issue ${OPTIONAL_PROMPT}`,
       initialValue: commit_state.ticket,
     }) as string
     if (p.isCancel(user_commit_ticket)) process.exit(0)
@@ -173,16 +172,16 @@ async function main(config: z.infer<typeof Config>) {
     commit_state.body = commit_body;
   }
 
-  // TODO: Fix type -- should be able to infer?
   if (config.commit_footer.enable) {
     const commit_footer = await p.multiselect({
             message: `Select optional footers ${SPACE_TO_SELECT}`,
             initialValues: config.commit_footer.initial_value,
-            options: COMMIT_FOOTER_OPTIONS as {value: "deprecated" | "breaking-change" | "closes", label: string, hint: string}[],
+            options: COMMIT_FOOTER_OPTIONS as {value: FooterOptions, label: string, hint: string}[],
             required: false
-    }) as ("deprecated" | "breaking-change" | "closes")[]
+    }) as (FooterOptions)[]
+    if (p.isCancel(commit_footer)) process.exit(0)
 
-    if (commit_footer?.includes('breaking-change')) {
+    if (commit_footer.includes('breaking-change')) {
       const breaking_changes_title = await p.text({
               message: 'Breaking changes: Write a short title / summary',
               placeholder: '',
@@ -198,7 +197,7 @@ async function main(config: z.infer<typeof Config>) {
       commit_state.breaking_body = breaking_changes_body;
     }
 
-    if (commit_footer?.includes('deprecated')) {
+    if (commit_footer.includes('deprecated')) {
       const deprecated_title = await p.text({
               message: 'Deprecated: Write a short title / summary',
               placeholder: '',
@@ -214,8 +213,16 @@ async function main(config: z.infer<typeof Config>) {
       commit_state.deprecates_title = deprecated_title;
     }
 
-    if (commit_footer?.includes('closes')) {
+    if (commit_footer.includes('closes')) {
       commit_state.closes = 'Closes:'
+    }
+
+    if (commit_footer.includes('custom')) {
+      const custom_footer = await p.text({
+              message: 'Write a custom footer',
+              placeholder: '',
+      }) as string
+      commit_state.custom_footer = custom_footer;
     }
   }
   
@@ -283,9 +290,16 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
     commit_string += `\n\n${body}`
   }
 
+  if (commit_state.custom_footer) {
+    const temp = commit_state.custom_footer.split('\\n')
+    const res = temp.map(v => colorize ? color.reset(v.trim()) : v.trim()).join('\n')
+    commit_string += colorize ? `\n\n${res}` : `\n\n${res}`;
+  }
+
   if (commit_state.closes && commit_state.ticket) {
     commit_string += colorize ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(commit_state.ticket)}` : `\n\n${commit_state.closes} ${commit_state.ticket}`;
   }
+
 
   return commit_string;
 }
