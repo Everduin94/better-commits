@@ -7,7 +7,7 @@
 
 A CLI for writing better commits, following the conventional commit guidelines, written with Typescript | ZOD | Clack
 
-https://user-images.githubusercontent.com/14320878/224050591-c6035ac5-1120-40c8-97b0-c33ebcb11b3e.mov
+https://user-images.githubusercontent.com/14320878/225088948-43073a0e-400c-4c5f-a6e3-4f4961cfe43d.mov
 
 ## ✨ Features
 - Follows the conventional commit guidelines
