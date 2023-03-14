@@ -1,59 +1,19 @@
 {
-	"check_status": true,
-	"commit_type": {
-		"enable": true,
-		"initial_value": "feat",
-		"infer_type_from_branch": true,
-		"options": [
-			{
-				"value": "feat",
-				"label": "feat"
-			},
-			{
-				"value": "fix",
-				"label": "fix"
-			},
-			{
-				"value": "docs",
-				"label": "docs"
-			},
-			{
-				"value": "refactor",
-				"label": "refactor"
-			},
-			{
-				"value": "perf",
-				"label": "perf"
-			},
-			{
-				"value": "test",
-				"label": "test"
-			},
-			{
-				"value": "",
-				"label": "none"
-			}
-		]
-	},
 	"commit_scope": {
 		"enable": true,
-		"initial_value": "app",
+		"initial_value": "main",
 		"options": [
 			{
-				"value": "app",
-				"label": "app"
+				"value": "main",
+				"label": "main"
 			},
 			{
-				"value": "shared",
-				"label": "shared"
+				"value": "init",
+				"label": "init"
 			},
-			{
-				"value": "server",
-				"label": "server"
-			},
-			{
-				"value": "tools",
-				"label": "tools"
+      {
+				"value": "util",
+				"label": "util"
 			},
 			{
 				"value": "",
@@ -62,30 +22,6 @@
 		]
 	},
 	"check_ticket": {
-		"infer_ticket": true,
-		"confirm_ticket": true,
-		"add_to_title": true,
-		"append_hashtag": false
-	},
-	"commit_title": {
-		"max_size": 70
-	},
-	"commit_body": {
-		"enable": true,
-		"required": false
-	},
-	"commit_footer": {
-		"enable": true,
-		"initial_value": [],
-		"options": [
-			"closes",
-			"breaking-change",
-			"deprecated",
-			"custom"
-		]
-	},
-	"breaking_change": {
-		"add_exclamation_to_title": true
-	},
-	"confirm_commit": true
+		"append_hashtag": true
+	}
 }
