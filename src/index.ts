@@ -8,7 +8,8 @@ import { execSync } from 'child_process';
 import { z } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, FooterOptions } from './utils';
+import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch } from './utils';
+import { Z_FOOTER_OPTIONS } from '../dist/utils';
 
 main(load_setup());
 
@@ -176,9 +177,9 @@ async function main(config: z.infer<typeof Config>) {
     const commit_footer = await p.multiselect({
             message: `Select optional footers ${SPACE_TO_SELECT}`,
             initialValues: config.commit_footer.initial_value,
-            options: COMMIT_FOOTER_OPTIONS as {value: FooterOptions, label: string, hint: string}[],
+            options: COMMIT_FOOTER_OPTIONS as {value: z.infer<typeof Z_FOOTER_OPTIONS>, label: string, hint: string}[],
             required: false
-    }) as (FooterOptions)[]
+    }) 
     if (p.isCancel(commit_footer)) process.exit(0)
 
     if (commit_footer.includes('breaking-change')) {
