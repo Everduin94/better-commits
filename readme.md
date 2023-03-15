@@ -165,7 +165,8 @@ All properties are optional, they can be removed from your configuration and wil
 	"breaking_change": {
 		"add_exclamation_to_title": true
 	},
-	"confirm_commit": true
+	"confirm_commit": true,
+	"print_commit_output": true
 }
 ```
 
