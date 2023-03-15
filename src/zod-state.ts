@@ -51,7 +51,8 @@ export const Config = z.object({
    breaking_change: z.object({
       add_exclamation_to_title: z.boolean().default(true)
    }).default({}),
-   confirm_commit: z.boolean().default(true)
+   confirm_commit: z.boolean().default(true),
+   print_commit_output: z.boolean().default(true)
 }).default({})
 
 export const CommitState = z.object({

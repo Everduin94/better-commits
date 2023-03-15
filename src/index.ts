@@ -13,7 +13,6 @@ import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewL
 main(load_setup());
 
 function load_setup(): z.infer<typeof Config> {
-
   console.clear();
   p.intro(`${color.bgCyan(color.black(' better-commits '))}`);
 
@@ -34,7 +33,6 @@ function load_setup(): z.infer<typeof Config> {
   p.log.step('Config not found. Generating default .better-commit.json at $HOME')
   fs.writeFileSync(home_path, JSON.stringify(default_config, null, '\t'));
   return default_config;
-
 }
 
 function read_config_from_path(config_path: string) {
@@ -238,7 +236,17 @@ async function main(config: z.infer<typeof Config>) {
     if (p.isCancel(continue_commit)) process.exit(0)
   }
 
-  if (continue_commit) simpleGit().commit(build_commit_string(commit_state, config, false))
+  if (!continue_commit) {
+    p.log.info('Exiting without commit')
+    process.exit(0)
+  } 
+
+  try {      
+    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false)}"`).toString().trim();
+    if (config.print_commit_output) p.log.info(output)
+  } catch(err) {
+    p.log.error('Something went wrong when committing: ' + err)
+  }
 }
 
 function build_commit_string(commit_state: z.infer<typeof CommitState>, config: z.infer<typeof Config>, colorize: boolean = false): string {
@@ -303,7 +311,6 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
   if (commit_state.closes && commit_state.ticket) {
     commit_string += colorize ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(commit_state.ticket)}` : `\n\n${commit_state.closes} ${commit_state.ticket}`;
   }
-
 
   return commit_string;
 }
