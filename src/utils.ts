@@ -20,6 +20,7 @@ export const DEFAULT_TYPE_OPTIONS = [
     { value: 'test', label: 'test', hint: 'Adding missing tests or correcting existing tests'},
     { value: 'build', label: 'build', hint: 'Changes that affect the build system or external dependencies'},
     { value: 'ci', label: 'ci', hint: 'Changes to our CI configuration files and scripts'},
+    { value: 'chore', label: 'chore', hint: 'Other changes that do not modify src or test files'},
     { value: '', label: 'none'},
 ]
 export const DEFAULT_SCOPE_OPTIONS = [

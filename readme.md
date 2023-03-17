@@ -108,6 +108,11 @@ All properties are optional, they can be removed from your configuration and wil
 				"hint": "Changes to our CI configuration files and scripts"
 			},
 			{
+				"value": "chore",
+				"label": "chore",
+				"hint": "Other changes that do not modify src or test files"
+			},
+			{
 				"value": "",
 				"label": "none"
 			}
