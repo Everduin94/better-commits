@@ -175,21 +175,28 @@ All properties are optional, they can be removed from your configuration and wil
 }
 ```
 
-#### ✅ Config Validation
-To simplify the CLI, some rules are enforced at runtime to make sure the program runs properly.
-- any property can be removed from the config, it will be replaced by the default at run-time
-- if a property is a string/number/boolean in the default, it must stay that type
-- the `initial_value` must be a valid value in the corresponding `options`
-- `commit_scope` and `commit_type` can be populated with as many or whatever options
-  - must maintain the shape `{value: string, label?: string, hint?: string}`
-  - `hint` and `label` are optional
-  - to force scope or type to be required, remove `None`
-- `commit_footer` options are supplied from a fixed list, because they have specific functionality
-  - thus, you can remove from that list, but you can't add custom values to it
+### ✅ Config Validation
+
+Any property can be removed from the config, it will be replaced by the default at run-time
+- See `.better-commits.json` in this repository as an example
+
+#### Types
+if a property is a string/number/boolean in the default, it must stay that type
+
+#### Scope & Type
+The `initial_value` must be a `value` in the corresponding `options`
+
+`commit_scope` and `commit_type` can be populated with as many or whatever options you like
+- `hint` and `label` are optional
+- to make scope or type required, remove `None`
+  
+#### Footer
+`commit_footer` options are supplied from a fixed list, because they have specific functionality
+  - You can remove from that list, but you can't add custom values to it
 
 TODO: Add table explaining properties
 
-#### 🔎 Inference
+### 🔎 Inference
 
 `better-commits` will attempt to infer the ticket/issue and the type from your branch name. It will auto populate the corresponding field if found. 
 
@@ -207,23 +214,30 @@ TODO: Add table explaining properties
 - `-TYPE-` -- If a type is between two dashes
 
 ## 😮 Mildly Interesting
-- `better-commits` works with [Semantic Release](https://github.com/semantic-release/semantic-release)
-- if you use `better-commits` to create your *first* commit on a new branch, when you open a PR for that branch, it will properly **auto-populate the title and body**.
-- when you squash / merge with github, if `better-commits` is your *first* commit, all later commits like "addressing comments", "fixing mistake". Will be prefixed with an asterisk for easy deletion. This way you **maintain your pretty commit even when squashing**.
-- if you use a branch name like the ones below, better-commits will be able to infer your ticket/issue and type
-  - `TYPE/TICKET-description`
-  - `USER/TYPE/TICKET-description`
-- if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
-- [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
-- `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
-- You can add this badge to your repository to display that you're using a better-commits repository config 
+
+### Building / Versioning
+`better-commits` works with [Semantic Release](https://github.com/semantic-release/semantic-release)
+
+### Github
+if you use `better-commits` to create your *first* commit on a new branch
+- when you open a PR for that branch, it will properly **auto-populate the title and body**.
+- when you squash/merge, all later commits like "addressing comments" or "fixing mistake". Will be prefixed with an asterisk for easy deletion. This way, you **maintain your pretty commit even when squashing**.
+
+if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
+
+### Fun Facts
+[better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
+
+`better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
+
+You can add this badge to your repository to display that you're using a better-commits repository config 
 ```
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 ```
 
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 
-
+---
 
 ## ❓ Troubleshooting
 
