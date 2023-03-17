@@ -14,6 +14,7 @@
   "bin": {
     "better-commits-init": "./dist/init.js",
     "better-commits": "./dist/index.js",
+    "bcommits": "./dist/index.js",
     "git-bc": "./dist/index.js"
   },
   "license": "MIT",
