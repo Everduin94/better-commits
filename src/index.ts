@@ -106,13 +106,39 @@ async function main(config: z.infer<typeof Config>) {
   }
 
   if (config.commit_scope.enable) {
-   const commit_scope = await p.select({
+    // Add custom option if not present
+    const options =
+    config.commit_scope.options.find(
+      option => option.value === 'custom'
+    ) ? config.commit_scope.options : [...config.commit_scope.options,
+      {
+        value: 'custom',
+        label: 'custom',
+        hint: 'Add a custom scope'
+      }
+    ];
+
+    const commit_scope = await p.select({
       message: 'Select a commit scope',
       initialValue: config.commit_scope.initial_value,
-      options: config.commit_scope.options
-    })
-    if (p.isCancel(commit_scope)) process.exit(0)
-    commit_state.scope = commit_scope;
+      options,
+    });
+
+    if (commit_scope === 'custom') {
+      const custom_scope = await p.text({
+        message: 'Write a custom scope',
+        placeholder: '',
+        validate: value => {
+          if (value.length === 0) return 'Please enter a scope';
+        },
+      });
+
+      if (p.isCancel(custom_scope)) process.exit(0);
+      commit_state.scope = custom_scope;
+    } else {
+      if (p.isCancel(commit_scope)) process.exit(0);
+      commit_state.scope = commit_scope;
+    }
   }
 
   if (config.check_ticket.infer_ticket) {
