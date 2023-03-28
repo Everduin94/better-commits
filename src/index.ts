@@ -8,7 +8,7 @@ import { execSync } from 'child_process';
 import { z } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS } from './utils';
+import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY } from './utils';
 
 main(load_setup());
 
@@ -106,12 +106,19 @@ async function main(config: z.infer<typeof Config>) {
   }
 
   if (config.commit_scope.enable) {
-   const commit_scope = await p.select({
+   let commit_scope = await p.select({
       message: 'Select a commit scope',
       initialValue: config.commit_scope.initial_value,
       options: config.commit_scope.options
     })
     if (p.isCancel(commit_scope)) process.exit(0)
+    if (commit_scope === CUSTOM_SCOPE_KEY && config.commit_scope.custom_scope) {
+      commit_scope = await p.text({ 
+        message: 'Write a custom scope',
+        placeholder: ''
+      })
+      if (p.isCancel(commit_scope)) process.exit(0)
+    }
     commit_state.scope = commit_scope;
   }
 

@@ -36,6 +36,7 @@ export const COMMIT_FOOTER_OPTIONS = [
   { value: 'deprecated', label: 'deprecated', hint: 'Add deprecated change'},
   { value: 'custom', label: 'custom', hint: 'Add a custom footer'},
 ]
+export const CUSTOM_SCOPE_KEY: 'custom' = 'custom'
 
 export const Z_FOOTER_OPTIONS = z.enum(['closes', 'breaking-change', 'deprecated', 'custom'])
 export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = ['closes', 'breaking-change', 'deprecated', 'custom']
