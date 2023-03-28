@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { DEFAULT_SCOPE_OPTIONS, DEFAULT_TYPE_OPTIONS, FOOTER_OPTION_VALUES, Z_FOOTER_OPTIONS } from "./utils"
+import { CUSTOM_SCOPE_KEY, DEFAULT_SCOPE_OPTIONS, DEFAULT_TYPE_OPTIONS, FOOTER_OPTION_VALUES, Z_FOOTER_OPTIONS } from "./utils"
 
 // TODO: add "Ref", "Fixes", ability to change phrase "Closes/closes/closes:"
 export const Config = z.object({
@@ -19,6 +19,7 @@ export const Config = z.object({
   }, (val) => ({ message: `Type: initial_value "${val.initial_value}" must exist in options` })),
    commit_scope: z.object({
      enable: z.boolean().default(true),
+     custom_scope: z.boolean().default(false),
      initial_value: z.string().default('app'),
      options: z.array(z.object({
       value: z.string(),
@@ -26,8 +27,18 @@ export const Config = z.object({
       hint: z.string().optional(),
      })).default(DEFAULT_SCOPE_OPTIONS)
    }).default({})
+  .transform(val => {
+    const options = val.options.map(v => v.value)
+    if (val.custom_scope && !options.includes(CUSTOM_SCOPE_KEY)) {
+      return {
+        ...val,
+        options: [...val.options, { label: CUSTOM_SCOPE_KEY, value: CUSTOM_SCOPE_KEY, hint: 'Write a custom scope'}]
+      } 
+    }
+    return val
+    })
    .refine(val => {
-     const options = val.options.map(v => v.value)
+    const options = val.options.map(v => v.value)
     return options.includes(val.initial_value)
   }, (val) => ({ message: `Scope: initial_value "${val.initial_value}" must exist in options` })),
    check_ticket: z.object({
