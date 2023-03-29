@@ -120,7 +120,7 @@ All properties are optional, they can be removed from your configuration and wil
 	},
 	"commit_scope": {
 		"enable": true,
-    "custom_scope": false,
+    		"custom_scope": false,
 		"initial_value": "app",
 		"options": [
 			{
