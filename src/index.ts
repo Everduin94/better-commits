@@ -31,7 +31,7 @@ function load_setup(): z.infer<typeof Config> {
 
   const default_config = Config.parse({})
   p.log.step('Config not found. Generating default .better-commit.json at $HOME')
-  fs.writeFileSync(home_path, JSON.stringify(default_config, null, '    '));
+  fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
   return default_config;
 }
 

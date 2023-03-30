@@ -12,7 +12,7 @@ try {
   const root = get_git_root();
   const root_path = `${root}/${CONFIG_FILE_NAME}`
   const default_config = Config.parse({})
-  fs.writeFileSync(root_path, JSON.stringify(default_config, null, '    '));
+  fs.writeFileSync(root_path, JSON.stringify(default_config, null, 4));
   p.log.success(`${color.green('Successfully created .better-commits.json')}`)
   p.outro(`Run ${color.bgBlack(color.white('better-commits'))} to start the CLI`)
 } catch (err: any) {
