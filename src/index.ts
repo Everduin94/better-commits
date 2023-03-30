@@ -57,8 +57,11 @@ function validate_config(config: z.infer<typeof Config>): z.infer<typeof Config>
 }
 
 async function main(config: z.infer<typeof Config>) {
+  const gitOptions = {
+		baseDir: execSync('git rev-parse --show-toplevel').toString().trim();
+	};
   let commit_state = CommitState.parse({})
-  let git_status = await simpleGit().status();
+  let git_status = await simpleGit(gitOptions).status();
   if (config.check_status) {
     p.log.step(color.black(color.bgGreen(' Checking Git Status ')))
     const missing_files = check_missing_stage(git_status);
@@ -74,8 +77,8 @@ async function main(config: z.infer<typeof Config>) {
      }) as string[]
     if (p.isCancel(selected_for_staging)) process.exit(0)
 
-     await simpleGit().add(selected_for_staging)
-     git_status = await simpleGit().status();
+     await simpleGit(gitOptions).add(selected_for_staging)
+     git_status = await simpleGit(gitOptions).status();
      if (selected_for_staging?.length){
         p.log.success(color.green('Changes successfully staged'))    
      }
