@@ -3,17 +3,16 @@
 import { Config } from "./zod-state";
 import color from 'picocolors';
 import fs from 'fs'
-import { execSync } from "child_process";
 import * as p from '@clack/prompts';
-import { CONFIG_FILE_NAME } from "./utils";
+import { CONFIG_FILE_NAME, get_git_root } from "./utils";
 
 try {
   console.clear();
   p.intro(`${color.bgCyan(color.black(' better-commits-init '))}`)
-  const root = execSync('git rev-parse --show-toplevel').toString().trim();
+  const root = get_git_root();
   const root_path = `${root}/${CONFIG_FILE_NAME}`
   const default_config = Config.parse({})
-  fs.writeFileSync(root_path, JSON.stringify(default_config, null, '\t'));
+  fs.writeFileSync(root_path, JSON.stringify(default_config, null, '    '));
   p.log.success(`${color.green('Successfully created .better-commits.json')}`)
   p.outro(`Run ${color.bgBlack(color.white('better-commits'))} to start the CLI`)
 } catch (err: any) {
