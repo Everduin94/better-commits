@@ -60,6 +60,10 @@ export function infer_type_from_branch(types: string[]): string {
   return found ?? ''
 }
 
+export function get_git_root(): string {
+  return execSync('git rev-parse --show-toplevel').toString().trim();
+}
+
 export function get_default_config_path(): string {
   return homedir()+'/'+CONFIG_FILE_NAME
 }

@@ -2,13 +2,13 @@
 
 import * as p from '@clack/prompts';
 import color from 'picocolors';
-import { simpleGit } from "simple-git"
+import { SimpleGit, simpleGit } from "simple-git"
 import fs from 'fs'
 import { execSync } from 'child_process';
 import { z } from "zod";
 import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY } from './utils';
+import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root } from './utils';
 
 main(load_setup());
 
@@ -16,7 +16,7 @@ function load_setup(): z.infer<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(' better-commits '))}`);
 
-  const root = execSync('git rev-parse --show-toplevel').toString().trim();
+  const root = get_git_root();
   const root_path = `${root}/${CONFIG_FILE_NAME}`
   if (fs.existsSync(root_path)) {
     p.log.step('Found repository config')
@@ -31,7 +31,7 @@ function load_setup(): z.infer<typeof Config> {
 
   const default_config = Config.parse({})
   p.log.step('Config not found. Generating default .better-commit.json at $HOME')
-  fs.writeFileSync(home_path, JSON.stringify(default_config, null, '\t'));
+  fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
   return default_config;
 }
 
@@ -58,7 +58,8 @@ function validate_config(config: z.infer<typeof Config>): z.infer<typeof Config>
 
 async function main(config: z.infer<typeof Config>) {
   let commit_state = CommitState.parse({})
-  let git_status = await simpleGit().status();
+  const simple_git = simpleGit({ baseDir: get_git_root() })
+  let git_status = await simple_git.status();
   if (config.check_status) {
     p.log.step(color.black(color.bgGreen(' Checking Git Status ')))
     const missing_files = check_missing_stage(git_status);
@@ -74,8 +75,8 @@ async function main(config: z.infer<typeof Config>) {
      }) as string[]
     if (p.isCancel(selected_for_staging)) process.exit(0)
 
-     await simpleGit().add(selected_for_staging)
-     git_status = await simpleGit().status();
+     await simple_git.add(selected_for_staging)
+     git_status = await simple_git.status();
      if (selected_for_staging?.length){
         p.log.success(color.green('Changes successfully staged'))    
      }

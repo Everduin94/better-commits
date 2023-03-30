@@ -61,118 +61,118 @@ All properties are optional, they can be removed from your configuration and wil
 
 ```json
 {
-	"check_status": true,
-	"commit_type": {
-		"enable": true,
-		"initial_value": "feat",
-		"infer_type_from_branch": true,
-		"options": [
-			{
-				"value": "feat",
-				"label": "feat",
-				"hint": "A new feature"
-			},
-			{
-				"value": "fix",
-				"label": "fix",
-				"hint": "A bug fix"
-			},
-			{
-				"value": "docs",
-				"label": "docs",
-				"hint": "Documentation only changes"
-			},
-			{
-				"value": "refactor",
-				"label": "refactor",
-				"hint": "A code change that neither fixes a bug nor adds a feature"
-			},
-			{
-				"value": "perf",
-				"label": "perf",
-				"hint": "A code change that improves performance"
-			},
-			{
-				"value": "test",
-				"label": "test",
-				"hint": "Adding missing tests or correcting existing tests"
-			},
-			{
-				"value": "build",
-				"label": "build",
-				"hint": "Changes that affect the build system or external dependencies"
-			},
-			{
-				"value": "ci",
-				"label": "ci",
-				"hint": "Changes to our CI configuration files and scripts"
-			},
-			{
-				"value": "chore",
-				"label": "chore",
-				"hint": "Other changes that do not modify src or test files"
-			},
-			{
-				"value": "",
-				"label": "none"
-			}
-		]
-	},
-	"commit_scope": {
-		"enable": true,
-    		"custom_scope": false,
-		"initial_value": "app",
-		"options": [
-			{
-				"value": "app",
-				"label": "app"
-			},
-			{
-				"value": "shared",
-				"label": "shared"
-			},
-			{
-				"value": "server",
-				"label": "server"
-			},
-			{
-				"value": "tools",
-				"label": "tools"
-			},
-			{
-				"value": "",
-				"label": "none"
-			}
-		]
-	},
-	"check_ticket": {
-		"infer_ticket": true,
-		"confirm_ticket": true,
-		"add_to_title": true,
-		"append_hashtag": false
-	},
-	"commit_title": {
-		"max_size": 70
-	},
-	"commit_body": {
-		"enable": true,
-		"required": false
-	},
-	"commit_footer": {
-		"enable": true,
-		"initial_value": [],
-		"options": [
-			"closes",
-			"breaking-change",
-			"deprecated",
-			"custom"
-		]
-	},
-	"breaking_change": {
-		"add_exclamation_to_title": true
-	},
-	"confirm_commit": true,
-	"print_commit_output": true
+    "check_status": true,
+    "commit_type": {
+        "enable": true,
+        "initial_value": "feat",
+        "infer_type_from_branch": true,
+        "options": [
+            {
+                "value": "feat",
+                "label": "feat",
+                "hint": "A new feature"
+            },
+            {
+                "value": "fix",
+                "label": "fix",
+                "hint": "A bug fix"
+            },
+            {
+                "value": "docs",
+                "label": "docs",
+                "hint": "Documentation only changes"
+            },
+            {
+                "value": "refactor",
+                "label": "refactor",
+                "hint": "A code change that neither fixes a bug nor adds a feature"
+            },
+            {
+                "value": "perf",
+                "label": "perf",
+                "hint": "A code change that improves performance"
+            },
+            {
+                "value": "test",
+                "label": "test",
+                "hint": "Adding missing tests or correcting existing tests"
+            },
+            {
+                "value": "build",
+                "label": "build",
+                "hint": "Changes that affect the build system or external dependencies"
+            },
+            {
+                "value": "ci",
+                "label": "ci",
+                "hint": "Changes to our CI configuration files and scripts"
+            },
+            {
+                "value": "chore",
+                "label": "chore",
+                "hint": "Other changes that do not modify src or test files"
+            },
+            {
+                "value": "",
+                "label": "none"
+            }
+        ]
+    },
+    "commit_scope": {
+        "enable": true,
+        "custom_scope": false,
+        "initial_value": "app",
+        "options": [
+            {
+                "value": "app",
+                "label": "app"
+            },
+            {
+                "value": "shared",
+                "label": "shared"
+            },
+            {
+                "value": "server",
+                "label": "server"
+            },
+            {
+                "value": "tools",
+                "label": "tools"
+            },
+            {
+                "value": "",
+                "label": "none"
+            }
+        ]
+    },
+    "check_ticket": {
+        "infer_ticket": true,
+        "confirm_ticket": true,
+        "add_to_title": true,
+        "append_hashtag": false
+    },
+    "commit_title": {
+        "max_size": 70
+    },
+    "commit_body": {
+        "enable": true,
+        "required": false
+    },
+    "commit_footer": {
+        "enable": true,
+        "initial_value": [],
+        "options": [
+            "closes",
+            "breaking-change",
+            "deprecated",
+            "custom"
+        ]
+    },
+    "breaking_change": {
+        "add_exclamation_to_title": true
+    },
+    "confirm_commit": true,
+    "print_commit_output": true
 }
 ```
 
