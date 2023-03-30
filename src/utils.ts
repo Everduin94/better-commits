@@ -1,8 +1,9 @@
 import {homedir}  from 'os';
-import { StatusResult } from 'simple-git';
+import { SimpleGit, StatusResult } from 'simple-git';
 import { z } from 'zod';
 import color from 'picocolors';
 import { execSync } from 'child_process';
+import { Config } from './zod-state';
 
 export const CONFIG_FILE_NAME = '.better-commits.json'
 export const SPACE_TO_SELECT = `${color.dim('(<space> to select)')}`
@@ -58,6 +59,10 @@ export function infer_type_from_branch(types: string[]): string {
   })
 
   return found ?? ''
+}
+
+export function get_git_root(): string {
+  return execSync('git rev-parse --show-toplevel').toString().trim();
 }
 
 export function get_default_config_path(): string {
