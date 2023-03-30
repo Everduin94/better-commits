@@ -58,8 +58,8 @@ function validate_config(config: z.infer<typeof Config>): z.infer<typeof Config>
 
 async function main(config: z.infer<typeof Config>) {
   const gitOptions = {
-		baseDir: execSync('git rev-parse --show-toplevel').toString().trim();
-	};
+    baseDir: execSync('git rev-parse --show-toplevel').toString().trim();
+  };
   let commit_state = CommitState.parse({})
   let git_status = await simpleGit(gitOptions).status();
   if (config.check_status) {
