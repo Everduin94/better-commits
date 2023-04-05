@@ -53,6 +53,7 @@ export const Config = z.object({
    commit_body: z.object({
      enable: z.boolean().default(true),
      required: z.boolean().default(false),
+     max_line_length: z.number().optional(),
    }).default({}),
    commit_footer:  z.object({
      enable: z.boolean().default(true),

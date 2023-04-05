@@ -166,10 +166,27 @@ async function main(config: z.infer<typeof Config>) {
 
   if (config.commit_body.enable) {
     const commit_body = await p.text({
-            message: `Write a detailed description of the changes ${OPTIONAL_PROMPT}`,
+            message: `Write a detailed description of the changes ${OPTIONAL_PROMPT}. Use \\n to create a new line`,
             placeholder: '',
             validate: (val) => {
               if (config.commit_body.required && !val) return 'Please enter a description' 
+              if (config.commit_body.max_line_length !== undefined) {
+                const lineMaxLength = config.commit_body.max_line_length;
+                const lines = val.split("\\n");
+                var exceedLineNumber: number | undefined;
+                var lineLength: number | undefined;
+                if (lines.some((line, index) => {
+                  if (line.length > lineMaxLength) {
+                    exceedLineNumber = index+1;
+                    lineLength = line.length;
+
+                    return true;
+                  }
+                  
+                })) {
+                  return `Line ${exceedLineNumber} exceeds max length. Max line length [${lineMaxLength}], current length [${lineLength}]`
+                }
+              }
             }
         
     })
