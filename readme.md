@@ -64,7 +64,7 @@ All properties are optional, they can be removed from your configuration and wil
     "check_status": true,
     "commit_type": {
         "enable": true,
-        "initial_value": "✨ feat",
+        "initial_value": "feat",
         "infer_type_from_branch": true,
         "append_emoji_to_label": false,
         "append_emoji_to_commit": false,
@@ -73,7 +73,7 @@ All properties are optional, they can be removed from your configuration and wil
                 "value": "feat",
                 "label": "feat",
                 "hint": "A new feature",
-                "emoji": "🌈"
+                "emoji": "✨"
             },
             {
                 "value": "fix",

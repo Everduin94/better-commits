@@ -6,7 +6,7 @@ export const Config = z.object({
    check_status: z.boolean().default(true),
    commit_type: z.object({
      enable: z.boolean().default(true),
-     initial_value: z.string().default('✨ feat'),
+     initial_value: z.string().default('feat'),
      infer_type_from_branch: z.boolean().default(true),
      append_emoji_to_label: z.boolean().default(false),
      append_emoji_to_commit: z.boolean().default(false),
