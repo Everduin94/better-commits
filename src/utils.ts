@@ -12,15 +12,15 @@ export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/)
 export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/)
 export const REGEX_START_NUM = new RegExp(/^(\d+)/)
 export const DEFAULT_TYPE_OPTIONS = [
-    { value: 'feat', label: 'feat' , hint: 'A new feature'},
-    { value: 'fix', label: 'fix' , hint: 'A bug fix'},
-    { value: 'docs', label: 'docs', hint: 'Documentation only changes'},
-    { value: 'refactor', label: 'refactor', hint: 'A code change that neither fixes a bug nor adds a feature'},
-    { value: 'perf', label: 'perf', hint: 'A code change that improves performance'},
-    { value: 'test', label: 'test', hint: 'Adding missing tests or correcting existing tests'},
-    { value: 'build', label: 'build', hint: 'Changes that affect the build system or external dependencies'},
-    { value: 'ci', label: 'ci', hint: 'Changes to our CI configuration files and scripts'},
-    { value: 'chore', label: 'chore', hint: 'Other changes that do not modify src or test files'},
+    { value: 'feat', label: 'feat' , hint: 'A new feature', emoji: '✨'},
+    { value: 'fix', label: 'fix' , hint: 'A bug fix', emoji: '🐛'},
+    { value: 'docs', label: 'docs', hint: 'Documentation only changes', emoji: '📚'},
+    { value: 'refactor', label: 'refactor', hint: 'A code change that neither fixes a bug nor adds a feature', emoji: '🔨'},
+    { value: 'perf', label: 'perf', hint: 'A code change that improves performance', emoji: '🚀'},
+    { value: 'test', label: 'test', hint: 'Adding missing tests or correcting existing tests', emoji: '🚨'},
+    { value: 'build', label: 'build', hint: 'Changes that affect the build system or external dependencies', emoji: '🚧'},
+    { value: 'ci', label: 'ci', hint: 'Changes to our CI configuration files and scripts', emoji: '🤖'},
+    { value: 'chore', label: 'chore', hint: 'Other changes that do not modify src or test files', emoji: '🧹'},
     { value: '', label: 'none'},
 ]
 export const DEFAULT_SCOPE_OPTIONS = [

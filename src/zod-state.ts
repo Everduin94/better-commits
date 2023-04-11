@@ -8,15 +8,23 @@ export const Config = z.object({
      enable: z.boolean().default(true),
      initial_value: z.string().default('feat'),
      infer_type_from_branch: z.boolean().default(true),
+     append_emoji_to_label: z.boolean().default(false),
+     append_emoji_to_commit: z.boolean().default(false),
      options: z.array(z.object({
       value: z.string(),
       label: z.string().optional(),
       hint: z.string().optional(),
+      emoji: z.string().emoji().optional(),
      })).default(DEFAULT_TYPE_OPTIONS)
-   }).default({}).refine(val => {
-     const options = val.options.map(v => v.value)
-    return options.includes(val.initial_value)
-  }, (val) => ({ message: `Type: initial_value "${val.initial_value}" must exist in options` })),
+   }).default({}).transform(val => {
+      const options = val.options.map(v => ({
+        ...v,
+        label: v.emoji && val.append_emoji_to_label ? `${v.emoji} ${v.label}` : v.label,
+      }))
+      return { ...val, options }
+    })
+    .refine(val => val.options.map(v => v.value).includes(val.initial_value)
+    , (val) => ({ message: `Type: initial_value "${val.initial_value}" must exist in options` })),
    commit_scope: z.object({
      enable: z.boolean().default(true),
      custom_scope: z.boolean().default(false),
