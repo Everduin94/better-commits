@@ -95,6 +95,9 @@ async function main(config: z.infer<typeof Config>) {
       const type_from_branch = infer_type_from_branch(options)
       if (type_from_branch) initial_value = type_from_branch
     }
+    const value_to_emoji: Record<string,string> = config.commit_type.options.reduce(
+      (acc, curr) => ({ ...acc, [curr.value]: curr.emoji ?? '' }), {}
+    )
     const commit_type = await p.select(
         {
           message: `Select a commit type`,
@@ -103,7 +106,9 @@ async function main(config: z.infer<typeof Config>) {
         }
     )
     if (p.isCancel(commit_type)) process.exit(0)
-    commit_state.type = commit_type;
+    commit_state.type = config.commit_type.append_emoji_to_commit ?
+      `${value_to_emoji[commit_type]} ${commit_type}`.trim()
+    : commit_type;
   }
 
   if (config.commit_scope.enable) {

@@ -20,14 +20,11 @@ export const Config = z.object({
       const options = val.options.map(v => ({
         ...v,
         label: v.emoji && val.append_emoji_to_label ? `${v.emoji} ${v.label}` : v.label,
-        value: v.emoji && val.append_emoji_to_commit ? `${v.emoji} ${v.value}` : v.value,
       }))
       return { ...val, options }
     })
-   .refine(val => {
-     const options = val.options.map(v => ({value: v.value, emoji: v.emoji}) )
-     return options.some(o => val.append_emoji_to_commit ? `${o.emoji} ${o.value}` : `${o.value}`)
-   }, (val) => ({ message: `Type: initial_value "${val.initial_value}" must exist in options` })),
+    .refine(val => val.options.map(v => v.value).includes(val.initial_value)
+    , (val) => ({ message: `Type: initial_value "${val.initial_value}" must exist in options` })),
    commit_scope: z.object({
      enable: z.boolean().default(true),
      custom_scope: z.boolean().default(false),
