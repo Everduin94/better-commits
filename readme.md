@@ -64,53 +64,64 @@ All properties are optional, they can be removed from your configuration and wil
     "check_status": true,
     "commit_type": {
         "enable": true,
-        "initial_value": "feat",
+        "initial_value": "✨ feat",
         "infer_type_from_branch": true,
+        "append_emoji_to_label": false,
+        "append_emoji_to_commit": false,
         "options": [
             {
                 "value": "feat",
                 "label": "feat",
-                "hint": "A new feature"
+                "hint": "A new feature",
+                "emoji": "🌈"
             },
             {
                 "value": "fix",
                 "label": "fix",
-                "hint": "A bug fix"
+                "hint": "A bug fix",
+                "emoji": "🐛"
             },
             {
                 "value": "docs",
                 "label": "docs",
-                "hint": "Documentation only changes"
+                "hint": "Documentation only changes",
+                "emoji": "📚"
             },
             {
                 "value": "refactor",
                 "label": "refactor",
-                "hint": "A code change that neither fixes a bug nor adds a feature"
+                "hint": "A code change that neither fixes a bug nor adds a feature",
+                "emoji": "🔨"
             },
             {
                 "value": "perf",
                 "label": "perf",
-                "hint": "A code change that improves performance"
+                "hint": "A code change that improves performance",
+                "emoji": "🚀"
             },
             {
                 "value": "test",
                 "label": "test",
-                "hint": "Adding missing tests or correcting existing tests"
+                "hint": "Adding missing tests or correcting existing tests",
+                "emoji": "🚨"
             },
             {
                 "value": "build",
                 "label": "build",
-                "hint": "Changes that affect the build system or external dependencies"
+                "hint": "Changes that affect the build system or external dependencies",
+                "emoji": "🚧"
             },
             {
                 "value": "ci",
                 "label": "ci",
-                "hint": "Changes to our CI configuration files and scripts"
+                "hint": "Changes to our CI configuration files and scripts",
+                "emoji": "🤖"
             },
             {
                 "value": "chore",
                 "label": "chore",
-                "hint": "Other changes that do not modify src or test files"
+                "hint": "Other changes that do not modify src or test files",
+                "emoji": "🧹"
             },
             {
                 "value": "",
