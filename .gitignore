@@ -8,4 +8,3 @@ dist
 .env
 .env.production
 .vercel
-package-lock.json
