@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { CUSTOM_SCOPE_KEY, DEFAULT_SCOPE_OPTIONS, DEFAULT_TYPE_OPTIONS, FOOTER_OPTION_VALUES, Z_FOOTER_OPTIONS } from "./utils"
 
-// test
+// test - 2
 export const Config = z.object({
    check_status: z.boolean().default(true),
    commit_type: z.object({
