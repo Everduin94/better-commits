@@ -15,7 +15,7 @@ export const Config = z.object({
       label: z.string().optional(),
       hint: z.string().optional(),
       emoji: z.string().emoji().optional(),
-     })).default(DEFAULT_TYPE_OPTIONS)
+     })).default(DEFAULT_TYPE_OPTIONS),
    }).default({}).transform(val => {
       const options = val.options.map(v => ({
         ...v,
@@ -72,6 +72,22 @@ export const Config = z.object({
    }).default({}),
    confirm_commit: z.boolean().default(true),
    print_commit_output: z.boolean().default(true),
+   branch_pre_commands: z.array(z.string()).default([]),
+   branch_post_commands: z.array(z.string()).default([]),
+   branch_user: z.object({
+     required: z.boolean().default(false),
+     separator: z.enum(['/', '-', '_']).default('/')
+   }).default({}),
+   branch_type: z.object({
+     separator: z.enum(['/', '-', '_']).default('/')
+   }).default({}),
+   branch_ticket: z.object({
+     required: z.boolean().default(false),
+     separator: z.enum(['/', '-', '_']).default('-')
+   }).default({}),
+   branch_description: z.object({
+     max_length: z.number().positive().default(70)
+   }).default({}),
 }).default({})
 
 export const CommitState = z.object({
@@ -87,4 +103,12 @@ export const CommitState = z.object({
   deprecates_title: z.string().default(''),
   deprecates_body: z.string().default(''),
   custom_footer: z.string().default(''),
+}).default({})
+
+
+export const BranchState = z.object({
+  user: z.string().default(''),
+  type: z.string().default(''),
+  ticket: z.string().default(''),
+  description: z.string().default(''),
 }).default({})

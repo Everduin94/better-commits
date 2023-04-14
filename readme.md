@@ -18,6 +18,8 @@ https://user-images.githubusercontent.com/14320878/225088948-43073a0e-400c-4c5f-
 - Attempts to infer ticket/issue and type from branch
 - Pretty prints preview in color
 - Validates config at runtime
+- Support for git emojis
+- Consistent branch naming conventions
 
 ## 📦 Installation
  
@@ -224,6 +226,25 @@ TODO: Add table explaining properties
 - `TYPE-` -- If a type is at the start of the branch
 - `TYPE/` -- If a slash comes after the type
 - `-TYPE-` -- If a type is between two dashes
+
+## 🌳 Better Branch
+
+Runs a prompt to checkout a branch with consistent naming conventions
+- `better-commits` can then infer ticket/issue and type from the branch
+
+In your terminal
+
+```sh
+better-branch
+```
+
+### Pre/Post Checkout Hooks
+
+Optionally configure pre and post checkout commands, for example:
+- checkout and rebase main before branching
+- run `npm install` before branching
+- run `npm run dev` after branching
+
 
 ## 😮 Mildly Interesting
 

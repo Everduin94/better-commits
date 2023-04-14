@@ -14,6 +14,7 @@
   "bin": {
     "better-commits-init": "./dist/init.js",
     "better-commits": "./dist/index.js",
+    "better-branch": "./dist/branch.js",
     "bcommits": "./dist/index.js",
     "git-bc": "./dist/index.js"
   },
@@ -21,6 +22,7 @@
   "dependencies": {
     "@clack/core": "^0.3.1",
     "@clack/prompts": "^0.6.2",
+    "configstore": "^6.0.0",
     "picocolors": "^1.0.0",
     "simple-git": "^3.16.1",
     "zod": "^3.21.3",
@@ -28,12 +30,14 @@
   },
   "scripts": {
     "start": "jiti ./src/index.ts",
+    "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
     "build": "tsup ./src/",
     "commit": "jiti ./src/index.ts"
   },
   "devDependencies": {
     "@semantic-release/git": "^10.0.1",
+    "@types/configstore": "^6.0.0",
     "@types/node": "^18.14.5",
     "jiti": "^1.17.0",
     "semantic-release": "^21.0.1",

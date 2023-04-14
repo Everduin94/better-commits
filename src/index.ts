@@ -2,61 +2,15 @@
 
 import * as p from '@clack/prompts';
 import color from 'picocolors';
-import { SimpleGit, simpleGit } from "simple-git"
-import fs from 'fs'
+import { simpleGit } from "simple-git"
 import { execSync } from 'child_process';
 import { z } from "zod";
-import { fromZodError } from 'zod-validation-error';
 import { CommitState, Config } from './zod-state';
-import { CONFIG_FILE_NAME, get_default_config_path, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root } from './utils';
+import { load_setup, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root } from './utils';
 
 main(load_setup());
 
-function load_setup(): z.infer<typeof Config> {
-  console.clear();
-  p.intro(`${color.bgCyan(color.black(' better-commits '))}`);
-
-  const root = get_git_root();
-  const root_path = `${root}/${CONFIG_FILE_NAME}`
-  if (fs.existsSync(root_path)) {
-    p.log.step('Found repository config')
-    return read_config_from_path(root_path)
-  }
-
-  const home_path = get_default_config_path();
-  if (fs.existsSync(home_path)) {
-    p.log.step('Found global config')
-    return read_config_from_path(home_path);
-  } 
-
-  const default_config = Config.parse({})
-  p.log.step('Config not found. Generating default .better-commit.json at $HOME')
-  fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
-  return default_config;
-}
-
-function read_config_from_path(config_path: string) {
-  let res = null;
-  try {
-    res = JSON.parse(fs.readFileSync(config_path, 'utf8'))
-  } catch (err) {
-    p.log.error('Invalid JSON file. Exiting.\n' + err)
-    process.exit(0);
-  }
-
-  return validate_config(res);
-}
-
-function validate_config(config: z.infer<typeof Config>): z.infer<typeof Config> {
-  try {
-    return Config.parse(config)
-  } catch (err: any) {
-    console.log(fromZodError(err).message);
-    process.exit(0)
-  }
-}
-
-async function main(config: z.infer<typeof Config>) {
+export async function main(config: z.infer<typeof Config>) {
   let commit_state = CommitState.parse({})
   const simple_git = simpleGit({ baseDir: get_git_root() })
   let git_status = await simple_git.status();
