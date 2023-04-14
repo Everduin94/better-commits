@@ -31,7 +31,5 @@
 	},
 	"check_ticket": {
 		"append_hashtag": true
-	},
-  "branch_pre_commands": ["git checkout main", "git pull -r origin main", "npm install"],
-  "branch_post_commands": ["npm run build"]
+	}
 }

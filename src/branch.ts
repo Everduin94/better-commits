@@ -12,18 +12,20 @@ import { execSync } from "child_process";
 main(load_setup(' better-branch '))
 
 async function main(config: z.infer<typeof Config>) {
-    const config_store = new Configstore('better-commits');
     const branch_state = BranchState.parse({});
-    const simple_git = simpleGit({ baseDir: get_git_root() })
+    const cache_user_name = get_user_from_cache()
     const user_name_required = config.branch_user.required
     const user_name = await p.text({
       message: `Type your git username ${user_name_required ? '' : OPTIONAL_PROMPT} ${CACHE_PROMPT}`.trim(),
       placeholder: '',
-      initialValue: config_store.get('username') ?? '',
+      initialValue: cache_user_name,
+      validate: (val) => {
+        if (user_name_required && !val) return 'Please enter a username'
+      }
     })
     if (p.isCancel(user_name)) process.exit(0)
     branch_state.user = user_name?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
-    config_store.set('username', branch_state.user)
+    set_user_cache(branch_state.user)
 
     if (config.commit_type.enable) {
       let initial_value = config.commit_type.initial_value 
@@ -38,9 +40,13 @@ async function main(config: z.infer<typeof Config>) {
       branch_state.type = commit_type;
     }
 
+    const ticked_required = config.branch_ticket.required
     const ticket = await p.text({
-      message: `Type ticket / issue number ${config.branch_ticket.required ? '' : OPTIONAL_PROMPT}`.trim(),
+      message: `Type ticket / issue number ${ticked_required ? '' : OPTIONAL_PROMPT}`.trim(),
       placeholder: '',
+      validate: (val) => {
+        if (ticked_required && !val) return 'Please enter a ticket / issue'
+      }
     })
     if (p.isCancel(ticket)) process.exit(0)
     branch_state.ticket = ticket;
@@ -68,6 +74,7 @@ async function main(config: z.infer<typeof Config>) {
       }
     })
 
+    const simple_git = simpleGit({ baseDir: get_git_root() })
     await simple_git.checkoutLocalBranch(build_branch(branch_state, config))
 
     config.branch_post_commands.forEach(command => {
@@ -91,7 +98,26 @@ function build_branch(branch: z.infer<typeof BranchState>, config: z.infer<typeo
   return res;
 }
 
+function get_user_from_cache(): string {
+  try {
+    const config_store = new Configstore('better-commits');
+    return config_store.get('username') ?? ''
+  } catch (err) {
+    p.log.warn('There was an issue accessing username from cache. Check that the folder "~/.config" exists')
+  }
 
-// TODO: I have no idea what's happening here
+  return ''
+}
+
+function set_user_cache(val: string): void {
+  try {
+    const config_store = new Configstore('better-commits');
+    config_store.set('username', val)
+  } catch (err) {
+    // fail silently, user has likely already seen guidance via get exceptions at this point
+  }
+}
+
+// TODO: No idea what's happening here
 // If you don't use CommitState, (even in unreachable code), parse fails on Config
 CommitState
