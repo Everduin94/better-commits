@@ -185,8 +185,25 @@ All properties are optional, they can be removed from your configuration and wil
         "add_exclamation_to_title": true
     },
     "confirm_commit": true,
-    "print_commit_output": true
+    "print_commit_output": true,
+    "branch_pre_commands": [],
+    "branch_post_commands": [],
+    "branch_user": {
+        "required": false,
+        "separator": "/"
+    },
+    "branch_type": {
+        "separator": "/"
+    },
+    "branch_ticket": {
+        "required": false,
+        "separator": "-"
+    },
+    "branch_description": {
+        "max_length": 70
+    }
 }
+
 ```
 
 ### ✅ Config Validation
