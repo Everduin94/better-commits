@@ -9,7 +9,7 @@ import Configstore from 'configstore';
 import { z } from "zod";
 import { execSync } from "child_process";
 
-main(load_setup())
+main(load_setup(' better-branch '))
 
 async function main(config: z.infer<typeof Config>) {
     const config_store = new Configstore('better-commits');
