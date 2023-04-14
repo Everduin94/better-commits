@@ -17,9 +17,9 @@ https://user-images.githubusercontent.com/14320878/225088948-43073a0e-400c-4c5f-
 - Works globally or in your repository
 - Attempts to infer ticket/issue and type from branch
 - Pretty prints preview in color
+- Support for git emojis per type
+- Consistent branch naming CLI via `better-branch`
 - Validates config at runtime
-- Support for git emojis
-- Consistent branch naming conventions
 
 ## 📦 Installation
  
@@ -262,11 +262,13 @@ Optionally configure pre and post checkout commands, for example:
 - run `npm install` before branching
 - run `npm run dev` after branching
 
+See *branch_pre_commands* and *branch_post_commands* in default config.
 
 ## 😮 Mildly Interesting
 
 ### Building / Versioning
 `better-commits` works with [Semantic Release](https://github.com/semantic-release/semantic-release)
+- See *package.json* and *.github/workflows/publish.yml* for example
 
 ### Github
 if you use `better-commits` to create your *first* commit on a new branch
