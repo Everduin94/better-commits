@@ -74,8 +74,11 @@ async function main(config: z.infer<typeof Config>) {
       }
     })
 
+    const branch_name = build_branch(branch_state, config)
     const simple_git = simpleGit({ baseDir: get_git_root() })
-    await simple_git.checkoutLocalBranch(build_branch(branch_state, config))
+    await simple_git.checkoutLocalBranch(branch_name)
+
+    p.log.info(`Switched to a new branch '${branch_name}'`)
 
     config.branch_post_commands.forEach(command => {
       try {
