@@ -13,7 +13,6 @@ main(load_setup(' better-branch '))
 
 async function main(config: z.infer<typeof Config>) {
     const config_store = new Configstore('better-commits');
-
     const branch_state = BranchState.parse({});
     const simple_git = simpleGit({ baseDir: get_git_root() })
     const user_name_required = config.branch_user.required
@@ -23,7 +22,7 @@ async function main(config: z.infer<typeof Config>) {
       initialValue: config_store.get('username') ?? '',
     })
     if (p.isCancel(user_name)) process.exit(0)
-    branch_state.user = user_name.replace(/\s+/g, '-').toLowerCase();
+    branch_state.user = user_name?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
     config_store.set('username', branch_state.user)
 
     if (config.commit_type.enable) {
@@ -57,7 +56,7 @@ async function main(config: z.infer<typeof Config>) {
       }
     })
     if (p.isCancel(description)) process.exit(0)
-    branch_state.description = description.replace(/\s+/g, '-').toLowerCase();
+    branch_state.description = description?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
 
     config.branch_pre_commands.forEach(command => {
       try {
