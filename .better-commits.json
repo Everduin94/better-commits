@@ -1,4 +1,8 @@
 {
+  "commit_type": {
+    "append_emoji_to_label": true,
+    "append_emoji_to_commit": true
+  },
 	"commit_scope": {
 		"enable": true,
 		"initial_value": "main",
@@ -6,6 +10,10 @@
 			{
 				"value": "main",
 				"label": "main"
+			},
+      {
+				"value": "branch",
+				"label": "branch"
 			},
 			{
 				"value": "init",

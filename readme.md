@@ -17,6 +17,8 @@ https://user-images.githubusercontent.com/14320878/225088948-43073a0e-400c-4c5f-
 - Works globally or in your repository
 - Attempts to infer ticket/issue and type from branch
 - Pretty prints preview in color
+- Support for git emojis per type
+- Consistent branch naming CLI via `better-branch`
 - Validates config at runtime
 
 ## 📦 Installation
@@ -183,8 +185,25 @@ All properties are optional, they can be removed from your configuration and wil
         "add_exclamation_to_title": true
     },
     "confirm_commit": true,
-    "print_commit_output": true
+    "print_commit_output": true,
+    "branch_pre_commands": [],
+    "branch_post_commands": [],
+    "branch_user": {
+        "required": false,
+        "separator": "/"
+    },
+    "branch_type": {
+        "separator": "/"
+    },
+    "branch_ticket": {
+        "required": false,
+        "separator": "-"
+    },
+    "branch_description": {
+        "max_length": 70
+    }
 }
+
 ```
 
 ### ✅ Config Validation
@@ -225,10 +244,31 @@ TODO: Add table explaining properties
 - `TYPE/` -- If a slash comes after the type
 - `-TYPE-` -- If a type is between two dashes
 
+## 🌳 Better Branch
+
+Runs a prompt to checkout a branch with consistent naming conventions
+- `better-commits` can then infer ticket/issue and type from the branch
+
+In your terminal
+
+```sh
+better-branch
+```
+
+### Pre/Post Checkout Hooks
+
+Optionally configure pre and post checkout commands, for example:
+- checkout and rebase main before branching
+- run `npm install` before branching
+- run `npm run dev` after branching
+
+See *branch_pre_commands* and *branch_post_commands* in default config.
+
 ## 😮 Mildly Interesting
 
 ### Building / Versioning
 `better-commits` works with [Semantic Release](https://github.com/semantic-release/semantic-release)
+- See *package.json* and *.github/workflows/publish.yml* for example
 
 ### Github
 if you use `better-commits` to create your *first* commit on a new branch

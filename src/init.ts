@@ -4,7 +4,7 @@ import { Config } from "./zod-state";
 import color from 'picocolors';
 import fs from 'fs'
 import * as p from '@clack/prompts';
-import { CONFIG_FILE_NAME, get_git_root } from "./utils";
+import { CONFIG_FILE_NAME, get_git_root, load_setup } from "./utils";
 
 try {
   console.clear();

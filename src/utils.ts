@@ -3,10 +3,15 @@ import { StatusResult } from 'simple-git';
 import { z } from 'zod';
 import color from 'picocolors';
 import { execSync } from 'child_process';
+import * as p from '@clack/prompts';
+import fs from 'fs'
+import { fromZodError } from 'zod-validation-error';
+import { Config } from './zod-state';
 
 export const CONFIG_FILE_NAME = '.better-commits.json'
 export const SPACE_TO_SELECT = `${color.dim('(<space> to select)')}`
 export const OPTIONAL_PROMPT =  `${color.dim('(optional)')}`
+export const CACHE_PROMPT =  `${color.dim('(value will be saved)')}`
 export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/)
 export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/)
 export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/)
@@ -40,6 +45,52 @@ export const CUSTOM_SCOPE_KEY: 'custom' = 'custom'
 
 export const Z_FOOTER_OPTIONS = z.enum(['closes', 'breaking-change', 'deprecated', 'custom'])
 export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = ['closes', 'breaking-change', 'deprecated', 'custom']
+
+/* LOAD */
+export function load_setup(cli_name = ' better-commits '): z.infer<typeof Config> {
+  console.clear();
+  p.intro(`${color.bgCyan(color.black(cli_name))}`);
+
+  const root = get_git_root();
+  const root_path = `${root}/${CONFIG_FILE_NAME}`
+  if (fs.existsSync(root_path)) {
+    p.log.step('Found repository config')
+    return read_config_from_path(root_path)
+  }
+
+  const home_path = get_default_config_path();
+  if (fs.existsSync(home_path)) {
+    p.log.step('Found global config')
+    return read_config_from_path(home_path);
+  } 
+
+  const default_config = Config.parse({})
+  p.log.step('Config not found. Generating default .better-commit.json at $HOME')
+  fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
+  return default_config;
+}
+
+function read_config_from_path(config_path: string) {
+  let res = null;
+  try {
+    res = JSON.parse(fs.readFileSync(config_path, 'utf8'))
+  } catch (err) {
+    p.log.error('Invalid JSON file. Exiting.\n' + err)
+    process.exit(0);
+  }
+
+  return validate_config(res);
+}
+
+function validate_config(config: z.infer<typeof Config>): z.infer<typeof Config> {
+  try {
+    return Config.parse(config)
+  } catch (err: any) {
+    console.log(fromZodError(err).message);
+    process.exit(0)
+  }
+}
+/* END LOAD */
 
 export function infer_type_from_branch(types: string[]): string {
   let branch = ''
