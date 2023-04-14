@@ -203,7 +203,6 @@ All properties are optional, they can be removed from your configuration and wil
         "max_length": 70
     }
 }
-
 ```
 
 ### ✅ Config Validation
