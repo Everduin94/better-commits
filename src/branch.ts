@@ -14,7 +14,9 @@ main(load_setup(' better-branch '))
 async function main(config: z.infer<typeof Config>) {
     const branch_state = BranchState.parse({});
     const cache_user_name = get_user_from_cache()
+    const user_name_enabled = config.branch_user.enabled
     const user_name_required = config.branch_user.required
+    if(user_name_enabled || user_name_required) {
     const user_name = await p.text({
       message: `Type your git username ${user_name_required ? '' : OPTIONAL_PROMPT} ${CACHE_PROMPT}`.trim(),
       placeholder: '',
@@ -25,6 +27,9 @@ async function main(config: z.infer<typeof Config>) {
     })
     if (p.isCancel(user_name)) process.exit(0)
     branch_state.user = user_name?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
+    } else {
+      branch_state.user = ''
+    }
     set_user_cache(branch_state.user)
 
     if (config.commit_type.enable) {

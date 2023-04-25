@@ -76,6 +76,7 @@ export const Config = z.object({
    branch_post_commands: z.array(z.string()).default([]),
    branch_user: z.object({
      required: z.boolean().default(false),
+     enabled: z.boolean().default(true),
      separator: z.enum(['/', '-', '_']).default('/')
    }).default({}),
    branch_type: z.object({
