@@ -75,13 +75,16 @@ export const Config = z.object({
    branch_pre_commands: z.array(z.string()).default([]),
    branch_post_commands: z.array(z.string()).default([]),
    branch_user: z.object({
+     enable: z.boolean().default(true),
      required: z.boolean().default(false),
      separator: z.enum(['/', '-', '_']).default('/')
    }).default({}),
    branch_type: z.object({
+     enable: z.boolean().default(true),
      separator: z.enum(['/', '-', '_']).default('/')
    }).default({}),
    branch_ticket: z.object({
+     enable: z.boolean().default(true),
      required: z.boolean().default(false),
      separator: z.enum(['/', '-', '_']).default('-')
    }).default({}),
