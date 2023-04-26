@@ -189,13 +189,16 @@ All properties are optional, they can be removed from your configuration and wil
     "branch_pre_commands": [],
     "branch_post_commands": [],
     "branch_user": {
+        "enable": true,
         "required": false,
         "separator": "/"
     },
     "branch_type": {
+        "enable": true,
         "separator": "/"
     },
     "branch_ticket": {
+        "enable": true,
         "required": false,
         "separator": "-"
     },

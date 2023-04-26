@@ -13,25 +13,28 @@ main(load_setup(' better-branch '))
 
 async function main(config: z.infer<typeof Config>) {
     const branch_state = BranchState.parse({});
-    const cache_user_name = get_user_from_cache()
-    const user_name_required = config.branch_user.required
-    const user_name = await p.text({
-      message: `Type your git username ${user_name_required ? '' : OPTIONAL_PROMPT} ${CACHE_PROMPT}`.trim(),
-      placeholder: '',
-      initialValue: cache_user_name,
-      validate: (val) => {
-        if (user_name_required && !val) return 'Please enter a username'
-      }
-    })
-    if (p.isCancel(user_name)) process.exit(0)
-    branch_state.user = user_name?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
-    set_user_cache(branch_state.user)
 
-    if (config.commit_type.enable) {
+    if (config.branch_user.enable) {
+      const cache_user_name = get_user_from_cache()
+      const user_name_required = config.branch_user.required
+      const user_name = await p.text({
+        message: `Type your git username ${user_name_required ? '' : OPTIONAL_PROMPT} ${CACHE_PROMPT}`.trim(),
+        placeholder: '',
+        initialValue: cache_user_name,
+        validate: (val) => {
+          if (user_name_required && !val) return 'Please enter a username'
+        }
+      })
+      if (p.isCancel(user_name)) process.exit(0)
+      branch_state.user = user_name?.replace(/\s+/g, '-')?.toLowerCase() ?? '';
+      set_user_cache(branch_state.user)
+    }
+    
+    if (config.branch_type.enable) {
       let initial_value = config.commit_type.initial_value 
       const commit_type = await p.select(
           {
-            message: `Select a commit type`,
+            message: `Select a branch type`,
             initialValue: initial_value,
             options: config.commit_type.options,
           }
@@ -40,17 +43,19 @@ async function main(config: z.infer<typeof Config>) {
       branch_state.type = commit_type;
     }
 
-    const ticked_required = config.branch_ticket.required
-    const ticket = await p.text({
-      message: `Type ticket / issue number ${ticked_required ? '' : OPTIONAL_PROMPT}`.trim(),
-      placeholder: '',
-      validate: (val) => {
-        if (ticked_required && !val) return 'Please enter a ticket / issue'
-      }
-    })
-    if (p.isCancel(ticket)) process.exit(0)
-    branch_state.ticket = ticket;
-
+    if (config.branch_ticket.enable) {
+      const ticked_required = config.branch_ticket.required
+      const ticket = await p.text({
+        message: `Type ticket / issue number ${ticked_required ? '' : OPTIONAL_PROMPT}`.trim(),
+        placeholder: '',
+        validate: (val) => {
+          if (ticked_required && !val) return 'Please enter a ticket / issue'
+        }
+      })
+      if (p.isCancel(ticket)) process.exit(0)
+      branch_state.ticket = ticket;
+    }
+    
 
     const description_max_length = config.branch_description.max_length
     const description = await p.text({
