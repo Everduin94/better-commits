@@ -23,6 +23,10 @@
 				"value": "util",
 				"label": "util"
 			},
+      {
+				"value": "build",
+				"label": "build"
+			},
 			{
 				"value": "",
 				"label": "none"
