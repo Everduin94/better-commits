@@ -235,7 +235,7 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
      commit_string += ': '
   }
 
-  if (commit_state.ticket) {
+  if (commit_state.ticket && config.check_ticket.add_to_title) {
      commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
   }
 
