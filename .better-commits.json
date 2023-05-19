@@ -1,7 +1,7 @@
 {
   "commit_type": {
     "append_emoji_to_label": true,
-    "append_emoji_to_commit": true
+    "append_emoji_to_commit": false
   },
 	"commit_scope": {
 		"enable": true,
