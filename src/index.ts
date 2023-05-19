@@ -235,13 +235,22 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
      commit_string += ': '
   }
 
-  if (commit_state.ticket && config.check_ticket.add_to_title) {
-     commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
+  if(config.check_ticket.add_to_title){
+
+    if(config.check_ticket.title_position === "start"){
+      commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
+      commit_string += colorize ? color.reset(commit_state.title) : commit_state.title
+    }else {
+      commit_string += colorize ? color.reset(commit_state.title) + ' ' : commit_state.title + ' '
+      commit_string += colorize ? color.magenta(commit_state.ticket)  : commit_state.ticket 
+    }
+  }else{
+
+    if (commit_state.title) {
+      commit_string += colorize ? color.reset(commit_state.title) : commit_state.title;
+    }
   }
 
-  if (commit_state.title) {
-    commit_string += colorize ? color.reset(commit_state.title) : commit_state.title;
-  }
 
   if (commit_state.body) {
     const temp = commit_state.body.split('\\n') // literal \n, not new-line.
