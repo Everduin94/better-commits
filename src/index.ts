@@ -250,7 +250,6 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
     commit_string +=  ' ' + (colorize ? color.magenta(commit_state.ticket) : commit_state.ticket)
   }
 
-
   if (commit_state.body) {
     const temp = commit_state.body.split('\\n') // literal \n, not new-line.
     const res = temp.map(v => colorize ? color.reset(v.trim()) : v.trim()).join('\n')
