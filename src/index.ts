@@ -235,12 +235,19 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
      commit_string += ': '
   }
 
-  if (commit_state.ticket && config.check_ticket.add_to_title) {
-     commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
+  const position_start = config.check_ticket.title_position === "start"
+  const position_end = config.check_ticket.title_position === "end"
+
+  if(commit_state.ticket && config.check_ticket.add_to_title && position_start) {
+    commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
   }
 
   if (commit_state.title) {
-    commit_string += colorize ? color.reset(commit_state.title) : commit_state.title;
+    commit_string += colorize ? color.reset(commit_state.title) : commit_state.title 
+  }
+
+  if(commit_state.ticket && config.check_ticket.add_to_title && position_end) {
+    commit_string +=  ' ' + (colorize ? color.magenta(commit_state.ticket) : commit_state.ticket)
   }
 
   if (commit_state.body) {
