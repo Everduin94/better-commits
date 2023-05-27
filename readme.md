@@ -1,25 +1,31 @@
-# Better Commits
+<h3 align="center">
 
+![bc-gradient](https://github.com/Everduin94/better-commits/assets/14320878/2f94e6ea-a40f-4f3e-b0b2-5cc7d83a9a7d)
+	
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 [![downloads](https://img.shields.io/npm/dt/better-commits.svg?style=for-the-badge&logo=npm&color=74c7ec&logoColor=D9E0EE&labelColor=302D41)](https://www.npmjs.com/package/better-commits)
 <a href="https://github.com/everduin94/better-commits/issues">
 		<img alt="Issues" src="https://img.shields.io/github/issues/everduin94/better-commits?style=for-the-badge&logo=gitbook&color=cba6f7&logoColor=D9E0EE&labelColor=302D41"></a>
+	
+</h3>
 
-A CLI for writing better commits, following the conventional commit guidelines, written with Typescript | ZOD | Clack
+<p align="center">
+A CLI for writing better commits, following the conventional commit guidelines	
+</p>
 
-https://user-images.githubusercontent.com/14320878/225088948-43073a0e-400c-4c5f-a6e3-4f4961cfe43d.mov
+https://github.com/Everduin94/better-commits/assets/14320878/842533de-b794-498a-9f7a-8a70de283553
+
 
 ## ✨ Features
 - Follows the conventional commit guidelines
-- Highly flexible configuration
-- Easy install with sane defaults
+- Highly flexible configuration with sane defaults
+- Infers ticket/issue and commit-type from branch
+- Consistent branch naming CLI via `better-branch`
 - Checks git status with interactive git add
 - Works globally or in your repository
-- Attempts to infer ticket/issue and type from branch
 - Pretty prints preview in color
-- Support for git emojis per type
-- Consistent branch naming CLI via `better-branch`
-- Validates config at runtime
+- Support for git emojis per commit-type
+- Config validation with specific error messages
 
 ## 📦 Installation
  
@@ -45,7 +51,6 @@ To modify, these prompts, see `configuration`.
 
 ## ⚙️ Configuration
  
- 
 ### Global
 
 Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
@@ -60,6 +65,9 @@ To create a **repository-specific config**, navigate to the root of your project
 All properties are optional, they can be removed from your configuration and will be replaced by the defaults at run-time.
 
 ### Defaults
+
+Any property can be removed from the config, it will be replaced by the default at run-time
+- See `.better-commits.json` in this repository as an example
 
 ```json
 {
@@ -209,56 +217,30 @@ All properties are optional, they can be removed from your configuration and wil
 }
 ```
 
-### ✅ Config Validation
-
-Any property can be removed from the config, it will be replaced by the default at run-time
-- See `.better-commits.json` in this repository as an example
-
-#### Types
-if a property is a string/number/boolean in the default, it must stay that type
-
-#### Scope & Type
-The `initial_value` must be a `value` in the corresponding `options`
-
-`commit_scope` and `commit_type` can be populated with as many or whatever options you like
-- `hint` and `label` are optional
-- to make scope or type required, remove `None`
-  
-#### Footer
-`commit_footer` options are supplied from a fixed list, because they have specific functionality
-  - You can remove from that list, but you can't add custom values to it
-
-TODO: Add table explaining properties
-
 ### 🔎 Inference
 
-`better-commits` will attempt to infer the ticket/issue and the type from your branch name. It will auto populate the corresponding field if found. 
+`better-commits` will attempt to infer the ticket/issue and the commit-type from your branch name. It will auto populate the corresponding field if found. 
 
-**Ticket**
-- `STRING-NUMBER` -- If a string-number is at the start of the branch
-- `/STRING-NUMBER` -- If a string-number comes after a /
+**Ticket / Issue-Number** 
+- If a `STRING-NUMBER` or `NUMBER` are at the start of the branch name or after a `/`
 
-**Issue**
-- `NUMBER` -- If a number is at the start of the branch
-- `/NUMBER` -- If a number comes after a /
-
-**Type**
-- `TYPE-` -- If a type is at the start of the branch
-- `TYPE/` -- If a slash comes after the type
-- `-TYPE-` -- If a type is between two dashes
+**Commit Type**
+- If a type is at the start of the branch or is followed by a `/`
 
 ## 🌳 Better Branch
 
-Runs a prompt to checkout a branch with consistent naming conventions
-- `better-commits` can then infer ticket/issue and type from the branch
+Better branch is a secondary feature that works with better commits
+- Caches your username
+- Uses same type-list/prompt from your config
+- Formats branch name
 
-In your terminal
+To run the CLI in your terminal:
 
 ```sh
 better-branch
 ```
 
-### Pre/Post Checkout Hooks
+### Pre/Post Branch Checkout Hooks
 
 Optionally configure pre and post checkout commands, for example:
 - checkout and rebase main before branching
@@ -267,7 +249,7 @@ Optionally configure pre and post checkout commands, for example:
 
 See *branch_pre_commands* and *branch_post_commands* in default config.
 
-## 😮 Mildly Interesting
+## 🌌 Mildly Interesting
 
 ### Building / Versioning
 `better-commits` works with [Semantic Release](https://github.com/semantic-release/semantic-release)
@@ -297,7 +279,4 @@ You can add this badge to your repository to display that you're using a better-
 ## ❓ Troubleshooting
 
 `TTY initialization failed: uv_tty_init returned EBADF (bad file descriptor)`. This may happen because you're running something like git-bash on Windows. Try another terminal/command-prompt or `winpty` to see if its still an issue.
-
-## Alternatives
-- Commitizen
 
