@@ -6,7 +6,7 @@ import { simpleGit } from "simple-git"
 import { execSync } from 'child_process';
 import { z } from "zod";
 import { CommitState, Config } from './zod-state';
-import { load_setup, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root } from './utils';
+import { load_setup, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root, REGEX_SLASH_UND, REGEX_START_UND } from './utils';
 
 main(load_setup());
 
@@ -85,7 +85,14 @@ export async function main(config: z.infer<typeof Config>) {
   if (config.check_ticket.infer_ticket) {
     try {
       const branch = execSync('git branch --show-current', {stdio : 'pipe' }).toString();
-      const found: string[] = [branch.match(REGEX_SLASH_TAG), branch.match(REGEX_SLASH_NUM) , branch.match(REGEX_START_TAG), branch.match(REGEX_START_NUM)]
+      const found: string[] = [
+        branch.match(REGEX_SLASH_TAG),
+        branch.match(REGEX_SLASH_NUM),
+        branch.match(REGEX_SLASH_UND),
+        branch.match(REGEX_START_TAG),
+        branch.match(REGEX_START_NUM),
+        branch.match(REGEX_START_UND),
+      ]
       .filter(v => v != null)
       .map(v => v && v.length >= 2 ?  v[1] : '')
       if (found.length && found[0]) {
