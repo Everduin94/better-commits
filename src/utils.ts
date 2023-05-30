@@ -16,8 +16,8 @@ export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/)
 export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/)
 export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/)
 export const REGEX_START_NUM = new RegExp(/^(\d+)/)
-export const REGEX_START_UND = new RegExp(/^(\w+-[\w\d]+)_/)
-export const REGEX_SLASH_UND = new RegExp(/\/(\w+-[\w\d]+)_/)
+export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/)
+export const REGEX_SLASH_UND = new RegExp(/\/([A-Z]+-[\[a-zA-Z\]\d]+)_/)
 
 export const DEFAULT_TYPE_OPTIONS = [
     { value: 'feat', label: 'feat' , hint: 'A new feature', emoji: '✨'},
