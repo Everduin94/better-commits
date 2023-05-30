@@ -86,12 +86,12 @@ export async function main(config: z.infer<typeof Config>) {
     try {
       const branch = execSync('git branch --show-current', {stdio : 'pipe' }).toString();
       const found: string[] = [
+        branch.match(REGEX_START_UND),
+        branch.match(REGEX_SLASH_UND),
         branch.match(REGEX_SLASH_TAG),
         branch.match(REGEX_SLASH_NUM),
-        branch.match(REGEX_SLASH_UND),
         branch.match(REGEX_START_TAG),
         branch.match(REGEX_START_NUM),
-        branch.match(REGEX_START_UND),
       ]
       .filter(v => v != null)
       .map(v => v && v.length >= 2 ?  v[1] : '')
