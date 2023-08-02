@@ -43,18 +43,22 @@ export async function main(config: z.infer<typeof Config>) {
   }
 
   if (config.commit_type.enable) {
+    let message = 'Select a commit type';
     let initial_value = config.commit_type.initial_value 
     if (config.commit_type.infer_type_from_branch) {
       const options = config.commit_type.options.map(o => o.value)
       const type_from_branch = infer_type_from_branch(options)
-      if (type_from_branch) initial_value = type_from_branch
+      if (type_from_branch) {
+        message = `Commit type inferred from branch ${color.dim('(confirm / edit)')}`
+        initial_value = type_from_branch
+      } 
     }
     const value_to_emoji: Record<string,string> = config.commit_type.options.reduce(
       (acc, curr) => ({ ...acc, [curr.value]: curr.emoji ?? '' }), {}
     )
     const commit_type = await p.select(
         {
-          message: `Select a commit type`,
+          message,
           initialValue: initial_value,
           options: config.commit_type.options,
         }
