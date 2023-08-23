@@ -213,6 +213,9 @@ Any property can be removed from the config, it will be replaced by the default 
     },
     "branch_description": {
         "max_length": 70
+    },
+    "overrides": {
+        "shell": "/bin/sh"
     }
 }
 ```
@@ -280,3 +283,11 @@ You can add this badge to your repository to display that you're using a better-
 
 `TTY initialization failed: uv_tty_init returned EBADF (bad file descriptor)`. This may happen because you're running something like git-bash on Windows. Try another terminal/command-prompt or `winpty` to see if its still an issue.
 
+If your are having issues with multilines for commits on windows, you can override the shell via config.
+
+Example.
+```
+"overrides": {
+   "shell": "c:\\Program Files\\Git\\bin\\bash.exe"
+}
+```
