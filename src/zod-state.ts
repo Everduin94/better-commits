@@ -91,6 +91,7 @@ export const Config = z.object({
    branch_description: z.object({
      max_length: z.number().positive().default(70)
    }).default({}),
+   overrides: z.object({ shell: z.string().optional() }).default({})
 }).default({})
 
 export const CommitState = z.object({

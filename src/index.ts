@@ -220,7 +220,8 @@ export async function main(config: z.infer<typeof Config>) {
   } 
 
   try {      
-    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false)}"`).toString().trim();
+    const options = config.overrides.shell ? { shell: config.overrides.shell } : {}
+    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false)}"`, options).toString().trim();
     if (config.print_commit_output) p.log.info(output)
   } catch(err) {
     p.log.error('Something went wrong when committing: ' + err)
