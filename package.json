@@ -1,7 +1,7 @@
 {
   "name": "better-commits",
   "private": false,
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "A CLI for creating better commits following the conventional commit guidelines",
   "author": "Erik Verduin (https://github.com/everduin94)",
   "keywords": [
