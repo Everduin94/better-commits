@@ -215,7 +215,7 @@ Any property can be removed from the config, it will be replaced by the default 
         "max_length": 70
     },
     "overrides": {
-        "shell": "path\to\shell"
+        "shell": "/bin/sh"
     }
 }
 ```
