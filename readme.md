@@ -220,6 +220,46 @@ Any property can be removed from the config, it will be replaced by the default 
 }
 ```
 
+### Better Commits Config file explaination
+| Property | Description |
+| -------- | ----------- |
+| `check_status` | `Boolean` |
+| `commit_type.enable` | `Boolean` |
+| `commit_type.initial_value` | "feat" |
+| `commit_type.infer_type_from_branch` | `Boolean` |
+| `commit_type.append_emoji_to_label` | `Boolean` |
+| `commit_type.append_emoji_to_commit` | `Boolean` |
+| `commit_type.options.value` | Changes that affect the build system or external dependencies |
+| `commit_type.options.label` | Changes to our CI configuration files and scripts |
+| `commit_type.options.hint` | Other changes that do not modify src or test files |
+| `commit_type.options.emoji` | Emoji value |
+| `commit_scope.enable` | `Boolean` |
+| `commit_scope.custom_scope` | `Boolean` |
+| `commit_scope.initial_value` | Default value at commit |
+| `commit_scope.options.value` | "Value" |
+| `commit_scope.options.label` | "app" |
+| `check_ticket.infer_ticket`| `Boolean` |
+| `check_ticket.confirm_ticket`| `Boolean` |
+| `check_ticket.add_to_title`| `Boolean` |
+| `check_ticket.append_hashtag`| `Boolean` |
+| `check_ticket.title_position`| `start` |
+| `commit_title.max_size` | `Number` |
+| `commit_body.enable` | `Boolean` |
+| `commit_body.required` | `Boolean` |
+| `commit_footer.enable` | `Boolean` |
+| `commit_footer.initial_value` | `Array` |
+| `commit_footer.options` | `Array` |
+| `breaking_change.add_exclamation_to_title` | `Boolean` |
+| `confirm_commit` | `Boolean` | 
+| `print_commit_output` | `Boolean` | 
+| `branch_pre_commands` | `Array` |
+| `branch_post_commands` | `Array` | 
+| `branch_user.enable` | `Boolean` |
+| `branch_user.required` | `Boolean` |
+| `branch_user.separator` | "/" |
+| `branch_description.max_length` | `Number` |
+| `overrides.shell` | "/bin/sh" |
+
 ### 🔎 Inference
 
 `better-commits` will attempt to infer the ticket/issue and the commit-type from your branch name. It will auto populate the corresponding field if found. 
