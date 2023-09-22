@@ -44,10 +44,9 @@ npx better-commits
 ```
 
 It will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
+Some of the values in these prompts will be infered by your branch name and auto populated. You can adjust this in your `.better-commits.json` configuration file.
 
 To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
-
-To modify, these prompts, see `configuration`.
 
 ## ⚙️ Configuration
  
@@ -62,14 +61,18 @@ To create a **repository-specific config**, navigate to the root of your project
 - run `better-commits-init`
 - This will create a default config named `.better-commits.json`
 
-All properties are optional, they can be removed from your configuration and will be replaced by the defaults at run-time.
+### Options
 
-### Defaults
+Better-commits (& better-branch) are highly flexible with sane defaults. These options allow you specify whats best for your workflow.
 
-Any property can be removed from the config, it will be replaced by the default at run-time
-- See `.better-commits.json` in this repository as an example
+> [!NOTE]<br>
+> All properties are optional and can be removed from the config. It will be replaced by the default at run-time.
+> - See `.better-commits.json` in this repository as an example
 
-```json
+<details>
+<summary>💫 Default JSON Config</summary>
+
+ ```json
 {
     "check_status": true,
     "commit_type": {
@@ -220,45 +223,59 @@ Any property can be removed from the config, it will be replaced by the default 
 }
 ```
 
-### Better Commits Config file explaination
+</details>
+
+<details>
+<summary>🔭 Config File Explanations</summary>
+
+`.` refers to nesting. i.e. if a property is `commit_type.enable` then expect in the config for it to be:
+
+```json
+"commit_type": {
+  "enable": true
+}
+```
+
 | Property | Description |
 | -------- | ----------- |
-| `check_status` | `Boolean` |
-| `commit_type.enable` | `Boolean` |
-| `commit_type.initial_value` | "feat" |
-| `commit_type.infer_type_from_branch` | `Boolean` |
-| `commit_type.append_emoji_to_label` | `Boolean` |
-| `commit_type.append_emoji_to_commit` | `Boolean` |
-| `commit_type.options.value` | Changes that affect the build system or external dependencies |
-| `commit_type.options.label` | Changes to our CI configuration files and scripts |
-| `commit_type.options.hint` | Other changes that do not modify src or test files |
-| `commit_type.options.emoji` | Emoji value |
-| `commit_scope.enable` | `Boolean` |
-| `commit_scope.custom_scope` | `Boolean` |
-| `commit_scope.initial_value` | Default value at commit |
-| `commit_scope.options.value` | "Value" |
-| `commit_scope.options.label` | "app" |
-| `check_ticket.infer_ticket`| `Boolean` |
-| `check_ticket.confirm_ticket`| `Boolean` |
-| `check_ticket.add_to_title`| `Boolean` |
-| `check_ticket.append_hashtag`| `Boolean` |
-| `check_ticket.title_position`| `start` |
-| `commit_title.max_size` | `Number` |
-| `commit_body.enable` | `Boolean` |
-| `commit_body.required` | `Boolean` |
-| `commit_footer.enable` | `Boolean` |
-| `commit_footer.initial_value` | `Array` |
-| `commit_footer.options` | `Array` |
-| `breaking_change.add_exclamation_to_title` | `Boolean` |
-| `confirm_commit` | `Boolean` | 
-| `print_commit_output` | `Boolean` | 
-| `branch_pre_commands` | `Array` |
-| `branch_post_commands` | `Array` | 
-| `branch_user.enable` | `Boolean` |
-| `branch_user.required` | `Boolean` |
-| `branch_user.separator` | "/" |
-| `branch_description.max_length` | `Number` |
-| `overrides.shell` | "/bin/sh" |
+| `check_status` | If true run interactive `git status` |
+| `commit_type.enable` | If true include commit type |
+| `commit_type.initial_value` | Initial selection of commit type |
+| `commit_type.infer_type_from_branch` | If true infer type from branch name |
+| `commit_type.append_emoji_to_label` | If true append emoji to prompt |
+| `commit_type.append_emoji_to_commit` | If true append emoji to commit |
+| `commit_type.options.value` | Commit type prompt value |
+| `commit_type.options.label` | Commit type prompt label |
+| `commit_type.options.hint` | Commit type inline hint (like this) |
+| `commit_type.options.emoji` | Commit type emoji |
+| `commit_scope.enable` | If true include commit scope |
+| `commit_scope.custom_scope` | If true allow custom scope at run-time |
+| `commit_scope.initial_value` | Default commit scope selected |
+| `commit_scope.options.value` | Commit scope value |
+| `commit_scope.options.label` | Commit scope label |
+| `check_ticket.infer_ticket`| If true infer ticket from branch name |
+| `check_ticket.confirm_ticket`| If true manually confirm inference |
+| `check_ticket.add_to_title`| If true add ticket to title |
+| `check_ticket.append_hashtag`| If true add hashtag to ticket (Ideal for Github Issues) |
+| `check_ticket.title_position`| If "start" ticket at start if "end" ticket at end |
+| `commit_title.max_size` | Max size of title including scope, type, etc... |
+| `commit_body.enable` | If true include body |
+| `commit_body.required` | If true body is required |
+| `commit_footer.enable` | If true include footer |
+| `commit_footer.initial_value` | Initial values selected in footer |
+| `commit_footer.options` | Footer options |
+| `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes |
+| `confirm_commit` | If true manually confirm commit at end | 
+| `print_commit_output` | If true pretty print commit preview | 
+| `branch_pre_commands` | Array of shell commands to run before branching |
+| `branch_post_commands` | Array of shell commands to run after branching | 
+| `branch_user.enable` | If enabled include user name |
+| `branch_user.required` | If enabled require user name |
+| `branch_user.separator` | Branch delimeter |
+| `branch_description.max_length` | Max length branch name |
+| `overrides.shell` | Override default shell, useful for windows users |
+ 
+</details>
 
 ### 🔎 Inference
 
@@ -271,6 +288,10 @@ Any property can be removed from the config, it will be replaced by the default 
 - If a type is at the start of the branch or is followed by a `/`
 
 ## 🌳 Better Branch
+
+> [!NOTE]<br>
+> Using `better-branch` with `better-commits` can supercharge your git workflow.
+> Make sure to try it out!
 
 Better branch is a secondary feature that works with better commits
 - Caches your username
@@ -299,11 +320,11 @@ See *branch_pre_commands* and *branch_post_commands* in default config.
 - See *package.json* and *.github/workflows/publish.yml* for example
 
 ### Github
-if you use `better-commits` to create your *first* commit on a new branch
-- when you open a PR for that branch, it will properly **auto-populate the title and body**.
-- when you squash/merge, all later commits like "addressing comments" or "fixing mistake". Will be prefixed with an asterisk for easy deletion. This way, you **maintain your pretty commit even when squashing**.
+If you use `better-commits` to create your *first* commit on a new branch
+- When you open a PR for that branch, it will properly **auto-populate the title and body**.
+- When you squash/merge, all later commits like "addressing comments" or "fixing mistake". Will be prefixed with an asterisk for easy deletion. This way, you **maintain your pretty commit even when squashing**.
 
-if you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
+If you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
 
 ### Fun Facts
 [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
@@ -311,22 +332,25 @@ if you're using Github issues to track your work, and select the `closes` footer
 `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
 
 You can add this badge to your repository to display that you're using a better-commits repository config 
-```
-[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
-```
 
-[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
+| Markdown | Result |
+| -------- | ------ |
+|  `[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)`    |   [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)     |
 
 ---
 
-## ❓ Troubleshooting
+### 🪟 Troubleshooting Windows
+
+#### Git Bash
 
 `TTY initialization failed: uv_tty_init returned EBADF (bad file descriptor)`. This may happen because you're running something like git-bash on Windows. Try another terminal/command-prompt or `winpty` to see if its still an issue.
 
-If your are having issues with multilines for commits on windows, you can override the shell via config.
+#### Multi-line
 
-Example.
-```
+If your are having issues with multilines for commits on windows, you can override the shell via your `.better-commits.json` config.
+
+Example
+```json
 "overrides": {
    "shell": "c:\\Program Files\\Git\\bin\\bash.exe"
 }
