@@ -187,8 +187,19 @@ export function infer_type_from_branch(types: string[]): string {
   return found ?? "";
 }
 
+/*
+rev-parse will fail in a --bare repository root
+*/
 export function get_git_root(): string {
-  return execSync("git rev-parse --show-toplevel").toString().trim();
+  let path = ".";
+  try {
+    path = execSync("git rev-parse --show-toplevel").toString().trim();
+  } catch (err) {
+    p.log.warn(
+      "Could not find git root. If in a --bare repository, ignore this warning."
+    );
+  }
+  return path;
 }
 
 export function get_default_config_path(): string {
