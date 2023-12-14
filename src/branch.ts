@@ -2,22 +2,36 @@
 
 import { CommitState, Config } from "./zod-state";
 import {
+  BRANCH_ACTION_OPTIONS,
   CACHE_PROMPT,
-  get_git_root,
   load_setup,
   OPTIONAL_PROMPT,
+  Z_BRANCH_ACTIONS,
 } from "./utils";
-import simpleGit from "simple-git";
 import { BranchState } from "./zod-state";
 import * as p from "@clack/prompts";
 import Configstore from "configstore";
 import { z } from "zod";
 import { execSync } from "child_process";
+import color from "picocolors";
+import { chdir } from "process";
 
 main(load_setup(" better-branch "));
 
 async function main(config: z.infer<typeof Config>) {
   const branch_state = BranchState.parse({});
+
+  let checkout_type: z.infer<typeof Z_BRANCH_ACTIONS> = "branch";
+  if (config.enable_worktrees) {
+    const branch_or_worktree = await p.select({
+      message: `Checkout a branch or create a worktree?`,
+      initialValue: config.branch_action_default,
+      options: BRANCH_ACTION_OPTIONS,
+    });
+
+    if (p.isCancel(branch_or_worktree)) process.exit();
+    checkout_type = branch_or_worktree;
+  }
 
   if (config.branch_user.enable) {
     const cache_user_name = get_user_from_cache();
@@ -87,10 +101,46 @@ async function main(config: z.infer<typeof Config>) {
   });
 
   const branch_name = build_branch(branch_state, config);
-  const simple_git = simpleGit({ baseDir: get_git_root() });
-  await simple_git.checkoutLocalBranch(branch_name);
-
-  p.log.info(`Switched to a new branch '${branch_name}'`);
+  const branch_flag = verify_branch_name(branch_name);
+  if (checkout_type === "branch") {
+    try {
+      execSync(`git checkout ${branch_flag} ${branch_name}`, {
+        stdio: "inherit",
+      });
+      p.log.info(
+        `Switched to a new branch '${color.bgGreen(
+          " " + color.black(branch_name) + " "
+        )}'`
+      );
+    } catch (err) {
+      process.exit(0);
+    }
+  } else {
+    try {
+      const ticket = branch_state.ticket ? `${branch_state.ticket}-` : "";
+      const worktree_name = `${ticket}${branch_state.description}`;
+      execSync(
+        `git worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
+        {
+          stdio: "inherit",
+        }
+      );
+      p.log.info(
+        `Created a new worktree ${color.bgGreen(
+          +" " + color.black(worktree_name) + " "
+        )}, checked out branch ${color.bgGreen(
+          " " + color.black(branch_name) + " "
+        )}`
+      );
+      p.log.info(
+        color.bgMagenta(color.black(` cd ${worktree_name} `)) +
+          " to navigate to your new worktree"
+      );
+      chdir(worktree_name);
+    } catch (err) {
+      process.exit(0);
+    }
+  }
 
   config.branch_post_commands.forEach((command) => {
     try {
@@ -125,6 +175,24 @@ function get_user_from_cache(): string {
   }
 
   return "";
+}
+
+function verify_branch_name(branch_name: string): string {
+  // TODO: There has to be a better way 🤦
+  let branch_flag = "";
+  try {
+    execSync(`git show-ref ${branch_name}`, { encoding: "utf-8" });
+    p.log.warning(
+      color.yellow(
+        `${branch_name} already exists! Checking out existing branch.`
+      )
+    );
+  } catch (err) {
+    // Branch does not exist
+    branch_flag = "-b";
+  }
+
+  return branch_flag;
 }
 
 function set_user_cache(val: string): void {

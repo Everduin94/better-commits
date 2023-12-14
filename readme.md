@@ -10,7 +10,7 @@
 </h3>
 
 <p align="center">
-A CLI for writing better commits, following the conventional commit guidelines	
+A CLI for writing better commits, following the conventional commit guidelines.
 </p>
 
 
@@ -18,15 +18,15 @@ https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-
 
 
 ## ✨ Features
-- Follows the conventional commit guidelines
-- Highly flexible configuration with sane defaults
-- Infers ticket/issue and commit-type from branch
-- Consistent branch naming CLI via `better-branch`
-- Checks git status with interactive git add
-- Works globally or in your repository
-- Pretty prints preview in color
+- Generate conventional commits through a series of prompts
+- Highly configurable with sane defaults
+- Infers ticket and commit-type from branch for consistent & fast commits 
+- Consistent branch creation with flexible workflow hooks via `better-branch`
+- Interactive git status/add on commit
+- Preview commit messages in color 
 - Support for git emojis per commit-type
-- Config validation with specific error messages
+- Configure globally or per repository
+- Config validation and error messaging
 
 ## 📦 Installation
  
@@ -70,8 +70,10 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 > All properties are optional and can be removed from the config. It will be replaced by the default at run-time.
 > - See `.better-commits.json` in this repository as an example
 
-<details>
-<summary>💫 Default JSON Config</summary>
+### 💫 Default JSON Config
+
+<details open>
+<summary>Expand / Collapse</summary>
 
  ```json
 {
@@ -218,6 +220,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "branch_description": {
         "max_length": 70
     },
+    "branch_action_default": "branch",
+    "enable_worktrees": true,
     "overrides": {
         "shell": "/bin/sh"
     }
@@ -226,8 +230,10 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 
 </details>
 
+### 🔭 Config File Explanations
+
 <details>
-<summary>🔭 Config File Explanations</summary>
+<summary>Expand / Collapse</summary>
 
 `.` refers to nesting. i.e. if a property is `commit_type.enable` then expect in the config for it to be:
 
@@ -237,44 +243,46 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 }
 ```
 
-| Property | Description |
-| -------- | ----------- |
-| `check_status` | If true run interactive `git status` |
-| `commit_type.enable` | If true include commit type |
-| `commit_type.initial_value` | Initial selection of commit type |
-| `commit_type.infer_type_from_branch` | If true infer type from branch name |
-| `commit_type.append_emoji_to_label` | If true append emoji to prompt |
-| `commit_type.append_emoji_to_commit` | If true append emoji to commit |
-| `commit_type.options.value` | Commit type prompt value |
-| `commit_type.options.label` | Commit type prompt label |
-| `commit_type.options.hint` | Commit type inline hint (like this) |
-| `commit_type.options.emoji` | Commit type emoji |
-| `commit_scope.enable` | If true include commit scope |
-| `commit_scope.custom_scope` | If true allow custom scope at run-time |
-| `commit_scope.initial_value` | Default commit scope selected |
-| `commit_scope.options.value` | Commit scope value |
-| `commit_scope.options.label` | Commit scope label |
-| `check_ticket.infer_ticket`| If true infer ticket from branch name |
-| `check_ticket.confirm_ticket`| If true manually confirm inference |
-| `check_ticket.add_to_title`| If true add ticket to title |
-| `check_ticket.append_hashtag`| If true add hashtag to ticket (Ideal for Github Issues) |
-| `check_ticket.title_position`| If "start" ticket at start if "end" ticket at end |
-| `commit_title.max_size` | Max size of title including scope, type, etc... |
-| `commit_body.enable` | If true include body |
-| `commit_body.required` | If true body is required |
-| `commit_footer.enable` | If true include footer |
-| `commit_footer.initial_value` | Initial values selected in footer |
-| `commit_footer.options` | Footer options |
+| Property                                   | Description                                                 |
+| --------                                   | -----------                                                 |
+| `check_status`                             | If true run interactive `git status`                        |
+| `commit_type.enable`                       | If true include commit type                                 |
+| `commit_type.initial_value`                | Initial selection of commit type                            |
+| `commit_type.infer_type_from_branch`       | If true infer type from branch name                         |
+| `commit_type.append_emoji_to_label`        | If true append emoji to prompt                              |
+| `commit_type.append_emoji_to_commit`       | If true append emoji to commit                              |
+| `commit_type.options.value`                | Commit type prompt value                                    |
+| `commit_type.options.label`                | Commit type prompt label                                    |
+| `commit_type.options.hint`                 | Commit type inline hint (like this)                         |
+| `commit_type.options.emoji`                | Commit type emoji                                           |
+| `commit_scope.enable`                      | If true include commit scope                                |
+| `commit_scope.custom_scope`                | If true allow custom scope at run-time                      |
+| `commit_scope.initial_value`               | Default commit scope selected                               |
+| `commit_scope.options.value`               | Commit scope value                                          |
+| `commit_scope.options.label`               | Commit scope label                                          |
+| `check_ticket.infer_ticket`                | If true infer ticket from branch name                       |
+| `check_ticket.confirm_ticket`              | If true manually confirm inference                          |
+| `check_ticket.add_to_title`                | If true add ticket to title                                 |
+| `check_ticket.append_hashtag`              | If true add hashtag to ticket (Ideal for Github Issues)     |
+| `check_ticket.title_position`              | If "start" ticket at start if "end" ticket at end           |
+| `commit_title.max_size`                    | Max size of title including scope, type, etc...             |
+| `commit_body.enable`                       | If true include body                                        |
+| `commit_body.required`                     | If true body is required                                    |
+| `commit_footer.enable`                     | If true include footer                                      |
+| `commit_footer.initial_value`              | Initial values selected in footer                           |
+| `commit_footer.options`                    | Footer options                                              |
 | `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes |
-| `confirm_commit` | If true manually confirm commit at end | 
-| `print_commit_output` | If true pretty print commit preview | 
-| `branch_pre_commands` | Array of shell commands to run before branching |
-| `branch_post_commands` | Array of shell commands to run after branching | 
-| `branch_user.enable` | If enabled include user name |
-| `branch_user.required` | If enabled require user name |
-| `branch_user.separator` | Branch delimeter |
-| `branch_description.max_length` | Max length branch name |
-| `overrides.shell` | Override default shell, useful for windows users |
+| `confirm_commit`                           | If true manually confirm commit at end                      |
+| `print_commit_output`                      | If true pretty print commit preview                         |
+| `branch_pre_commands`                      | Array of shell commands to run before branching             |
+| `branch_post_commands`                     | Array of shell commands to run after branching              |
+| `branch_user.enable`                       | If enabled include user name                                |
+| `branch_user.required`                     | If enabled require user name                                |
+| `branch_user.separator`                    | Branch delimeter                                            |
+| `branch_description.max_length`            | Max length branch name                                      |
+| `branch_action_default`                    | 'branch' or 'worktree'                                      |
+| `enable_worktrees`                         | If false, always default to branch action                   |
+| `overrides.shell`                          | Override default shell, useful for windows users            |
  
 </details>
 
@@ -295,15 +303,25 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 > Make sure to try it out!
 
 Better branch is a secondary feature that works with better commits
-- Caches your username
+- Supports consistent branch naming conventions
 - Uses same type-list/prompt from your config
-- Formats branch name
+- Enables better-commits to infer type & ticket
+- Caches your username for speedy branching
 
 To run the CLI in your terminal:
 
 ```sh
 better-branch
 ```
+
+### Worktree Support
+
+`better-branch` will prompt for **Branch** or **Worktree**. Creating a **Worktree** with `better-branch` is a great way to create worktrees while maintaining consistent branch naming conventions.
+
+The worktree flow creates a folder/worktree with your **branch description** and a git branch inside with your **full branch name**.
+
+> [!NOTE]<br>
+> Creating a worktree named `everduin94/feat/TAC-123-add-worktrees` with the native git command would create a nested folder for each `/`. `better-branch` removes the hassle by creating 1 folder while still using the full name for the branch.
 
 ### Pre/Post Branch Checkout Hooks
 
