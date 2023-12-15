@@ -124,6 +124,8 @@ export const Config = z
     print_commit_output: z.boolean().default(true),
     branch_pre_commands: z.array(z.string()).default([]),
     branch_post_commands: z.array(z.string()).default([]),
+    worktree_pre_commands: z.array(z.string()).default([]),
+    worktree_post_commands: z.array(z.string()).default([]),
     branch_user: z
       .object({
         enable: z.boolean().default(true),
