@@ -203,6 +203,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "print_commit_output": true,
     "branch_pre_commands": [],
     "branch_post_commands": [],
+    "worktree_pre_commands": [],
+    "worktree_post_commands": [],
     "branch_user": {
         "enable": true,
         "required": false,
@@ -276,6 +278,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `print_commit_output`                      | If true pretty print commit preview                         |
 | `branch_pre_commands`                      | Array of shell commands to run before branching             |
 | `branch_post_commands`                     | Array of shell commands to run after branching              |
+| `worktree_pre_commands`                    | Array of shell commands to run before creating worktree     |
+| `worktree_post_commands`                   | Array of shell commands to run after creating worktree      |
 | `branch_user.enable`                       | If enabled include user name                                |
 | `branch_user.required`                     | If enabled require user name                                |
 | `branch_user.separator`                    | Branch delimeter                                            |
@@ -330,7 +334,7 @@ Optionally configure pre and post checkout commands, for example:
 - run `npm install` before branching
 - run `npm run dev` after branching
 
-See *branch_pre_commands* and *branch_post_commands* in default config.
+See *branch_pre_commands* and *branch_post_commands* in default config. (or *worktree_pre_commands* and *worktree_post_commands* for creating worktrees)
 
 ## 🌌 Mildly Interesting
 

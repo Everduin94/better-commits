@@ -91,7 +91,11 @@ async function main(config: z.infer<typeof Config>) {
   branch_state.description =
     description?.replace(/\s+/g, "-")?.toLowerCase() ?? "";
 
-  config.branch_pre_commands.forEach((command) => {
+  const pre_commands =
+    checkout_type === "worktree"
+      ? config.worktree_pre_commands
+      : config.branch_pre_commands;
+  pre_commands.forEach((command) => {
     try {
       execSync(command, { stdio: "inherit" });
     } catch (err) {
@@ -142,7 +146,11 @@ async function main(config: z.infer<typeof Config>) {
     }
   }
 
-  config.branch_post_commands.forEach((command) => {
+  const post_commands =
+    checkout_type === "worktree"
+      ? config.worktree_post_commands
+      : config.branch_post_commands;
+  post_commands.forEach((command) => {
     try {
       execSync(command, { stdio: "inherit" });
     } catch (err) {
