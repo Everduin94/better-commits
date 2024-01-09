@@ -24,12 +24,12 @@
     "@clack/prompts": "^0.6.2",
     "configstore": "^5.0.1",
     "picocolors": "^1.0.0",
-    "simple-git": "^3.16.1",
     "zod": "^3.21.3",
     "zod-validation-error": "^1.0.1"
   },
   "scripts": {
     "start": "jiti ./src/index.ts",
+    "parse": "jiti ./src/git.ts",
     "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
     "build": "tsup ./src/",

@@ -2,45 +2,42 @@
 
 import * as p from '@clack/prompts';
 import color from 'picocolors';
-import { simpleGit } from "simple-git"
 import { execSync } from 'child_process';
+import { chdir } from "process";
 import { z } from "zod";
 import { CommitState, Config } from './zod-state';
-import { load_setup, check_missing_stage, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root, REGEX_SLASH_UND, REGEX_START_UND } from './utils';
+import { load_setup,  addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, Z_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY,  get_git_root, REGEX_SLASH_UND, REGEX_START_UND } from './utils';
+import { git_add, git_status } from './git';
 
 main(load_setup());
 
 export async function main(config: z.infer<typeof Config>) {
   let commit_state = CommitState.parse({})
-  const simple_git = simpleGit({ baseDir: get_git_root() })
-  let git_status = await simple_git.status();
+  chdir(get_git_root());
+
   if (config.check_status) {
+    let {index, work_tree} = git_status() 
     p.log.step(color.black(color.bgGreen(' Checking Git Status ')))
-    const missing_files = check_missing_stage(git_status);
-    const staged_files = git_status.staged.reduce((acc,curr,i: number) => color.green(acc+curr+addNewLine(git_status.staged,i)), '');
+    const staged_files = index.reduce((acc,curr,i: number) => color.green(acc+curr+addNewLine(index,i)), '');
     p.log.success('Changes to be committed:\n'+staged_files)
-    if (missing_files.length) {
-    const unstaged_files = missing_files.reduce((acc,curr,i: number) => color.red(acc+curr+addNewLine(missing_files,i)), '');
+    if (work_tree.length) {
+    const unstaged_files = work_tree.reduce((acc,curr,i: number) => color.red(acc+curr+addNewLine(work_tree,i)), '');
      p.log.error('Changes not staged for commit:\n'+unstaged_files)
      const selected_for_staging = await p.multiselect({
        message: `Some files have not been staged, would you like to add them now? ${SPACE_TO_SELECT}`,
-       options: [{value: '.', label: '.'}, ...missing_files.map(v => ({value: v, label: v}))],
+       options: [{value: '.', label: '.'}, ...work_tree.map(v => ({value: v, label: v}))],
        required: false,
      }) as string[]
     if (p.isCancel(selected_for_staging)) process.exit(0)
+      git_add(selected_for_staging);
+    }
 
-     await simple_git.add(selected_for_staging)
-     git_status = await simple_git.status();
-     if (selected_for_staging?.length){
-        p.log.success(color.green('Changes successfully staged'))    
-     }
+    let updated_status = git_status() 
+    if (!updated_status.index.length) {
+      p.log.error(color.red('no changes added to commit (use "git add" and/or "git commit -a")'))
+      process.exit(0);
     }
   } 
-
-  if (!git_status.staged.length) {
-    p.log.error(color.red('no changes added to commit (use "git add" and/or "git commit -a")'))
-    process.exit(0);
-  }
 
   if (config.commit_type.enable) {
     let message = 'Select a commit type';
