@@ -29,7 +29,6 @@
   },
   "scripts": {
     "start": "jiti ./src/index.ts",
-    "parse": "jiti ./src/git.ts",
     "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
     "build": "tsup ./src/",
