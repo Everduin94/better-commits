@@ -1,5 +1,4 @@
 import { homedir } from "os";
-import { StatusResult } from "simple-git";
 import { z } from "zod";
 import color from "picocolors";
 import { execSync } from "child_process";
@@ -10,6 +9,9 @@ import { Config } from "./zod-state";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
+export const A_FOR_ALL = `${color.dim(
+  "(<space> to select, <a> to select all)"
+)}`;
 export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
 export const CACHE_PROMPT = `${color.dim("(value will be saved)")}`;
 export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/);
@@ -204,12 +206,6 @@ export function get_git_root(): string {
 
 export function get_default_config_path(): string {
   return homedir() + "/" + CONFIG_FILE_NAME;
-}
-
-export function check_missing_stage(stats: StatusResult): string[] {
-  return stats.files
-    .filter((f) => f.index.trim() === "" || f.index === "?")
-    .map((f) => f.path);
 }
 
 export function addNewLine(arr: string[], i: number) {
