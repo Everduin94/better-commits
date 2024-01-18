@@ -205,7 +205,7 @@ export async function main(config: z.infer<typeof Config>) {
   
 
   let continue_commit = true;
-  p.note(build_commit_string(commit_state, config, true), 'Commit Preview')
+  p.note(build_commit_string(commit_state, config, true, false), 'Commit Preview')
   if (config.confirm_commit) {
     continue_commit = await p.confirm({message: 'Confirm Commit?'}) as boolean;
     if (p.isCancel(continue_commit)) process.exit(0)
@@ -218,14 +218,14 @@ export async function main(config: z.infer<typeof Config>) {
 
   try {      
     const options = config.overrides.shell ? { shell: config.overrides.shell } : {}
-    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false)}"`, options).toString().trim();
+    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false, true)}"`, options).toString().trim();
     if (config.print_commit_output) p.log.info(output)
   } catch(err) {
     p.log.error('Something went wrong when committing: ' + err)
   }
 }
 
-function build_commit_string(commit_state: z.infer<typeof CommitState>, config: z.infer<typeof Config>, colorize: boolean = false): string {
+function build_commit_string(commit_state: z.infer<typeof CommitState>, config: z.infer<typeof Config>, colorize: boolean = false, escape_quotes: boolean = false): string {
   let commit_string = '';
   if (commit_state.type) {
     commit_string += colorize ? color.blue(commit_state.type) : commit_state.type
@@ -293,6 +293,10 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
 
   if (commit_state.closes && commit_state.ticket) {
     commit_string += colorize ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(commit_state.ticket)}` : `\n\n${commit_state.closes} ${commit_state.ticket}`;
+  }
+
+  if (escape_quotes) {
+    commit_string = commit_string.replaceAll('"', '\\"')
   }
 
   return commit_string;
