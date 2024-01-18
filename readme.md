@@ -10,7 +10,7 @@
 </h3>
 
 <p align="center">
-A CLI for writing better commits, following the conventional commit guidelines.
+A CLI for writing better commits, following the conventional commits guidelines.
 </p>
 
 
