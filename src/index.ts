@@ -50,8 +50,8 @@ export async function main(config: z.infer<typeof Config>) {
         initial_value = type_from_branch
       } 
     }
-    const value_to_emoji: Record<string,string> = config.commit_type.options.reduce(
-      (acc, curr) => ({ ...acc, [curr.value]: curr.emoji ?? '' }), {}
+    const value_to_data: Record<string, {emoji: string, trailer: string}> = config.commit_type.options.reduce(
+      (acc, curr) => ({ ...acc, [curr.value]: {emoji: curr.emoji ?? '', trailer: curr.trailer ?? '' }}), {}
     )
     const commit_type = await p.select(
         {
@@ -61,8 +61,9 @@ export async function main(config: z.infer<typeof Config>) {
         }
     )
     if (p.isCancel(commit_type)) process.exit(0)
+    commit_state.trailer = value_to_data[commit_type].trailer;
     commit_state.type = config.commit_type.append_emoji_to_commit ?
-      `${value_to_emoji[commit_type]} ${commit_type}`.trim()
+      `${value_to_data[commit_type].emoji} ${commit_type}`.trim()
     : commit_type;
   }
 
@@ -201,11 +202,15 @@ export async function main(config: z.infer<typeof Config>) {
       if (p.isCancel(custom_footer)) process.exit(0)
       commit_state.custom_footer = custom_footer;
     }
+
+    if (!commit_footer.includes('trailer')) {
+      commit_state.trailer = '';
+    }
   }
   
 
   let continue_commit = true;
-  p.note(build_commit_string(commit_state, config, true, false), 'Commit Preview')
+  p.note(build_commit_string(commit_state, config, true, false, true), 'Commit Preview')
   if (config.confirm_commit) {
     continue_commit = await p.confirm({message: 'Confirm Commit?'}) as boolean;
     if (p.isCancel(continue_commit)) process.exit(0)
@@ -218,14 +223,20 @@ export async function main(config: z.infer<typeof Config>) {
 
   try {      
     const options = config.overrides.shell ? { shell: config.overrides.shell } : {}
-    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false, true)}"`, options).toString().trim();
+    const trailer = commit_state.trailer ? `--trailer="${commit_state.trailer}"` : '';
+    const output = execSync(`git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`, options).toString().trim();
     if (config.print_commit_output) p.log.info(output)
   } catch(err) {
     p.log.error('Something went wrong when committing: ' + err)
   }
 }
 
-function build_commit_string(commit_state: z.infer<typeof CommitState>, config: z.infer<typeof Config>, colorize: boolean = false, escape_quotes: boolean = false): string {
+function build_commit_string(commit_state: z.infer<typeof CommitState>,
+  config: z.infer<typeof Config>,
+  colorize: boolean = false,
+  escape_quotes: boolean = false,
+  include_trailer: boolean = false
+): string {
   let commit_string = '';
   if (commit_state.type) {
     commit_string += colorize ? color.blue(commit_state.type) : commit_state.type
@@ -295,9 +306,14 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>, config: 
     commit_string += colorize ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(commit_state.ticket)}` : `\n\n${commit_state.closes} ${commit_state.ticket}`;
   }
 
+  if (include_trailer && commit_state.trailer) {
+    commit_string += colorize ? `\n\n${color.dim(commit_state.trailer)}` : `\n\n${commit_state.trailer}`
+  }
+
   if (escape_quotes) {
     commit_string = commit_string.replaceAll('"', '\\"')
   }
+
 
   return commit_string;
 }

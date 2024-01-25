@@ -22,49 +22,56 @@ export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/);
 export const REGEX_SLASH_UND = new RegExp(/\/([A-Z]+-[\[a-zA-Z\]\d]+)_/);
 
 export const DEFAULT_TYPE_OPTIONS = [
-  { value: "feat", label: "feat", hint: "A new feature", emoji: "✨" },
-  { value: "fix", label: "fix", hint: "A bug fix", emoji: "🐛" },
+  { value: "feat", label: "feat", hint: "A new feature", emoji: "✨", trailer: "Changelog: feature"},
+  { value: "fix", label: "fix", hint: "A bug fix", emoji: "🐛", trailer: "Changelog: fix"},
   {
     value: "docs",
     label: "docs",
     hint: "Documentation only changes",
     emoji: "📚",
+    trailer: "Changelog: documentation"
   },
   {
     value: "refactor",
     label: "refactor",
     hint: "A code change that neither fixes a bug nor adds a feature",
     emoji: "🔨",
+    trailer: "Changelog: refactor"
   },
   {
     value: "perf",
     label: "perf",
     hint: "A code change that improves performance",
     emoji: "🚀",
+    trailer: "Changelog: performance"
   },
   {
     value: "test",
     label: "test",
     hint: "Adding missing tests or correcting existing tests",
     emoji: "🚨",
+    trailer: "Changelog: test"
   },
   {
     value: "build",
     label: "build",
     hint: "Changes that affect the build system or external dependencies",
     emoji: "🚧",
+    trailer: "Changelog: build"
   },
   {
     value: "ci",
     label: "ci",
     hint: "Changes to our CI configuration files and scripts",
     emoji: "🤖",
+    trailer: "Changelog: ci"
   },
   {
     value: "chore",
     label: "chore",
     hint: "Other changes that do not modify src or test files",
     emoji: "🧹",
+    trailer: "Changelog: chore"
   },
   { value: "", label: "none" },
 ];
@@ -82,6 +89,11 @@ export const COMMIT_FOOTER_OPTIONS = [
     hint: "Attempts to infer ticket from branch",
   },
   {
+    value: "trailer",
+    label: "trailer",
+    hint: "Appends trailer based on commit type",
+  },
+  {
     value: "breaking-change",
     label: "breaking change",
     hint: "Add breaking change",
@@ -93,6 +105,7 @@ export const CUSTOM_SCOPE_KEY: "custom" = "custom";
 
 export const Z_FOOTER_OPTIONS = z.enum([
   "closes",
+  "trailer",
   "breaking-change",
   "deprecated",
   "custom",
@@ -100,6 +113,7 @@ export const Z_FOOTER_OPTIONS = z.enum([
 export const Z_BRANCH_ACTIONS = z.enum(["branch", "worktree"]);
 export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
   "closes",
+  "trailer",
   "breaking-change",
   "deprecated",
   "custom",

@@ -28,6 +28,12 @@ https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-
 - Configure globally or per repository
 - Config validation and error messaging
 
+As a side-effect of formatting messages
+- Auto populate PR title / body
+- Automate semantic releases
+- Automate changelogs 
+- Automatically link & close related tickets / issues
+
 ## 📦 Installation
  
 ```sh
@@ -89,55 +95,64 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
                 "value": "feat",
                 "label": "feat",
                 "hint": "A new feature",
-                "emoji": "✨"
+                "emoji": "✨",
+                "trailer": "Changelog: feature"
             },
             {
                 "value": "fix",
                 "label": "fix",
                 "hint": "A bug fix",
-                "emoji": "🐛"
+                "emoji": "🐛",
+                "trailer": "Changelog: fix"
             },
             {
                 "value": "docs",
                 "label": "docs",
                 "hint": "Documentation only changes",
-                "emoji": "📚"
+                "emoji": "📚",
+                "trailer": "Changelog: documentation"
             },
             {
                 "value": "refactor",
                 "label": "refactor",
                 "hint": "A code change that neither fixes a bug nor adds a feature",
-                "emoji": "🔨"
+                "emoji": "🔨",
+                "trailer": "Changelog: refactor"
             },
             {
                 "value": "perf",
                 "label": "perf",
                 "hint": "A code change that improves performance",
-                "emoji": "🚀"
+                "emoji": "🚀",
+                "trailer": "Changelog: performance"
             },
             {
                 "value": "test",
                 "label": "test",
                 "hint": "Adding missing tests or correcting existing tests",
-                "emoji": "🚨"
+                "emoji": "🚨",
+                "trailer": "Changelog: test"
             },
             {
                 "value": "build",
                 "label": "build",
                 "hint": "Changes that affect the build system or external dependencies",
-                "emoji": "🚧"
+                "emoji": "🚧",
+                "trailer": "Changelog: build"
             },
             {
                 "value": "ci",
                 "label": "ci",
                 "hint": "Changes to our CI configuration files and scripts",
-                "emoji": "🤖"
+                "emoji": "🤖",
+                "trailer": "Changelog: ci"
             },
             {
                 "value": "chore",
                 "label": "chore",
                 "hint": "Other changes that do not modify src or test files",
-                "emoji": "🧹"
+                "emoji": "🧹",
+                "trailer": "Changelog: chore"
             },
             {
                 "value": "",
@@ -191,6 +206,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "initial_value": [],
         "options": [
             "closes",
+            "trailer",
             "breaking-change",
             "deprecated",
             "custom"
@@ -257,6 +273,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `commit_type.options.label`                | Commit type prompt label                                    |
 | `commit_type.options.hint`                 | Commit type inline hint (like this)                         |
 | `commit_type.options.emoji`                | Commit type emoji                                           |
+| `commit_type.options.trailer`              | Commit type trailer                                         |
 | `commit_scope.enable`                      | If true include commit scope                                |
 | `commit_scope.custom_scope`                | If true allow custom scope at run-time                      |
 | `commit_scope.initial_value`               | Default commit scope selected                               |
@@ -348,6 +365,10 @@ If you use `better-commits` to create your *first* commit on a new branch
 - When you squash/merge, all later commits like "addressing comments" or "fixing mistake". Will be prefixed with an asterisk for easy deletion. This way, you **maintain your pretty commit even when squashing**.
 
 If you're using Github issues to track your work, and select the `closes` footer option when writing your commit. Github will **automatically link and close** that issue when your **pr is merged**
+
+### Changelogs
+
+`better-commits` can append a commit trailer per commit type. This allows you to [automate change logs](https://docs.gitlab.com/ee/user/project/changelogs.html) with tools like Gitlab.
 
 ### Fun Facts
 [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
