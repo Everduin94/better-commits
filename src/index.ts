@@ -247,27 +247,40 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
     commit_string += `(${scope})`
   }
 
+  let title_ticket = commit_state.ticket;
+  const surround = config.check_ticket.surround;
+  if (commit_state.ticket && surround) {
+    const open_token = surround.charAt(0);
+    const close_token = surround.charAt(1);
+    title_ticket = `${open_token}${commit_state.ticket}${close_token}` 
+  }
+
+  const position_before_colon = config.check_ticket.title_position === "before-colon"
+  if (title_ticket && config.check_ticket.add_to_title && position_before_colon) {
+    const spacing = commit_state.scope || (commit_state.type && !config.check_ticket.surround) ? ' ' : '';
+    commit_string += colorize ? color.magenta(spacing + title_ticket) : spacing + title_ticket
+  }
+
   if (commit_state.breaking_title && config.breaking_change.add_exclamation_to_title) {
     commit_string += colorize ? color.red('!') : '!'
   }
 
-  if (commit_state.scope || commit_state.type) {
+  if (commit_state.scope || commit_state.type || (title_ticket && position_before_colon)) {
      commit_string += ': '
   }
 
   const position_start = config.check_ticket.title_position === "start"
   const position_end = config.check_ticket.title_position === "end"
-
-  if(commit_state.ticket && config.check_ticket.add_to_title && position_start) {
-    commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
+  if(title_ticket && config.check_ticket.add_to_title && position_start) {
+    commit_string += colorize ? color.magenta(title_ticket) + ' ' : title_ticket + ' '
   }
 
   if (commit_state.title) {
     commit_string += colorize ? color.reset(commit_state.title) : commit_state.title 
   }
 
-  if(commit_state.ticket && config.check_ticket.add_to_title && position_end) {
-    commit_string +=  ' ' + (colorize ? color.magenta(commit_state.ticket) : commit_state.ticket)
+  if(title_ticket && config.check_ticket.add_to_title && position_end) {
+    commit_string +=  ' ' + (colorize ? color.magenta(title_ticket) : title_ticket)
   }
 
   if (commit_state.body) {
@@ -313,7 +326,6 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
   if (escape_quotes) {
     commit_string = commit_string.replaceAll('"', '\\"')
   }
-
 
   return commit_string;
 }
