@@ -307,7 +307,7 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
   }
 
   if (include_trailer && commit_state.trailer) {
-    commit_string += `\n\n${color.dim(commit_state.trailer)}`
+    commit_string += colorize ? `\n\n${color.dim(commit_state.trailer)}` : `\n\n${commit_state.trailer}`
   }
 
   if (escape_quotes) {
