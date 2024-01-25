@@ -95,7 +95,8 @@ export const Config = z
         confirm_ticket: z.boolean().default(true),
         add_to_title: z.boolean().default(true),
         append_hashtag: z.boolean().default(false),
-        title_position: z.enum(["start", "end"]).default("start"),
+        surround: z.enum(["", "()", "[]", "{}"]).default(""),
+        title_position: z.enum(["start", "end", "before-colon"]).default("start"),
       })
       .default({}),
     commit_title: z

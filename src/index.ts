@@ -115,6 +115,13 @@ export async function main(config: z.infer<typeof Config>) {
     commit_state.ticket = user_commit_ticket ?? '';
   }
 
+  const surround = config.check_ticket.surround;
+  if (commit_state.ticket && surround) {
+    const open_token = surround.charAt(0);
+    const close_token = surround.charAt(1);
+    commit_state.ticket = `${open_token}${commit_state.ticket}${close_token}` 
+  }
+
   const commit_title = await p.text(
       {
 					message: 'Write a brief title describing the commit',
@@ -247,6 +254,12 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
     commit_string += `(${scope})`
   }
 
+  const position_before_colon = config.check_ticket.title_position === "before-colon"
+  if (commit_state.ticket && config.check_ticket.add_to_title && position_before_colon) {
+    const spacing = commit_state.scope || (commit_state.type && !config.check_ticket.surround) ? ' ' : '';
+    commit_string += colorize ? color.magenta(spacing + commit_state.ticket) : spacing + commit_state.ticket
+  }
+
   if (commit_state.breaking_title && config.breaking_change.add_exclamation_to_title) {
     commit_string += colorize ? color.red('!') : '!'
   }
@@ -257,7 +270,6 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
 
   const position_start = config.check_ticket.title_position === "start"
   const position_end = config.check_ticket.title_position === "end"
-
   if(commit_state.ticket && config.check_ticket.add_to_title && position_start) {
     commit_string += colorize ? color.magenta(commit_state.ticket) + ' ' : commit_state.ticket + ' '
   }
