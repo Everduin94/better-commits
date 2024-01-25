@@ -192,7 +192,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "confirm_ticket": true,
         "add_to_title": true,
         "append_hashtag": false,
-        "title_position": "start"
+        "title_position": "start",
+        "surround": ""
     },
     "commit_title": {
         "max_size": 70
@@ -284,6 +285,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `check_ticket.add_to_title`                | If true add ticket to title                                 |
 | `check_ticket.append_hashtag`              | If true add hashtag to ticket (Ideal for Github Issues)     |
 | `check_ticket.title_position`              | If "start" ticket at start if "end" ticket at end           |
+| `check_ticket.surround`                    | Options: "", "[]", "()", "{}" - Wraps ticket in title       |
 | `commit_title.max_size`                    | Max size of title including scope, type, etc...             |
 | `commit_body.enable`                       | If true include body                                        |
 | `commit_body.required`                     | If true body is required                                    |
