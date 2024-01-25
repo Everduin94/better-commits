@@ -265,7 +265,7 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
     commit_string += colorize ? color.red('!') : '!'
   }
 
-  if (commit_state.scope || commit_state.type) {
+  if (commit_state.scope || commit_state.type || (title_ticket && position_before_colon)) {
      commit_string += ': '
   }
 
