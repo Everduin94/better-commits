@@ -378,3 +378,14 @@ Example
    "shell": "c:\\Program Files\\Git\\bin\\bash.exe"
 }
 ```
+
+
+<h1 align="center">🌟 Sponsors</h1>
+
+<h3 align="center">
+
+[![flotes-g-2](https://github.com/Everduin94/Everduin94/assets/14320878/b0fd0aa5-ca9d-4a2d-8579-7616140927a7)](https://flotes.app)
+  
+[Markdown Notetaking - Built for Learning](https://flotes.app)
+
+</h3>
