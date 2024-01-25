@@ -2,7 +2,7 @@
   "name": "better-commits",
   "private": false,
   "version": "1.8.1",
-  "description": "A CLI for creating better commits following the conventional commit guidelines",
+  "description": "A CLI for creating better commits following the conventional commits specification",
   "author": "Erik Verduin (https://github.com/everduin94)",
   "keywords": [
     "typescript",

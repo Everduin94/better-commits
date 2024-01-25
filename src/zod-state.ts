@@ -25,6 +25,7 @@ export const Config = z
               label: z.string().optional(),
               hint: z.string().optional(),
               emoji: z.string().emoji().optional(),
+              trailer: z.string().optional(),
             })
           )
           .default(DEFAULT_TYPE_OPTIONS),
@@ -171,6 +172,7 @@ export const CommitState = z
     deprecates_title: z.string().default(""),
     deprecates_body: z.string().default(""),
     custom_footer: z.string().default(""),
+    trailer: z.string().default("")
   })
   .default({});
 
