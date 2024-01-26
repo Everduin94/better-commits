@@ -192,8 +192,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "confirm_ticket": true,
         "add_to_title": true,
         "append_hashtag": false,
-        "title_position": "start",
-        "surround": ""
+        "surround": "",
+        "title_position": "start"
     },
     "commit_title": {
         "max_size": 70
@@ -231,15 +231,28 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "enable": true,
         "separator": "/"
     },
+    "branch_version": {
+        "enable": false,
+        "required": false,
+        "separator": "/"
+    },
     "branch_ticket": {
         "enable": true,
         "required": false,
         "separator": "-"
     },
     "branch_description": {
-        "max_length": 70
+        "max_length": 70,
+        "separator": ""
     },
     "branch_action_default": "branch",
+    "branch_order": [
+        "user",
+        "version",
+        "type",
+        "ticket",
+        "description"
+    ],
     "enable_worktrees": true,
     "overrides": {
         "shell": "/bin/sh"
@@ -295,18 +308,33 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes |
 | `confirm_commit`                           | If true manually confirm commit at end                      |
 | `print_commit_output`                      | If true pretty print commit preview                         |
+| `overrides.shell`                          | Override default shell, useful for windows users            |
+
+Branch configuration (same config file, split for readability)
+
+| Property                                   | Description                                                 |
+| --------                                   | -----------                                                 |
 | `branch_pre_commands`                      | Array of shell commands to run before branching             |
 | `branch_post_commands`                     | Array of shell commands to run after branching              |
 | `worktree_pre_commands`                    | Array of shell commands to run before creating worktree     |
 | `worktree_post_commands`                   | Array of shell commands to run after creating worktree      |
 | `branch_user.enable`                       | If enabled include user name                                |
 | `branch_user.required`                     | If enabled require user name                                |
-| `branch_user.separator`                    | Branch delimeter                                            |
+| `branch_user.separator`                    | Branch delimeter - "/" (default), "-", "_"                  |
+| `branch_type.enable`                       | If enabled include type                                     |
+| `branch_type.separator`                    | Branch delimeter - "/" (default), "-", "_"                  |
+| `branch_ticket.enable`                     | If enabled include ticket                                   |
+| `branch_ticket.required`                   | If enabled require ticket                                   |
+| `branch_ticket.separator`                  | Branch delimeter - "/", "-" (default), "_"                  |
 | `branch_description.max_length`            | Max length branch name                                      |
-| `branch_action_default`                    | 'branch' or 'worktree'                                      |
+| `branch_description.separator`             | Branch delimeter - "" (default), "/", "-", "_"              |
+| `branch_version.enable`                    | If enabled include version                                  |
+| `branch_version.required`                  | If enabled require version                                  |
+| `branch_version.separator`                 | Branch delimeter - "", "/" (default), "-", "_"              |
+| `branch_order`                             | Order of branch name values (doesn't effect prompt order)   |
+| `branch_action_default`                    | "branch" or "worktree"                                      |
 | `enable_worktrees`                         | If false, always default to branch action                   |
-| `overrides.shell`                          | Override default shell, useful for windows users            |
- 
+
 </details>
 
 ### 🔎 Inference

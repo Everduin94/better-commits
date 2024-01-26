@@ -1,10 +1,12 @@
 import { z } from "zod";
 import {
+    BRANCH_ORDER_DEFAULTS,
   CUSTOM_SCOPE_KEY,
   DEFAULT_SCOPE_OPTIONS,
   DEFAULT_TYPE_OPTIONS,
   FOOTER_OPTION_VALUES,
   Z_BRANCH_ACTIONS,
+  Z_BRANCH_FIELDS,
   Z_FOOTER_OPTIONS,
 } from "./utils";
 
@@ -141,6 +143,13 @@ export const Config = z
         separator: z.enum(["/", "-", "_"]).default("/"),
       })
       .default({}),
+    branch_version: z
+      .object({
+        enable: z.boolean().default(false),
+        required: z.boolean().default(false),
+        separator: z.enum(["/", "-", "_"]).default("/"),
+      })
+      .default({}),
     branch_ticket: z
       .object({
         enable: z.boolean().default(true),
@@ -151,9 +160,11 @@ export const Config = z
     branch_description: z
       .object({
         max_length: z.number().positive().default(70),
+        separator: z.enum(["", "/", "-", "_"]).default(""),
       })
       .default({}),
     branch_action_default: Z_BRANCH_ACTIONS.default("branch"),
+    branch_order: z.array(Z_BRANCH_FIELDS).default(BRANCH_ORDER_DEFAULTS),
     enable_worktrees: z.boolean().default(true),
     overrides: z.object({ shell: z.string().optional() }).default({}),
   })
@@ -183,5 +194,6 @@ export const BranchState = z
     type: z.string().default(""),
     ticket: z.string().default(""),
     description: z.string().default(""),
+    version: z.string().default("")
   })
   .default({});

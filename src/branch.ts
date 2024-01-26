@@ -7,6 +7,8 @@ import {
   load_setup,
   OPTIONAL_PROMPT,
   Z_BRANCH_ACTIONS,
+  Z_BRANCH_CONFIG_FIELDS,
+  Z_BRANCH_FIELDS,
 } from "./utils";
 import { BranchState } from "./zod-state";
 import * as p from "@clack/prompts";
@@ -75,6 +77,21 @@ async function main(config: z.infer<typeof Config>) {
     });
     if (p.isCancel(ticket)) process.exit(0);
     branch_state.ticket = ticket;
+  }
+
+  if (config.branch_version.enable) {
+    const version_required = config.branch_version.required;
+    const version = await p.text({
+      message: `Type version number ${
+        version_required ? "" : OPTIONAL_PROMPT
+      }`.trim(),
+      placeholder: "",
+      validate: (val) => {
+        if (version_required && !val) return "Please enter a version";
+      },
+    });
+    if (p.isCancel(version)) process.exit(0);
+    branch_state.version = version;
   }
 
   const description_max_length = config.branch_description.max_length;
@@ -165,11 +182,14 @@ function build_branch(
   config: z.infer<typeof Config>
 ) {
   let res = "";
-  if (branch.user) res += branch.user + config.branch_user.separator;
-  if (branch.type) res += branch.type + config.branch_type.separator;
-  if (branch.ticket) res += branch.ticket + config.branch_ticket.separator;
-  if (branch.description) res += branch.description;
-  return res;
+  config.branch_order.forEach((b: z.infer<typeof Z_BRANCH_FIELDS>) => {
+    const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`
+     if (branch[b]) res += branch[b] + config[config_key].separator
+  })
+  if (res.endsWith('-') || res.endsWith('/') || res.endsWith('_')) {
+    return res.slice(0, -1).trim();
+  }
+  return res.trim();
 }
 
 function get_user_from_cache(): string {
