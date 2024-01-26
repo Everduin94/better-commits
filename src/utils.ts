@@ -16,10 +16,15 @@ export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
 export const CACHE_PROMPT = `${color.dim("(value will be saved)")}`;
 export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/);
 export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/);
-export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/);
-export const REGEX_START_NUM = new RegExp(/^(\d+)/);
 export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/);
 export const REGEX_SLASH_UND = new RegExp(/\/([A-Z]+-[\[a-zA-Z\]\d]+)_/);
+
+// TODO: This might conflict with version from better-branch
+// - Maybe negative lookup against .
+// - Maybe check the order
+// - Maybe use order to split and check values
+export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/);
+export const REGEX_START_NUM = new RegExp(/^(\d+)/);
 
 export const DEFAULT_TYPE_OPTIONS = [
   { value: "feat", label: "feat", hint: "A new feature", emoji: "✨", trailer: "Changelog: feature"},
@@ -110,6 +115,15 @@ export const Z_FOOTER_OPTIONS = z.enum([
   "deprecated",
   "custom",
 ]);
+export const Z_BRANCH_FIELDS = z.enum(["user", "version", "type", "ticket", "description"]);
+export const Z_BRANCH_CONFIG_FIELDS = z.enum([
+  "branch_user",
+  "branch_version",
+  "branch_type",
+  "branch_ticket",
+  "branch_description"
+]);
+export const BRANCH_ORDER_DEFAULTS: z.infer<typeof Z_BRANCH_FIELDS>[] = ["user", "version", "type", "ticket", "description"]
 export const Z_BRANCH_ACTIONS = z.enum(["branch", "worktree"]);
 export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
   "closes",
