@@ -186,7 +186,10 @@ function build_branch(
     const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`
      if (branch[b]) res += branch[b] + config[config_key].separator
   })
-  return res;
+  if (res.endsWith('-') || res.endsWith('/') || res.endsWith('_')) {
+    return res.slice(0, -1).trim();
+  }
+  return res.trim();
 }
 
 function get_user_from_cache(): string {
