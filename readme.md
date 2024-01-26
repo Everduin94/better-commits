@@ -325,13 +325,13 @@ Branch configuration (same config file, split for readability)
 | `branch_type.separator`                    | Branch delimeter - "/" (default), "-", "_"                  |
 | `branch_ticket.enable`                     | If enabled include ticket                                   |
 | `branch_ticket.required`                   | If enabled require ticket                                   |
-| `branch_ticket.separator`                  | Branch delimeter - "/", "-" (default), "_"                 |
+| `branch_ticket.separator`                  | Branch delimeter - "/", "-" (default), "_"                  |
 | `branch_description.max_length`            | Max length branch name                                      |
 | `branch_description.separator`             | Branch delimeter - "" (default), "/", "-", "_"              |
 | `branch_version.enable`                    | If enabled include version                                  |
 | `branch_version.required`                  | If enabled require version                                  |
 | `branch_version.separator`                 | Branch delimeter - "", "/" (default), "-", "_"              |
-| `branch_order`                             | ["user", "version", "type", "ticket", "description"]        |
+| `branch_order`                             | Order of branch name values (doesn't effect prompt order)   |
 | `branch_action_default`                    | "branch" or "worktree"                                      |
 | `enable_worktrees`                         | If false, always default to branch action                   |
 
