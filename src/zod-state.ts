@@ -124,6 +124,7 @@ export const Config = z
         add_exclamation_to_title: z.boolean().default(true),
       })
       .default({}),
+    confirm_with_editor: z.boolean().default(false),
     confirm_commit: z.boolean().default(true),
     print_commit_output: z.boolean().default(true),
     branch_pre_commands: z.array(z.string()).default([]),

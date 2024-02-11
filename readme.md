@@ -217,6 +217,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "add_exclamation_to_title": true
     },
     "confirm_commit": true,
+    "confirm_with_editor": false,
     "print_commit_output": true,
     "branch_pre_commands": [],
     "branch_post_commands": [],
@@ -307,6 +308,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `commit_footer.options`                    | Footer options                                              |
 | `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes |
 | `confirm_commit`                           | If true manually confirm commit at end                      |
+| `confirm_with_editor`                      | Confirm / Edit commit with $GIT_EDITOR / $EDITOR            |
 | `print_commit_output`                      | If true pretty print commit preview                         |
 | `overrides.shell`                          | Override default shell, useful for windows users            |
 
@@ -404,6 +406,9 @@ If you're using Github issues to track your work, and select the `closes` footer
 [better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
 
 `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
+
+Setting `confirm_with_editor=true` will allow you to edit/confirm a commit with your editor.
+- For example, to edit with Neovim: `git config --global core.editor "nvim"`
 
 You can add this badge to your repository to display that you're using a better-commits repository config 
 
