@@ -207,7 +207,13 @@ export async function main(config: z.infer<typeof Config>) {
       commit_state.trailer = '';
     }
   }
-  
+
+  if (config.confirm_with_editor) {
+    const options = config.overrides.shell ? { shell: config.overrides.shell, stdio: 'inherit' } :  { stdio: 'inherit' }
+    const trailer = commit_state.trailer ? `--trailer="${commit_state.trailer}"` : '';
+    execSync(`git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer} --edit`, options);
+    process.exit(0);
+  }
 
   let continue_commit = true;
   p.note(build_commit_string(commit_state, config, true, false, true), 'Commit Preview')
