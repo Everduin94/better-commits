@@ -14,6 +14,9 @@ export const A_FOR_ALL = `${color.dim(
 )}`;
 export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
 export const CACHE_PROMPT = `${color.dim("(value will be saved)")}`;
+export const WINDOW_DEFAULT_SHELLL_WARNING = `${color.dim(
+  "(using window default shell can cause issues with multiple lines)"
+)}`;
 export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/);
 export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/);
 export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/);
