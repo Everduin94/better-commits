@@ -264,7 +264,13 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 
 </details>
 
+> [!NOTE]<br>
+> Some properties use sets of string values
+> See *confile file explanations* for possible values
+
 ### 🔭 Config File Explanations
+
+Expand to see explanations and possible values
 
 <details>
 <summary>Expand / Collapse</summary>
