@@ -148,18 +148,26 @@ export function load_setup(
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
+  let global_config = null
+  const home_path = get_default_config_path();
+  if (fs.existsSync(home_path)) {
+    p.log.step("Found global config");
+    global_config = read_config_from_path(home_path);
+  }
+
   const root = get_git_root();
   const root_path = `${root}/${CONFIG_FILE_NAME}`;
   if (fs.existsSync(root_path)) {
     p.log.step("Found repository config");
-    return read_config_from_path(root_path);
+    const repo_config = read_config_from_path(root_path);
+    return global_config ? {
+      ...repo_config,
+      overrides: global_config.overrides ?? repo_config.overrides,
+      confirm_with_editor: global_config.confirm_with_editor ?? repo_config.confirm_with_editor
+    } : repo_config
   }
 
-  const home_path = get_default_config_path();
-  if (fs.existsSync(home_path)) {
-    p.log.step("Found global config");
-    return read_config_from_path(home_path);
-  }
+  if (global_config) return global_config
 
   const default_config = Config.parse({});
   p.log.step(
