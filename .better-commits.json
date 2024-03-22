@@ -34,7 +34,7 @@
     ]
   },
   "check_ticket": {
-    "append_hashtag": true
+    "prepend_hashtag": "Prompt"
   },
   "branch_pre_commands": [
     "git stash",

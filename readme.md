@@ -192,6 +192,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
         "confirm_ticket": true,
         "add_to_title": true,
         "append_hashtag": false,
+        "prepend_hashtag": "Never",
         "surround": "",
         "title_position": "start"
     },
@@ -297,7 +298,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 | `check_ticket.infer_ticket`                | If true infer ticket from branch name                       |
 | `check_ticket.confirm_ticket`              | If true manually confirm inference                          |
 | `check_ticket.add_to_title`                | If true add ticket to title                                 |
-| `check_ticket.append_hashtag`              | If true add hashtag to ticket (Ideal for Github Issues)     |
+| `check_ticket.append_hashtag`              | **Deprecated**: see prepend_hashtag                         |
+| `check_ticket.prepend_hashtag`             | "Never" (default), "Prompt", or "Always"                    |
 | `check_ticket.title_position`              | "start" (of description) (default), "end", "before-colon"   |
 | `check_ticket.surround`                    | "" (default), "[]", "()", "{}" - Wraps ticket in title      |
 | `commit_title.max_size`                    | Max size of title including scope, type, etc...             |
