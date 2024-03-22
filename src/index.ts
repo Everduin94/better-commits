@@ -98,7 +98,9 @@ export async function main(config: z.infer<typeof Config>) {
       .filter(v => v != null)
       .map(v => v && v.length >= 2 ?  v[1] : '')
       if (found.length && found[0]) {
-        commit_state.ticket = config.check_ticket.append_hashtag ? '#' + found[0] : found[0]
+        commit_state.ticket = config.check_ticket.append_hashtag 
+          || config.check_ticket.prepend_hashtag === 'Prompt'
+          ? '#' + found[0] : found[0]
       }
     } catch(err: any) {
       // Can't find branch, fail silently
@@ -113,6 +115,12 @@ export async function main(config: z.infer<typeof Config>) {
     })
     if (p.isCancel(user_commit_ticket)) process.exit(0)
     commit_state.ticket = user_commit_ticket ?? '';
+  }
+
+  if (config.check_ticket.prepend_hashtag === 'Always' 
+    && commit_state.ticket 
+    && !commit_state.ticket.startsWith('#')) {
+    commit_state.ticket = '#' + commit_state.ticket;
   }
 
   const commit_title = await p.text(
