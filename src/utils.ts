@@ -162,8 +162,8 @@ export function load_setup(
     const repo_config = read_config_from_path(root_path);
     return global_config ? {
       ...repo_config,
-      overrides: global_config.overrides ?? repo_config.overrides,
-      confirm_with_editor: global_config.confirm_with_editor ?? repo_config.confirm_with_editor
+      overrides: global_config.overrides.shell ? global_config.overrides : repo_config.overrides,
+      confirm_with_editor: global_config.confirm_with_editor
     } : repo_config
   }
 

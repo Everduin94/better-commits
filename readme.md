@@ -65,8 +65,9 @@ Your first time running `better-commits`, a default config will be generated in 
 ### Repository
 
 To create a **repository-specific config**, navigate to the root of your project.
-- run `better-commits-init`
+- Run `better-commits-init`
 - This will create a default config named `.better-commits.json`
+- Properties such as `confirm_with_editor` and `overrides` will prefer the global config
 
 ### Options
 
