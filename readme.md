@@ -266,8 +266,8 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 </details>
 
 > [!NOTE]<br>
-> Some properties use sets of string values
-> See *config file explanations* for possible values
+> Some properties allow a set of specifc string values
+> - See *config file explanations* for possible values
 
 ### 🔭 Config File Explanations
 
