@@ -1,29 +1,28 @@
 #! /usr/bin/env node
 
-import { CommitState, Config } from "./zod-state";
+import * as p from "@clack/prompts";
+import { execSync } from "child_process";
+import Configstore from "configstore";
+import color from "picocolors";
+import { chdir } from "process";
+import { Output, parse } from "valibot";
 import {
   BRANCH_ACTION_OPTIONS,
   CACHE_PROMPT,
-  load_setup,
   OPTIONAL_PROMPT,
-  Z_BRANCH_ACTIONS,
-  Z_BRANCH_CONFIG_FIELDS,
-  Z_BRANCH_FIELDS,
+  V_BRANCH_ACTIONS,
+  V_BRANCH_CONFIG_FIELDS,
+  V_BRANCH_FIELDS,
+  load_setup,
 } from "./utils";
-import { BranchState } from "./zod-state";
-import * as p from "@clack/prompts";
-import Configstore from "configstore";
-import { z } from "zod";
-import { execSync } from "child_process";
-import color from "picocolors";
-import { chdir } from "process";
+import { BranchState, CommitState, Config } from "./vali-state";
 
 main(load_setup(" better-branch "));
 
-async function main(config: z.infer<typeof Config>) {
-  const branch_state = BranchState.parse({});
+async function main(config: Output<typeof Config>) {
+  const branch_state = parse(BranchState, {});
 
-  let checkout_type: z.infer<typeof Z_BRANCH_ACTIONS> = "branch";
+  let checkout_type: Output<typeof V_BRANCH_ACTIONS> = "branch";
   if (config.enable_worktrees) {
     const branch_or_worktree = await p.select({
       message: `Checkout a branch or create a worktree?`,
@@ -39,9 +38,8 @@ async function main(config: z.infer<typeof Config>) {
     const cache_user_name = get_user_from_cache();
     const user_name_required = config.branch_user.required;
     const user_name = await p.text({
-      message: `Type your git username ${
-        user_name_required ? "" : OPTIONAL_PROMPT
-      } ${CACHE_PROMPT}`.trim(),
+      message: `Type your git username ${user_name_required ? "" : OPTIONAL_PROMPT
+        } ${CACHE_PROMPT}`.trim(),
       placeholder: "",
       initialValue: cache_user_name,
       validate: (val) => {
@@ -67,9 +65,8 @@ async function main(config: z.infer<typeof Config>) {
   if (config.branch_ticket.enable) {
     const ticked_required = config.branch_ticket.required;
     const ticket = await p.text({
-      message: `Type ticket / issue number ${
-        ticked_required ? "" : OPTIONAL_PROMPT
-      }`.trim(),
+      message: `Type ticket / issue number ${ticked_required ? "" : OPTIONAL_PROMPT
+        }`.trim(),
       placeholder: "",
       validate: (val) => {
         if (ticked_required && !val) return "Please enter a ticket / issue";
@@ -82,9 +79,8 @@ async function main(config: z.infer<typeof Config>) {
   if (config.branch_version.enable) {
     const version_required = config.branch_version.required;
     const version = await p.text({
-      message: `Type version number ${
-        version_required ? "" : OPTIONAL_PROMPT
-      }`.trim(),
+      message: `Type version number ${version_required ? "" : OPTIONAL_PROMPT
+        }`.trim(),
       placeholder: "",
       validate: (val) => {
         if (version_required && !val) return "Please enter a version";
@@ -155,7 +151,7 @@ async function main(config: z.infer<typeof Config>) {
       );
       p.log.info(
         color.bgMagenta(color.black(` cd ${worktree_name} `)) +
-          " to navigate to your new worktree",
+        " to navigate to your new worktree",
       );
       chdir(worktree_name);
     } catch (err) {
@@ -178,15 +174,15 @@ async function main(config: z.infer<typeof Config>) {
 }
 
 function build_branch(
-  branch: z.infer<typeof BranchState>,
-  config: z.infer<typeof Config>,
+  branch: Output<typeof BranchState>,
+  config: Output<typeof Config>
 ) {
   let res = "";
-  config.branch_order.forEach((b: z.infer<typeof Z_BRANCH_FIELDS>) => {
-    const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
-    if (branch[b]) res += branch[b] + config[config_key].separator;
-  });
-  if (res.endsWith("-") || res.endsWith("/") || res.endsWith("_")) {
+  config.branch_order.forEach((b: Output<typeof V_BRANCH_FIELDS>) => {
+    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`
+    if (branch[b]) res += branch[b] + config[config_key].separator
+  })
+  if (res.endsWith('-') || res.endsWith('/') || res.endsWith('_')) {
     return res.slice(0, -1).trim();
   }
   return res.trim();

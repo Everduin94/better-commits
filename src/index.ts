@@ -4,32 +4,15 @@ import * as p from "@clack/prompts";
 import color from "picocolors";
 import { execSync } from "child_process";
 import { chdir } from "process";
-import { z } from "zod";
-import { CommitState, Config } from "./zod-state";
-import {
-  load_setup,
-  addNewLine,
-  SPACE_TO_SELECT,
-  REGEX_SLASH_TAG,
-  REGEX_SLASH_NUM,
-  REGEX_START_TAG,
-  REGEX_START_NUM,
-  OPTIONAL_PROMPT,
-  clean_commit_title,
-  COMMIT_FOOTER_OPTIONS,
-  infer_type_from_branch,
-  Z_FOOTER_OPTIONS,
-  CUSTOM_SCOPE_KEY,
-  get_git_root,
-  REGEX_SLASH_UND,
-  REGEX_START_UND,
-} from "./utils";
-import { git_add, git_status } from "./git";
+import { Output, parse } from "valibot"
+import { CommitState, Config } from './vali-state';
+import { load_setup, addNewLine, SPACE_TO_SELECT, REGEX_SLASH_TAG, REGEX_SLASH_NUM, REGEX_START_TAG, REGEX_START_NUM, OPTIONAL_PROMPT, clean_commit_title, COMMIT_FOOTER_OPTIONS, infer_type_from_branch, V_FOOTER_OPTIONS, CUSTOM_SCOPE_KEY, get_git_root, REGEX_SLASH_UND, REGEX_START_UND } from './utils';
+import { git_add, git_status } from './git';
 
 main(load_setup());
 
-export async function main(config: z.infer<typeof Config>) {
-  let commit_state = CommitState.parse({});
+export async function main(config: Output<typeof Config>) {
+  let commit_state = parse(CommitState, {})
   chdir(get_git_root());
 
   if (config.check_status) {
@@ -139,7 +122,7 @@ export async function main(config: z.infer<typeof Config>) {
       if (found.length && found[0]) {
         commit_state.ticket =
           config.check_ticket.append_hashtag ||
-          config.check_ticket.prepend_hashtag === "Prompt"
+            config.check_ticket.prepend_hashtag === "Prompt"
             ? "#" + found[0]
             : found[0];
       }
@@ -182,9 +165,9 @@ export async function main(config: z.infer<typeof Config>) {
         : 0;
       if (
         commit_scope_size +
-          commit_type_size +
-          commit_ticket_size +
-          value.length >
+        commit_type_size +
+        commit_ticket_size +
+        value.length >
         config.commit_title.max_size
       )
         return `Exceeded max length. Title max [${config.commit_title.max_size}]`;
@@ -210,14 +193,10 @@ export async function main(config: z.infer<typeof Config>) {
     const commit_footer = await p.multiselect({
       message: `Select optional footers ${SPACE_TO_SELECT}`,
       initialValues: config.commit_footer.initial_value,
-      options: COMMIT_FOOTER_OPTIONS as {
-        value: z.infer<typeof Z_FOOTER_OPTIONS>;
-        label: string;
-        hint: string;
-      }[],
-      required: false,
-    });
-    if (p.isCancel(commit_footer)) process.exit(0);
+      options: COMMIT_FOOTER_OPTIONS as { value: Output<typeof V_FOOTER_OPTIONS>, label: string, hint: string }[],
+      required: false
+    })
+    if (p.isCancel(commit_footer)) process.exit(0)
 
     if (commit_footer.includes("breaking-change")) {
       const breaking_changes_title = await p.text({
@@ -323,9 +302,8 @@ export async function main(config: z.infer<typeof Config>) {
   }
 }
 
-function build_commit_string(
-  commit_state: z.infer<typeof CommitState>,
-  config: z.infer<typeof Config>,
+function build_commit_string(commit_state: Output<typeof CommitState>,
+  config: Output<typeof Config>,
   colorize: boolean = false,
   escape_quotes: boolean = false,
   include_trailer: boolean = false,
