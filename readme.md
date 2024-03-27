@@ -4,9 +4,7 @@
 	
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 [![downloads](https://img.shields.io/npm/dt/better-commits.svg?style=for-the-badge&logo=npm&color=74c7ec&logoColor=D9E0EE&labelColor=302D41)](https://www.npmjs.com/package/better-commits)
-<a href="https://github.com/everduin94/better-commits/issues">
-		<img alt="Issues" src="https://img.shields.io/github/issues/everduin94/better-commits?style=for-the-badge&logo=gitbook&color=cba6f7&logoColor=D9E0EE&labelColor=302D41"></a>
-	
+[![discord](https://img.shields.io/badge/discord-join--discord?style=for-the-badge&logo=discord&color=cba6f7&logoColor=D9E0EE&labelColor=302D41)](https://discord.gg/grHVnZwYup)
 </h3>
 
 <p align="center">
@@ -419,6 +417,9 @@ If you're using Github issues to track your work, and select the `closes` footer
 Setting `confirm_with_editor=true` will allow you to edit/confirm a commit with your editor.
 - For example, to edit with Neovim: `git config --global core.editor "nvim"`
 - For VS Code, `git config --global core.editor "code -n --wait"`
+
+> [!NOTE]<br>
+> Enjoy learning, open source technology, and note-taking? [Join our Discord!](https://discord.gg/grHVnZwYup) 
 
 You can add this badge to your repository to display that you're using a better-commits repository config 
 
