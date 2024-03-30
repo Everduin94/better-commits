@@ -30,7 +30,7 @@ export const Config = object({
                                 value: string(),
                                 label: optional(string()),
                                 hint: optional(string()),
-                                emoji: optional(string([emoji()]), ""),
+                                emoji: optional(string([emoji()]), undefined),
                                 trailer: optional(string()),
                             })
                         ),
@@ -38,10 +38,10 @@ export const Config = object({
                     ),
                 },
                 [
-                    custom((val) =>
-                        val.options.map((v) => v.value).includes(val.initial_value)
-                        // #TODO : return better error message
-                        // `Type: initial_value "${val.initial_value}" must exist in options`
+                    custom(
+                        (val) => val.options.map((v) => v.value).includes(val.initial_value),
+                        // @ts-ignore
+                        (val) => `Type: initial_value "${val.initial_value}" must exist in options`
                     ),
                 ]
             ),
@@ -80,9 +80,9 @@ export const Config = object({
                         const options = val.options.map((v) => v.value);
                         return options.includes(val.initial_value);
                     },
+                    // @ts-ignore
+                    (val) => `Scope: initial_value "${val.initial_value}" must exist in options`
                 )
-                // #TODO : return better error message here
-                // `Scope: initial_value "${val.initial_value}" must exist in options`
             ]
         ),
         {}
