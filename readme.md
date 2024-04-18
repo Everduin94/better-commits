@@ -305,7 +305,7 @@ Expand to see explanations and possible values
 | `check_ticket.add_to_title`                | If true add ticket to title                                 |
 | `check_ticket.append_hashtag`              | **Deprecated**: see prepend_hashtag                         |
 | `check_ticket.prepend_hashtag`             | "Never" (default), "Prompt", or "Always"                    |
-| `check_ticket.title_position`              | "start" (of description) (default), "end", "before-colon"   |
+| `check_ticket.title_position`              | "start" (of description) (default), "end", "before-colon", "beginning" (of the entire commit title)   |
 | `check_ticket.surround`                    | "" (default), "[]", "()", "{}" - Wraps ticket in title      |
 | `commit_title.max_size`                    | Max size of title including scope, type, etc...             |
 | `commit_body.enable`                       | If true include body                                        |

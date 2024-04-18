@@ -268,6 +268,11 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
     const close_token = surround.charAt(1);
     title_ticket = `${open_token}${commit_state.ticket}${close_token}` 
   }
+  
+  const position_beginning = config.check_ticket.title_position === 'beginning';
+  if (title_ticket && config.check_ticket.add_to_title && position_beginning) {
+    commit_string = `${colorize ? color.magenta(title_ticket) : title_ticket} ${commit_string}`;
+  }
 
   const position_before_colon = config.check_ticket.title_position === "before-colon"
   if (title_ticket && config.check_ticket.add_to_title && position_before_colon) {
@@ -343,4 +348,3 @@ function build_commit_string(commit_state: z.infer<typeof CommitState>,
 
   return commit_string;
 }
-

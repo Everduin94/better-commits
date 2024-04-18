@@ -99,7 +99,7 @@ export const Config = z
         append_hashtag: z.boolean().default(false),
         prepend_hashtag: z.enum(['Never', 'Always', 'Prompt']).default("Never"),
         surround: z.enum(["", "()", "[]", "{}"]).default(""),
-        title_position: z.enum(["start", "end", "before-colon"]).default("start"),
+        title_position: z.enum(["start", "end", "before-colon", "beginning"]).default("start"),
       })
       .default({}),
     commit_title: z
