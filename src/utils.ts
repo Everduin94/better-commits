@@ -6,6 +6,7 @@ import * as p from "@clack/prompts";
 import fs from "fs";
 import { fromZodError } from "zod-validation-error";
 import { Config } from "./zod-state";
+import data from "./data";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
@@ -27,56 +28,68 @@ export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/);
 export const REGEX_START_NUM = new RegExp(/^(\d+)/);
 
 export const DEFAULT_TYPE_OPTIONS = [
-  { value: "feat", label: "feat", hint: "A new feature", emoji: "✨", trailer: "Changelog: feature"},
-  { value: "fix", label: "fix", hint: "A bug fix", emoji: "🐛", trailer: "Changelog: fix"},
+  {
+    value: "feat",
+    label: "feat",
+    hint: "A new feature",
+    emoji: "✨",
+    trailer: "Changelog: feature",
+  },
+  {
+    value: "fix",
+    label: "fix",
+    hint: "A bug fix",
+    emoji: "🐛",
+    trailer: "Changelog: fix",
+  },
   {
     value: "docs",
     label: "docs",
     hint: "Documentation only changes",
     emoji: "📚",
-    trailer: "Changelog: documentation"
+    trailer: "Changelog: documentation",
   },
   {
     value: "refactor",
     label: "refactor",
     hint: "A code change that neither fixes a bug nor adds a feature",
     emoji: "🔨",
-    trailer: "Changelog: refactor"
+    trailer: "Changelog: refactor",
   },
   {
     value: "perf",
     label: "perf",
     hint: "A code change that improves performance",
     emoji: "🚀",
-    trailer: "Changelog: performance"
+    trailer: "Changelog: performance",
   },
   {
     value: "test",
     label: "test",
     hint: "Adding missing tests or correcting existing tests",
     emoji: "🚨",
-    trailer: "Changelog: test"
+    trailer: "Changelog: test",
   },
   {
     value: "build",
     label: "build",
     hint: "Changes that affect the build system or external dependencies",
     emoji: "🚧",
-    trailer: "Changelog: build"
+    trailer: "Changelog: build",
   },
   {
     value: "ci",
     label: "ci",
     hint: "Changes to our CI configuration files and scripts",
     emoji: "🤖",
-    trailer: "Changelog: ci"
+    trailer: "Changelog: ci",
   },
   {
     value: "chore",
     label: "chore",
     hint: "Other changes that do not modify src or test files",
     emoji: "🧹",
-    trailer: "Changelog: chore"
+    trailer: "Changelog: chore",
   },
   { value: "", label: "none" },
 ];
@@ -115,15 +128,27 @@ export const Z_FOOTER_OPTIONS = z.enum([
   "deprecated",
   "custom",
 ]);
-export const Z_BRANCH_FIELDS = z.enum(["user", "version", "type", "ticket", "description"]);
+export const Z_BRANCH_FIELDS = z.enum([
+  "user",
+  "version",
+  "type",
+  "ticket",
+  "description",
+]);
 export const Z_BRANCH_CONFIG_FIELDS = z.enum([
   "branch_user",
   "branch_version",
   "branch_type",
   "branch_ticket",
-  "branch_description"
+  "branch_description",
 ]);
-export const BRANCH_ORDER_DEFAULTS: z.infer<typeof Z_BRANCH_FIELDS>[] = ["user", "version", "type", "ticket", "description"]
+export const BRANCH_ORDER_DEFAULTS: z.infer<typeof Z_BRANCH_FIELDS>[] = [
+  "user",
+  "version",
+  "type",
+  "ticket",
+  "description",
+];
 export const Z_BRANCH_ACTIONS = z.enum(["branch", "worktree"]);
 export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
   "closes",
@@ -148,7 +173,7 @@ export function load_setup(
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
-  let global_config = null
+  let global_config = null;
   const home_path = get_default_config_path();
   if (fs.existsSync(home_path)) {
     p.log.step("Found global config");
@@ -160,14 +185,18 @@ export function load_setup(
   if (fs.existsSync(root_path)) {
     p.log.step("Found repository config");
     const repo_config = read_config_from_path(root_path);
-    return global_config ? {
-      ...repo_config,
-      overrides: global_config.overrides.shell ? global_config.overrides : repo_config.overrides,
-      confirm_with_editor: global_config.confirm_with_editor
-    } : repo_config
+    return global_config
+      ? {
+          ...repo_config,
+          overrides: global_config.overrides.shell
+            ? global_config.overrides
+            : repo_config.overrides,
+          confirm_with_editor: global_config.confirm_with_editor,
+        }
+      : repo_config;
   }
 
-  if (global_config) return global_config
+  if (global_config) return global_config;
 
   const default_config = Config.parse({});
   p.log.step(
@@ -255,4 +284,8 @@ export function clean_commit_title(title: string): string {
     return title_trimmed.substring(0, title_trimmed.length - 1).trim();
   }
   return title.trim();
+}
+
+export function get_random_lyric_from_mood(mood: keyof typeof data): string {
+  return data[mood][Math.floor(Math.random() * data[mood].length)];
 }

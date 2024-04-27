@@ -23,8 +23,10 @@ import {
   get_git_root,
   REGEX_SLASH_UND,
   REGEX_START_UND,
+  get_random_lyric_from_mood,
 } from "./utils";
 import { git_add, git_status } from "./git";
+import data from "./data";
 
 main(load_setup());
 
@@ -170,30 +172,17 @@ export async function main(config: z.infer<typeof Config>) {
     commit_state.ticket = "#" + commit_state.ticket;
   }
 
-  const commit_title = await p.text({
-    message: "Write a brief title describing the commit",
-    placeholder: "",
-    validate: (value) => {
-      if (!value) return "Please enter a title";
-      const commit_scope_size = commit_state.scope
-        ? commit_state.scope.length + 2
-        : 0;
-      const commit_type_size = commit_state.type.length;
-      const commit_ticket_size = config.check_ticket.add_to_title
-        ? commit_state.ticket.length
-        : 0;
-      if (
-        commit_scope_size +
-          commit_type_size +
-          commit_ticket_size +
-          value.length >
-        config.commit_title.max_size
-      )
-        return `Exceeded max length. Title max [${config.commit_title.max_size}]`;
-    },
-  });
+  const commit_title = async (): Promise<string> => {
+    const mood = await p.select({
+      message: "What’s your commit’s Swiftie mood?",
+      options: Object.keys(data).map((key) => ({ value: key, label: key })),
+    });
+    return get_random_lyric_from_mood(mood as keyof typeof data);
+  };
   if (p.isCancel(commit_title)) process.exit(0);
-  commit_state.title = clean_commit_title(commit_title);
+  commit_state.title = await commit_title();
+
+  p.note(`Your Swiftie Title: ${color.cyan(commit_state.title)}`);
 
   if (config.commit_body.enable) {
     const commit_body = await p.text({
