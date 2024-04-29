@@ -39,6 +39,7 @@
     "@types/configstore": "^6.0.0",
     "@types/node": "^18.14.5",
     "jiti": "^1.17.0",
+    "prettier": "3.2.5",
     "semantic-release": "^21.0.1",
     "tsup": "^6.6.3",
     "tsx": "^3.12.3"

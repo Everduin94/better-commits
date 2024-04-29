@@ -130,8 +130,8 @@ async function main(config: z.infer<typeof Config>) {
       });
       p.log.info(
         `Switched to a new branch '${color.bgGreen(
-          " " + color.black(branch_name) + " "
-        )}'`
+          " " + color.black(branch_name) + " ",
+        )}'`,
       );
     } catch (err) {
       process.exit(0);
@@ -144,18 +144,18 @@ async function main(config: z.infer<typeof Config>) {
         `git worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
         {
           stdio: "inherit",
-        }
+        },
       );
       p.log.info(
         `Created a new worktree ${color.bgGreen(
-          +" " + color.black(worktree_name) + " "
+          +" " + color.black(worktree_name) + " ",
         )}, checked out branch ${color.bgGreen(
-          " " + color.black(branch_name) + " "
-        )}`
+          " " + color.black(branch_name) + " ",
+        )}`,
       );
       p.log.info(
         color.bgMagenta(color.black(` cd ${worktree_name} `)) +
-          " to navigate to your new worktree"
+          " to navigate to your new worktree",
       );
       chdir(worktree_name);
     } catch (err) {
@@ -179,14 +179,14 @@ async function main(config: z.infer<typeof Config>) {
 
 function build_branch(
   branch: z.infer<typeof BranchState>,
-  config: z.infer<typeof Config>
+  config: z.infer<typeof Config>,
 ) {
   let res = "";
   config.branch_order.forEach((b: z.infer<typeof Z_BRANCH_FIELDS>) => {
-    const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`
-     if (branch[b]) res += branch[b] + config[config_key].separator
-  })
-  if (res.endsWith('-') || res.endsWith('/') || res.endsWith('_')) {
+    const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
+    if (branch[b]) res += branch[b] + config[config_key].separator;
+  });
+  if (res.endsWith("-") || res.endsWith("/") || res.endsWith("_")) {
     return res.slice(0, -1).trim();
   }
   return res.trim();
@@ -198,7 +198,7 @@ function get_user_from_cache(): string {
     return config_store.get("username") ?? "";
   } catch (err) {
     p.log.warn(
-      'There was an issue accessing username from cache. Check that the folder "~/.config" exists'
+      'There was an issue accessing username from cache. Check that the folder "~/.config" exists',
     );
   }
 
@@ -212,8 +212,8 @@ function verify_branch_name(branch_name: string): string {
     execSync(`git show-ref ${branch_name}`, { encoding: "utf-8" });
     p.log.warning(
       color.yellow(
-        `${branch_name} already exists! Checking out existing branch.`
-      )
+        `${branch_name} already exists! Checking out existing branch.`,
+      ),
     );
   } catch (err) {
     // Branch does not exist

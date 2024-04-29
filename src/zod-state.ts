@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-    BRANCH_ORDER_DEFAULTS,
+  BRANCH_ORDER_DEFAULTS,
   CUSTOM_SCOPE_KEY,
   DEFAULT_SCOPE_OPTIONS,
   DEFAULT_TYPE_OPTIONS,
@@ -28,7 +28,7 @@ export const Config = z
               hint: z.string().optional(),
               emoji: z.string().emoji().optional(),
               trailer: z.string().optional(),
-            })
+            }),
           )
           .default(DEFAULT_TYPE_OPTIONS),
       })
@@ -47,7 +47,7 @@ export const Config = z
         (val) => val.options.map((v) => v.value).includes(val.initial_value),
         (val) => ({
           message: `Type: initial_value "${val.initial_value}" must exist in options`,
-        })
+        }),
       ),
     commit_scope: z
       .object({
@@ -60,7 +60,7 @@ export const Config = z
               value: z.string(),
               label: z.string().optional(),
               hint: z.string().optional(),
-            })
+            }),
           )
           .default(DEFAULT_SCOPE_OPTIONS),
       })
@@ -89,7 +89,7 @@ export const Config = z
         },
         (val) => ({
           message: `Scope: initial_value "${val.initial_value}" must exist in options`,
-        })
+        }),
       ),
     check_ticket: z
       .object({
@@ -97,9 +97,11 @@ export const Config = z
         confirm_ticket: z.boolean().default(true),
         add_to_title: z.boolean().default(true),
         append_hashtag: z.boolean().default(false),
-        prepend_hashtag: z.enum(['Never', 'Always', 'Prompt']).default("Never"),
+        prepend_hashtag: z.enum(["Never", "Always", "Prompt"]).default("Never"),
         surround: z.enum(["", "()", "[]", "{}"]).default(""),
-        title_position: z.enum(["start", "end", "before-colon", "beginning"]).default("start"),
+        title_position: z
+          .enum(["start", "end", "before-colon", "beginning"])
+          .default("start"),
       })
       .default({}),
     commit_title: z
@@ -186,7 +188,7 @@ export const CommitState = z
     deprecates_title: z.string().default(""),
     deprecates_body: z.string().default(""),
     custom_footer: z.string().default(""),
-    trailer: z.string().default("")
+    trailer: z.string().default(""),
   })
   .default({});
 
@@ -196,6 +198,6 @@ export const BranchState = z
     type: z.string().default(""),
     ticket: z.string().default(""),
     description: z.string().default(""),
-    version: z.string().default("")
+    version: z.string().default(""),
   })
   .default({});
