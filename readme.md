@@ -1,6 +1,7 @@
 <h3 align="center">
 
 ![bc-gradient](https://github.com/Everduin94/better-commits/assets/14320878/2f94e6ea-a40f-4f3e-b0b2-5cc7d83a9a7d)
+
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 [![downloads](https://img.shields.io/npm/dt/better-commits.svg?style=for-the-badge&logo=npm&color=74c7ec&logoColor=D9E0EE&labelColor=302D41)](https://www.npmjs.com/package/better-commits)
 [![discord](https://img.shields.io/badge/discord-join--discord?style=for-the-badge&logo=discord&color=cba6f7&logoColor=D9E0EE&labelColor=302D41)](https://discord.gg/grHVnZwYup)
