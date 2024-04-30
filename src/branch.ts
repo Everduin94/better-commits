@@ -38,8 +38,9 @@ async function main(config: Output<typeof Config>) {
     const cache_user_name = get_user_from_cache();
     const user_name_required = config.branch_user.required;
     const user_name = await p.text({
-      message: `Type your git username ${user_name_required ? "" : OPTIONAL_PROMPT
-        } ${CACHE_PROMPT}`.trim(),
+      message: `Type your git username ${
+        user_name_required ? "" : OPTIONAL_PROMPT
+      } ${CACHE_PROMPT}`.trim(),
       placeholder: "",
       initialValue: cache_user_name,
       validate: (val) => {
@@ -65,8 +66,9 @@ async function main(config: Output<typeof Config>) {
   if (config.branch_ticket.enable) {
     const ticked_required = config.branch_ticket.required;
     const ticket = await p.text({
-      message: `Type ticket / issue number ${ticked_required ? "" : OPTIONAL_PROMPT
-        }`.trim(),
+      message: `Type ticket / issue number ${
+        ticked_required ? "" : OPTIONAL_PROMPT
+      }`.trim(),
       placeholder: "",
       validate: (val) => {
         if (ticked_required && !val) return "Please enter a ticket / issue";
@@ -79,8 +81,9 @@ async function main(config: Output<typeof Config>) {
   if (config.branch_version.enable) {
     const version_required = config.branch_version.required;
     const version = await p.text({
-      message: `Type version number ${version_required ? "" : OPTIONAL_PROMPT
-        }`.trim(),
+      message: `Type version number ${
+        version_required ? "" : OPTIONAL_PROMPT
+      }`.trim(),
       placeholder: "",
       validate: (val) => {
         if (version_required && !val) return "Please enter a version";
@@ -151,7 +154,7 @@ async function main(config: Output<typeof Config>) {
       );
       p.log.info(
         color.bgMagenta(color.black(` cd ${worktree_name} `)) +
-        " to navigate to your new worktree",
+          " to navigate to your new worktree",
       );
       chdir(worktree_name);
     } catch (err) {
@@ -175,14 +178,14 @@ async function main(config: Output<typeof Config>) {
 
 function build_branch(
   branch: Output<typeof BranchState>,
-  config: Output<typeof Config>
+  config: Output<typeof Config>,
 ) {
   let res = "";
   config.branch_order.forEach((b: Output<typeof V_BRANCH_FIELDS>) => {
-    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`
-    if (branch[b]) res += branch[b] + config[config_key].separator
-  })
-  if (res.endsWith('-') || res.endsWith('/') || res.endsWith('_')) {
+    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
+    if (branch[b]) res += branch[b] + config[config_key].separator;
+  });
+  if (res.endsWith("-") || res.endsWith("/") || res.endsWith("_")) {
     return res.slice(0, -1).trim();
   }
   return res.trim();

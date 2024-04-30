@@ -160,13 +160,13 @@ export const BRANCH_ACTION_OPTIONS: {
   label: string;
   hint?: string;
 }[] = [
-    { value: "branch", label: "Branch" },
-    { value: "worktree", label: "Worktree" },
-  ];
+  { value: "branch", label: "Branch" },
+  { value: "worktree", label: "Worktree" },
+];
 
 /* LOAD */
 export function load_setup(
-  cli_name = " better-commits "
+  cli_name = " better-commits ",
 ): Output<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
@@ -185,12 +185,12 @@ export function load_setup(
     const repo_config = read_config_from_path(root_path);
     return global_config
       ? {
-        ...repo_config,
-        overrides: global_config.overrides.shell
-          ? global_config.overrides
-          : repo_config.overrides,
-        confirm_with_editor: global_config.confirm_with_editor,
-      }
+          ...repo_config,
+          overrides: global_config.overrides.shell
+            ? global_config.overrides
+            : repo_config.overrides,
+          confirm_with_editor: global_config.confirm_with_editor,
+        }
       : repo_config;
   }
 
@@ -216,14 +216,12 @@ function read_config_from_path(config_path: string) {
   return validate_config(res);
 }
 
-function validate_config(
-  config: Output<typeof Config>
-): Output<typeof Config> {
+function validate_config(config: Output<typeof Config>): Output<typeof Config> {
   try {
     return parse(Config, config);
   } catch (err: any) {
     if (err instanceof ValiError) {
-      console.log(err.message)
+      console.log(err.message);
     }
     process.exit(0);
   }
