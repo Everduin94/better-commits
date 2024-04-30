@@ -6,6 +6,10 @@ import Configstore from "configstore";
 import color from "picocolors";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
+
+// This must be imported before ./utils 🤦
+import { BranchState, CommitState, Config } from "./vali-state";
+
 import {
   BRANCH_ACTION_OPTIONS,
   CACHE_PROMPT,
@@ -15,7 +19,6 @@ import {
   V_BRANCH_FIELDS,
   load_setup,
 } from "./utils";
-import { BranchState, CommitState, Config } from "./vali-state";
 
 main(load_setup(" better-branch "));
 

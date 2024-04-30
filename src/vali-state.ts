@@ -51,9 +51,9 @@ export const Config = object({
             (val) =>
               val.options.map((v) => v.value).includes(val.initial_value),
             (val) => {
-              const input = val.input as {initial_value: string}
-              return `Type: initial_value "${input.initial_value}" must exist in options`
-            }
+              const input = val.input as { initial_value: string };
+              return `Type: initial_value "${input.initial_value}" must exist in options`;
+            },
           ),
         ],
       ),
@@ -95,10 +95,9 @@ export const Config = object({
               return options.includes(val.initial_value);
             },
             (val) => {
-              const input = val.input as {initial_value: string}
-              return `Scope: initial_value "${input.initial_value}" must exist in options`
-            }
-
+              const input = val.input as { initial_value: string };
+              return `Scope: initial_value "${input.initial_value}" must exist in options`;
+            },
           ),
         ],
       ),
