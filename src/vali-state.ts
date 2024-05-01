@@ -190,7 +190,7 @@ export const Config = object({
   ),
   branch_version: optional(
     object({
-      enable: optional(boolean(), true),
+      enable: optional(boolean(), false),
       required: optional(boolean(), false),
       separator: optional(picklist(["/", "-", "_"]), "/"),
     }),
