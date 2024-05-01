@@ -221,7 +221,11 @@ function validate_config(config: Output<typeof Config>): Output<typeof Config> {
     return parse(Config, config);
   } catch (err: any) {
     if (err instanceof ValiError) {
-      console.log(err.message);
+      const first_issue_path = err.issues[0].path ?? [];
+      const dot_path = first_issue_path.map((item) => item.key).join(".");
+      p.log.error(
+        `Invalid Configuration: ${color.red(dot_path)}\n` + err.message,
+      );
     }
     process.exit(0);
   }
