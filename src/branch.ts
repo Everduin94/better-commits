@@ -1,29 +1,31 @@
 #! /usr/bin/env node
 
-import { CommitState, Config } from "./zod-state";
+import * as p from "@clack/prompts";
+import { execSync } from "child_process";
+import Configstore from "configstore";
+import color from "picocolors";
+import { chdir } from "process";
+import { Output, parse } from "valibot";
+
+// This must be imported before ./utils 🤦
+import { BranchState, CommitState, Config } from "./vali-state";
+
 import {
   BRANCH_ACTION_OPTIONS,
   CACHE_PROMPT,
-  load_setup,
   OPTIONAL_PROMPT,
-  Z_BRANCH_ACTIONS,
-  Z_BRANCH_CONFIG_FIELDS,
-  Z_BRANCH_FIELDS,
+  V_BRANCH_ACTIONS,
+  V_BRANCH_CONFIG_FIELDS,
+  V_BRANCH_FIELDS,
+  load_setup,
 } from "./utils";
-import { BranchState } from "./zod-state";
-import * as p from "@clack/prompts";
-import Configstore from "configstore";
-import { z } from "zod";
-import { execSync } from "child_process";
-import color from "picocolors";
-import { chdir } from "process";
 
 main(load_setup(" better-branch "));
 
-async function main(config: z.infer<typeof Config>) {
-  const branch_state = BranchState.parse({});
+async function main(config: Output<typeof Config>) {
+  const branch_state = parse(BranchState, {});
 
-  let checkout_type: z.infer<typeof Z_BRANCH_ACTIONS> = "branch";
+  let checkout_type: Output<typeof V_BRANCH_ACTIONS> = "branch";
   if (config.enable_worktrees) {
     const branch_or_worktree = await p.select({
       message: `Checkout a branch or create a worktree?`,
@@ -178,12 +180,12 @@ async function main(config: z.infer<typeof Config>) {
 }
 
 function build_branch(
-  branch: z.infer<typeof BranchState>,
-  config: z.infer<typeof Config>,
+  branch: Output<typeof BranchState>,
+  config: Output<typeof Config>,
 ) {
   let res = "";
-  config.branch_order.forEach((b: z.infer<typeof Z_BRANCH_FIELDS>) => {
-    const config_key: z.infer<typeof Z_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
+  config.branch_order.forEach((b: Output<typeof V_BRANCH_FIELDS>) => {
+    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
     if (branch[b]) res += branch[b] + config[config_key].separator;
   });
   if (res.endsWith("-") || res.endsWith("/") || res.endsWith("_")) {

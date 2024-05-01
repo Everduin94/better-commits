@@ -4,8 +4,8 @@ import * as p from "@clack/prompts";
 import color from "picocolors";
 import { execSync } from "child_process";
 import { chdir } from "process";
-import { z } from "zod";
-import { CommitState, Config } from "./zod-state";
+import { Output, parse } from "valibot";
+import { CommitState, Config } from "./vali-state";
 import {
   load_setup,
   addNewLine,
@@ -18,7 +18,7 @@ import {
   clean_commit_title,
   COMMIT_FOOTER_OPTIONS,
   infer_type_from_branch,
-  Z_FOOTER_OPTIONS,
+  V_FOOTER_OPTIONS,
   CUSTOM_SCOPE_KEY,
   get_git_root,
   REGEX_SLASH_UND,
@@ -28,8 +28,8 @@ import { git_add, git_status } from "./git";
 
 main(load_setup());
 
-export async function main(config: z.infer<typeof Config>) {
-  let commit_state = CommitState.parse({});
+export async function main(config: Output<typeof Config>) {
+  let commit_state = parse(CommitState, {});
   chdir(get_git_root());
 
   if (config.check_status) {
@@ -211,7 +211,7 @@ export async function main(config: z.infer<typeof Config>) {
       message: `Select optional footers ${SPACE_TO_SELECT}`,
       initialValues: config.commit_footer.initial_value,
       options: COMMIT_FOOTER_OPTIONS as {
-        value: z.infer<typeof Z_FOOTER_OPTIONS>;
+        value: Output<typeof V_FOOTER_OPTIONS>;
         label: string;
         hint: string;
       }[],
@@ -324,8 +324,8 @@ export async function main(config: z.infer<typeof Config>) {
 }
 
 function build_commit_string(
-  commit_state: z.infer<typeof CommitState>,
-  config: z.infer<typeof Config>,
+  commit_state: Output<typeof CommitState>,
+  config: Output<typeof Config>,
   colorize: boolean = false,
   escape_quotes: boolean = false,
   include_trailer: boolean = false,

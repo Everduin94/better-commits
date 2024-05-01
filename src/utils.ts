@@ -1,11 +1,10 @@
-import { homedir } from "os";
-import { z } from "zod";
-import color from "picocolors";
-import { execSync } from "child_process";
 import * as p from "@clack/prompts";
+import { execSync } from "child_process";
 import fs from "fs";
-import { fromZodError } from "zod-validation-error";
-import { Config } from "./zod-state";
+import { homedir } from "os";
+import color from "picocolors";
+import { Output, ValiError, parse, picklist } from "valibot";
+import { Config } from "./vali-state";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
@@ -120,36 +119,36 @@ export const COMMIT_FOOTER_OPTIONS = [
 ];
 export const CUSTOM_SCOPE_KEY: "custom" = "custom";
 
-export const Z_FOOTER_OPTIONS = z.enum([
+export const V_FOOTER_OPTIONS = picklist([
   "closes",
   "trailer",
   "breaking-change",
   "deprecated",
   "custom",
 ]);
-export const Z_BRANCH_FIELDS = z.enum([
+export const V_BRANCH_FIELDS = picklist([
   "user",
   "version",
   "type",
   "ticket",
   "description",
 ]);
-export const Z_BRANCH_CONFIG_FIELDS = z.enum([
+export const V_BRANCH_CONFIG_FIELDS = picklist([
   "branch_user",
   "branch_version",
   "branch_type",
   "branch_ticket",
   "branch_description",
 ]);
-export const BRANCH_ORDER_DEFAULTS: z.infer<typeof Z_BRANCH_FIELDS>[] = [
+export const BRANCH_ORDER_DEFAULTS: Output<typeof V_BRANCH_FIELDS>[] = [
   "user",
   "version",
   "type",
   "ticket",
   "description",
 ];
-export const Z_BRANCH_ACTIONS = z.enum(["branch", "worktree"]);
-export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
+export const V_BRANCH_ACTIONS = picklist(["branch", "worktree"]);
+export const FOOTER_OPTION_VALUES: Output<typeof V_FOOTER_OPTIONS>[] = [
   "closes",
   "trailer",
   "breaking-change",
@@ -157,7 +156,7 @@ export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
   "custom",
 ];
 export const BRANCH_ACTION_OPTIONS: {
-  value: z.infer<typeof Z_BRANCH_ACTIONS>;
+  value: Output<typeof V_BRANCH_ACTIONS>;
   label: string;
   hint?: string;
 }[] = [
@@ -168,7 +167,7 @@ export const BRANCH_ACTION_OPTIONS: {
 /* LOAD */
 export function load_setup(
   cli_name = " better-commits ",
-): z.infer<typeof Config> {
+): Output<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
@@ -197,7 +196,7 @@ export function load_setup(
 
   if (global_config) return global_config;
 
-  const default_config = Config.parse({});
+  const default_config = parse(Config, {});
   p.log.step(
     "Config not found. Generating default .better-commit.json at $HOME",
   );
@@ -217,13 +216,17 @@ function read_config_from_path(config_path: string) {
   return validate_config(res);
 }
 
-function validate_config(
-  config: z.infer<typeof Config>,
-): z.infer<typeof Config> {
+function validate_config(config: Output<typeof Config>): Output<typeof Config> {
   try {
-    return Config.parse(config);
+    return parse(Config, config);
   } catch (err: any) {
-    console.log(fromZodError(err).message);
+    if (err instanceof ValiError) {
+      const first_issue_path = err.issues[0].path ?? [];
+      const dot_path = first_issue_path.map((item) => item.key).join(".");
+      p.log.error(
+        `Invalid Configuration: ${color.red(dot_path)}\n` + err.message,
+      );
+    }
     process.exit(0);
   }
 }
