@@ -25,6 +25,7 @@ https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-
 - Support for git emojis per commit-type
 - Configure globally or per repository
 - Config validation and error messaging
+- [Lightweight](https://bundlejs.com/?q=better-commits&treeshake=%5B*%5D) (17kb)
 
 As a side-effect of formatting messages
 
@@ -411,8 +412,6 @@ If you're using Github issues to track your work, and select the `closes` footer
 `better-commits` can append a commit trailer per commit type. This allows you to [automate change logs](https://docs.gitlab.com/ee/user/project/changelogs.html) with tools like Gitlab.
 
 ### Fun Facts
-
-[better-commits](https://packagephobia.com/result?p=better-commits) is much smaller than its alternative [commitizen](https://packagephobia.com/result?p=commitizen)
 
 `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
 
