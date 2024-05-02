@@ -3,8 +3,9 @@ import { execSync } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
 import color from "picocolors";
-import { Output, ValiError, parse, picklist } from "valibot";
-import { Config } from "./vali-state";
+import { Output, ValiError, parse } from "valibot";
+import { Config  } from "./valibot-state";
+import { V_BRANCH_ACTIONS } from "./valibot-consts";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
@@ -25,79 +26,6 @@ export const REGEX_SLASH_UND = new RegExp(/\/([A-Z]+-[\[a-zA-Z\]\d]+)_/);
 export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/);
 export const REGEX_START_NUM = new RegExp(/^(\d+)/);
 
-export const DEFAULT_TYPE_OPTIONS = [
-  {
-    value: "feat",
-    label: "feat",
-    hint: "A new feature",
-    emoji: "✨",
-    trailer: "Changelog: feature",
-  },
-  {
-    value: "fix",
-    label: "fix",
-    hint: "A bug fix",
-    emoji: "🐛",
-    trailer: "Changelog: fix",
-  },
-  {
-    value: "docs",
-    label: "docs",
-    hint: "Documentation only changes",
-    emoji: "📚",
-    trailer: "Changelog: documentation",
-  },
-  {
-    value: "refactor",
-    label: "refactor",
-    hint: "A code change that neither fixes a bug nor adds a feature",
-    emoji: "🔨",
-    trailer: "Changelog: refactor",
-  },
-  {
-    value: "perf",
-    label: "perf",
-    hint: "A code change that improves performance",
-    emoji: "🚀",
-    trailer: "Changelog: performance",
-  },
-  {
-    value: "test",
-    label: "test",
-    hint: "Adding missing tests or correcting existing tests",
-    emoji: "🚨",
-    trailer: "Changelog: test",
-  },
-  {
-    value: "build",
-    label: "build",
-    hint: "Changes that affect the build system or external dependencies",
-    emoji: "🚧",
-    trailer: "Changelog: build",
-  },
-  {
-    value: "ci",
-    label: "ci",
-    hint: "Changes to our CI configuration files and scripts",
-    emoji: "🤖",
-    trailer: "Changelog: ci",
-  },
-  {
-    value: "chore",
-    label: "chore",
-    hint: "Other changes that do not modify src or test files",
-    emoji: "🧹",
-    trailer: "Changelog: chore",
-  },
-  { value: "", label: "none" },
-];
-export const DEFAULT_SCOPE_OPTIONS = [
-  { value: "app", label: "app" },
-  { value: "shared", label: "shared" },
-  { value: "server", label: "server" },
-  { value: "tools", label: "tools" },
-  { value: "", label: "none" },
-];
 export const COMMIT_FOOTER_OPTIONS = [
   {
     value: "closes",
@@ -116,44 +44,6 @@ export const COMMIT_FOOTER_OPTIONS = [
   },
   { value: "deprecated", label: "deprecated", hint: "Add deprecated change" },
   { value: "custom", label: "custom", hint: "Add a custom footer" },
-];
-export const CUSTOM_SCOPE_KEY: "custom" = "custom";
-
-export const V_FOOTER_OPTIONS = picklist([
-  "closes",
-  "trailer",
-  "breaking-change",
-  "deprecated",
-  "custom",
-]);
-export const V_BRANCH_FIELDS = picklist([
-  "user",
-  "version",
-  "type",
-  "ticket",
-  "description",
-]);
-export const V_BRANCH_CONFIG_FIELDS = picklist([
-  "branch_user",
-  "branch_version",
-  "branch_type",
-  "branch_ticket",
-  "branch_description",
-]);
-export const BRANCH_ORDER_DEFAULTS: Output<typeof V_BRANCH_FIELDS>[] = [
-  "user",
-  "version",
-  "type",
-  "ticket",
-  "description",
-];
-export const V_BRANCH_ACTIONS = picklist(["branch", "worktree"]);
-export const FOOTER_OPTION_VALUES: Output<typeof V_FOOTER_OPTIONS>[] = [
-  "closes",
-  "trailer",
-  "breaking-change",
-  "deprecated",
-  "custom",
 ];
 export const BRANCH_ACTION_OPTIONS: {
   value: Output<typeof V_BRANCH_ACTIONS>;

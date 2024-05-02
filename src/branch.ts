@@ -6,17 +6,12 @@ import Configstore from "configstore";
 import color from "picocolors";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
-
-// This must be imported before ./utils 🤦
-import { BranchState, CommitState, Config } from "./vali-state";
-
+import { V_BRANCH_ACTIONS, V_BRANCH_CONFIG_FIELDS, V_BRANCH_FIELDS } from "./valibot-consts";
+import { BranchState, CommitState, Config } from "./valibot-state";
 import {
   BRANCH_ACTION_OPTIONS,
   CACHE_PROMPT,
   OPTIONAL_PROMPT,
-  V_BRANCH_ACTIONS,
-  V_BRANCH_CONFIG_FIELDS,
-  V_BRANCH_FIELDS,
   load_setup,
 } from "./utils";
 

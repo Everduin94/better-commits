@@ -5,7 +5,7 @@ import color from "picocolors";
 import { execSync } from "child_process";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
-import { CommitState, Config } from "./vali-state";
+import { CommitState, Config } from "./valibot-state";
 import {
   load_setup,
   addNewLine,
@@ -18,13 +18,12 @@ import {
   clean_commit_title,
   COMMIT_FOOTER_OPTIONS,
   infer_type_from_branch,
-  V_FOOTER_OPTIONS,
-  CUSTOM_SCOPE_KEY,
   get_git_root,
   REGEX_SLASH_UND,
   REGEX_START_UND,
 } from "./utils";
 import { git_add, git_status } from "./git";
+import { CUSTOM_SCOPE_KEY, V_FOOTER_OPTIONS } from "./valibot-consts";
 
 main(load_setup());
 
