@@ -5,7 +5,7 @@ import fs from "fs";
 import color from "picocolors";
 import { parse } from "valibot";
 import { CONFIG_FILE_NAME, get_git_root } from "./utils";
-import { Config } from "./vali-state";
+import { Config } from "./valibot-state";
 
 try {
   console.clear();

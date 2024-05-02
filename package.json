@@ -4,6 +4,7 @@
   "version": "1.15.2",
   "description": "A CLI for creating better commits following the conventional commits specification",
   "author": "Erik Verduin (https://github.com/everduin94)",
+  "type": "module",
   "keywords": [
     "typescript",
     "cli",
@@ -30,7 +31,7 @@
     "start": "jiti ./src/index.ts",
     "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
-    "build": "tsup ./src/",
+    "build": "tsup",
     "commit": "jiti ./src/index.ts"
   },
   "devDependencies": {
@@ -40,8 +41,9 @@
     "jiti": "^1.17.0",
     "prettier": "3.2.5",
     "semantic-release": "^21.0.1",
-    "tsup": "^6.6.3",
-    "tsx": "^3.12.3"
+    "tsup": "^8.0.2",
+    "tsx": "^3.12.3",
+    "typescript": "^5.4.5"
   },
   "release": {
     "branches": [
