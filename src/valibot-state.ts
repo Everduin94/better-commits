@@ -1,5 +1,14 @@
-import * as v from 'valibot';
-import { BRANCH_ORDER_DEFAULTS, CUSTOM_SCOPE_KEY, DEFAULT_SCOPE_OPTIONS, DEFAULT_TYPE_OPTIONS, FOOTER_OPTION_VALUES, V_BRANCH_ACTIONS, V_BRANCH_FIELDS, V_FOOTER_OPTIONS } from './valibot-consts';
+import * as v from "valibot";
+import {
+  BRANCH_ORDER_DEFAULTS,
+  CUSTOM_SCOPE_KEY,
+  DEFAULT_SCOPE_OPTIONS,
+  DEFAULT_TYPE_OPTIONS,
+  FOOTER_OPTION_VALUES,
+  V_BRANCH_ACTIONS,
+  V_BRANCH_FIELDS,
+  V_FOOTER_OPTIONS,
+} from "./valibot-consts";
 
 export const Config = v.object({
   check_status: v.optional(v.boolean(), true),
@@ -27,7 +36,8 @@ export const Config = v.object({
         },
         [
           v.custom(
-            (val) => val.options.map((v) => v.value).includes(val.initial_value),
+            (val) =>
+              val.options.map((v) => v.value).includes(val.initial_value),
             (val) => {
               const input = val.input as { initial_value: string };
               return `Type: initial_value "${input.initial_value}" must exist in options`;
@@ -38,13 +48,14 @@ export const Config = v.object({
       {},
     ),
     (val) => {
-      const options = val.options.map((v) => ({
-        ...v,
-        label:
-          v.emoji && val.append_emoji_to_label
-            ? `${v.emoji} ${v.label}`
-            : v.label,
-      })) ?? [];
+      const options =
+        val.options.map((v) => ({
+          ...v,
+          label:
+            v.emoji && val.append_emoji_to_label
+              ? `${v.emoji} ${v.label}`
+              : v.label,
+        })) ?? [];
       return { ...val, options };
     },
   ),
