@@ -1,4 +1,4 @@
-import * as v from 'valibot';
+import * as v from "valibot";
 
 export const CUSTOM_SCOPE_KEY: "custom" = "custom";
 export const FOOTER_OPTION_VALUES: v.Output<typeof V_FOOTER_OPTIONS>[] = [
@@ -112,5 +112,3 @@ export const DEFAULT_TYPE_OPTIONS = [
   },
   { value: "", label: "none" },
 ];
-
-

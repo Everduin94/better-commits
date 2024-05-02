@@ -5,6 +5,7 @@
   "description": "A CLI for creating better commits following the conventional commits specification",
   "author": "Erik Verduin (https://github.com/everduin94)",
   "type": "module",
+  "sideEffects": false,
   "keywords": [
     "typescript",
     "cli",

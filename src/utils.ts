@@ -4,7 +4,7 @@ import fs from "fs";
 import { homedir } from "os";
 import color from "picocolors";
 import { Output, ValiError, parse } from "valibot";
-import { Config  } from "./valibot-state";
+import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";

@@ -6,7 +6,11 @@ import Configstore from "configstore";
 import color from "picocolors";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
-import { V_BRANCH_ACTIONS, V_BRANCH_CONFIG_FIELDS, V_BRANCH_FIELDS } from "./valibot-consts";
+import {
+  V_BRANCH_ACTIONS,
+  V_BRANCH_CONFIG_FIELDS,
+  V_BRANCH_FIELDS,
+} from "./valibot-consts";
 import { BranchState, CommitState, Config } from "./valibot-state";
 import {
   BRANCH_ACTION_OPTIONS,
