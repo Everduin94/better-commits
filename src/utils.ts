@@ -1,8 +1,5 @@
-import { homedir } from "os";
-import { z } from "zod";
-import color from "picocolors";
-import { execSync } from "child_process";
 import * as p from "@clack/prompts";
+import { execSync } from "child_process";
 import fs from "fs";
 import { fromZodError } from "zod-validation-error";
 import { Config } from "./zod-state";
@@ -11,7 +8,7 @@ import data from "./data";
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
 export const A_FOR_ALL = `${color.dim(
-  "(<space> to select, <a> to select all)"
+  "(<space> to select, <a> to select all)",
 )}`;
 export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
 export const CACHE_PROMPT = `${color.dim("(value will be saved)")}`;
@@ -158,7 +155,7 @@ export const FOOTER_OPTION_VALUES: z.infer<typeof Z_FOOTER_OPTIONS>[] = [
   "custom",
 ];
 export const BRANCH_ACTION_OPTIONS: {
-  value: z.infer<typeof Z_BRANCH_ACTIONS>;
+  value: Output<typeof V_BRANCH_ACTIONS>;
   label: string;
   hint?: string;
 }[] = [
@@ -168,8 +165,8 @@ export const BRANCH_ACTION_OPTIONS: {
 
 /* LOAD */
 export function load_setup(
-  cli_name = " better-commits "
-): z.infer<typeof Config> {
+  cli_name = " better-commits ",
+): Output<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
@@ -198,9 +195,9 @@ export function load_setup(
 
   if (global_config) return global_config;
 
-  const default_config = Config.parse({});
+  const default_config = parse(Config, {});
   p.log.step(
-    "Config not found. Generating default .better-commit.json at $HOME"
+    "Config not found. Generating default .better-commit.json at $HOME",
   );
   fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
   return default_config;
@@ -218,13 +215,17 @@ function read_config_from_path(config_path: string) {
   return validate_config(res);
 }
 
-function validate_config(
-  config: z.infer<typeof Config>
-): z.infer<typeof Config> {
+function validate_config(config: Output<typeof Config>): Output<typeof Config> {
   try {
-    return Config.parse(config);
+    return parse(Config, config);
   } catch (err: any) {
-    console.log(fromZodError(err).message);
+    if (err instanceof ValiError) {
+      const first_issue_path = err.issues[0].path ?? [];
+      const dot_path = first_issue_path.map((item) => item.key).join(".");
+      p.log.error(
+        `Invalid Configuration: ${color.red(dot_path)}\n` + err.message,
+      );
+    }
     process.exit(0);
   }
 }
@@ -263,7 +264,7 @@ export function get_git_root(): string {
     path = execSync("git rev-parse --show-toplevel").toString().trim();
   } catch (err) {
     p.log.warn(
-      "Could not find git root. If in a --bare repository, ignore this warning."
+      "Could not find git root. If in a --bare repository, ignore this warning.",
     );
   }
   return path;
