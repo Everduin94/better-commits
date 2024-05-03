@@ -4,8 +4,8 @@ import * as p from "@clack/prompts";
 import color from "picocolors";
 import { execSync } from "child_process";
 import { chdir } from "process";
-import { z } from "zod";
-import { CommitState, Config } from "./zod-state";
+import { Output, parse } from "valibot";
+import { CommitState, Config } from "./valibot-state";
 import {
   load_setup,
   addNewLine,
@@ -18,20 +18,17 @@ import {
   clean_commit_title,
   COMMIT_FOOTER_OPTIONS,
   infer_type_from_branch,
-  Z_FOOTER_OPTIONS,
-  CUSTOM_SCOPE_KEY,
   get_git_root,
   REGEX_SLASH_UND,
   REGEX_START_UND,
-  get_random_lyric_from_mood,
 } from "./utils";
 import { git_add, git_status } from "./git";
-import data from "./data";
+import { CUSTOM_SCOPE_KEY, V_FOOTER_OPTIONS } from "./valibot-consts";
 
 main(load_setup());
 
-export async function main(config: z.infer<typeof Config>) {
-  let commit_state = CommitState.parse({});
+export async function main(config: Output<typeof Config>) {
+  let commit_state = parse(CommitState, {});
   chdir(get_git_root());
 
   if (config.check_status) {
@@ -39,14 +36,14 @@ export async function main(config: z.infer<typeof Config>) {
     p.log.step(color.black(color.bgGreen(" Checking Git Status ")));
     const staged_files = index.reduce(
       (acc, curr, i: number) => color.green(acc + curr + addNewLine(index, i)),
-      ""
+      "",
     );
     p.log.success("Changes to be committed:\n" + staged_files);
     if (work_tree.length) {
       const unstaged_files = work_tree.reduce(
         (acc, curr, i: number) =>
           color.red(acc + curr + addNewLine(work_tree, i)),
-        ""
+        "",
       );
       p.log.error("Changes not staged for commit:\n" + unstaged_files);
       const selected_for_staging = (await p.multiselect({
@@ -65,8 +62,8 @@ export async function main(config: z.infer<typeof Config>) {
     if (!updated_status.index.length) {
       p.log.error(
         color.red(
-          'no changes added to commit (use "git add" and/or "git commit -a")'
-        )
+          'no changes added to commit (use "git add" and/or "git commit -a")',
+        ),
       );
       process.exit(0);
     }
@@ -79,9 +76,7 @@ export async function main(config: z.infer<typeof Config>) {
       const options = config.commit_type.options.map((o) => o.value);
       const type_from_branch = infer_type_from_branch(options);
       if (type_from_branch) {
-        message = `Commit type inferred from branch ${color.dim(
-          "(confirm / edit)"
-        )}`;
+        message = `Commit type inferred from branch ${color.dim("(confirm / edit)")}`;
         initial_value = type_from_branch;
       }
     }
@@ -94,7 +89,7 @@ export async function main(config: z.infer<typeof Config>) {
             trailer: curr.trailer ?? "",
           },
         }),
-        {}
+        {},
       );
     const commit_type = await p.select({
       message,
@@ -287,7 +282,7 @@ export async function main(config: z.infer<typeof Config>) {
   let continue_commit = true;
   p.note(
     build_commit_string(commit_state, config, true, false, true),
-    "Commit Preview"
+    "Commit Preview",
   );
   if (config.confirm_commit) {
     continue_commit = (await p.confirm({
@@ -331,7 +326,7 @@ function build_commit_string(
   config: z.infer<typeof Config>,
   colorize: boolean = false,
   escape_quotes: boolean = false,
-  include_trailer: boolean = false
+  include_trailer: boolean = false,
 ): string {
   let commit_string = "";
   if (commit_state.type) {

@@ -1,7 +1,7 @@
 {
   "name": "swift-commits",
   "private": false,
-  "version": "1.15.0",
+  "version": "1.0.0",
   "description": "A CLI for creating even better commits following the conventional commits specification, but for Swifties",
   "author": "Christina Martinez (https://github.com/christina-de-martinez) and Chris Pennington (https://github.com/coding-in-public)",
   "keywords": [
@@ -24,14 +24,13 @@
     "@clack/prompts": "^0.6.2",
     "configstore": "^5.0.1",
     "picocolors": "^1.0.0",
-    "zod": "^3.21.3",
-    "zod-validation-error": "^1.0.1"
+    "valibot": "^0.30.0"
   },
   "scripts": {
     "start": "jiti ./src/index.ts",
     "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
-    "build": "tsup ./src/",
+    "build": "tsup",
     "commit": "jiti ./src/index.ts"
   },
   "devDependencies": {
@@ -39,9 +38,11 @@
     "@types/configstore": "^6.0.0",
     "@types/node": "^18.14.5",
     "jiti": "^1.17.0",
+    "prettier": "3.2.5",
     "semantic-release": "^21.0.1",
-    "tsup": "^6.6.3",
-    "tsx": "^3.12.3"
+    "tsup": "^8.0.2",
+    "tsx": "^3.12.3",
+    "typescript": "^5.4.5"
   },
   "release": {
     "branches": [
