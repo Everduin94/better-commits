@@ -1,14 +1,14 @@
 <h3 align="center">
 
 ![bc-gradient](https://github.com/Everduin94/better-commits/assets/14320878/2f94e6ea-a40f-4f3e-b0b2-5cc7d83a9a7d)
-	
+
 [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)
 [![downloads](https://img.shields.io/npm/dt/better-commits.svg?style=for-the-badge&logo=npm&color=74c7ec&logoColor=D9E0EE&labelColor=302D41)](https://www.npmjs.com/package/better-commits)
 [![discord](https://img.shields.io/badge/discord-join--discord?style=for-the-badge&logo=discord&color=cba6f7&logoColor=D9E0EE&labelColor=302D41)](https://discord.gg/grHVnZwYup)
 </h3>
 
 <p align="center">
-A CLI for writing better commits, following the conventional commits specification.
+A CLI for writing even better commits, following the conventional commits specification, with a Swiftie twist.
 </p>
 
 
@@ -18,10 +18,10 @@ https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-
 ## ✨ Features
 - Generate conventional commits through a series of prompts
 - Highly configurable with sane defaults
-- Infers ticket and commit-type from branch for consistent & fast commits 
+- Infers ticket and commit-type from branch for consistent & fast commits
 - Consistent branch creation with flexible workflow hooks via `better-branch`
 - Interactive git status/add on commit
-- Preview commit messages in color 
+- Preview commit messages in color
 - Support for git emojis per commit-type
 - Configure globally or per repository
 - Config validation and error messaging
@@ -29,11 +29,11 @@ https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-
 As a side-effect of formatting messages
 - Auto populate PR title / body
 - Automate semantic releases
-- Automate changelogs 
+- Automate changelogs
 - Automatically link & close related tickets / issues
 
 ## 📦 Installation
- 
+
 ```sh
 npm install -g better-commits
 ```
@@ -54,7 +54,7 @@ Some of the values in these prompts will be infered by your branch name and auto
 To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
 
 ## ⚙️ Configuration
- 
+
 ### Global
 
 Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
@@ -348,9 +348,9 @@ Branch configuration (same config file, split for readability)
 
 ### 🔎 Inference
 
-`better-commits` will attempt to infer the ticket/issue and the commit-type from your branch name. It will auto populate the corresponding field if found. 
+`better-commits` will attempt to infer the ticket/issue and the commit-type from your branch name. It will auto populate the corresponding field if found.
 
-**Ticket / Issue-Number** 
+**Ticket / Issue-Number**
 - If a `STRING-NUMBER` or `NUMBER` are at the start of the branch name or after a `/`
 
 **Commit Type**
@@ -419,9 +419,9 @@ Setting `confirm_with_editor=true` will allow you to edit/confirm a commit with 
 - For VS Code, `git config --global core.editor "code -n --wait"`
 
 > [!NOTE]<br>
-> Enjoy learning, open source technology, and note-taking? [Join our Discord!](https://discord.gg/grHVnZwYup) 
+> Enjoy learning, open source technology, and note-taking? [Join our Discord!](https://discord.gg/grHVnZwYup)
 
-You can add this badge to your repository to display that you're using a better-commits repository config 
+You can add this badge to your repository to display that you're using a better-commits repository config
 
 | Markdown | Result |
 | -------- | ------ |
@@ -452,7 +452,7 @@ Example
 <h3 align="center">
 
 [![flotes-g-2](https://github.com/Everduin94/Everduin94/assets/14320878/b0fd0aa5-ca9d-4a2d-8579-7616140927a7)](https://flotes.app)
-  
+
 [Markdown Notetaking - Built for Learning](https://flotes.app)
 
 </h3>
