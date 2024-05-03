@@ -35,7 +35,7 @@ As a side-effect of formatting messages
 ## 📦 Installation
 
 ```sh
-npm install -g better-commits
+npm install -g swift-commits
 ```
 
 ## 🚀 Usage
@@ -43,9 +43,9 @@ npm install -g better-commits
 When you're ready to commit. To run the CLI in your terminal:
 
 ```sh
-better-commits
+swift-commits
 # or
-npx better-commits
+npx swift-commits
 ```
 
 It will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
@@ -57,7 +57,7 @@ To better understand these prompts and their intention, read [Conventional Commi
 
 ### Global
 
-Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
+Your first time running `swift-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
 - This config will be used if a repository-specific config cannot be found.
 
 ### Repository
