@@ -1,9 +1,11 @@
 {
-  "name": "swift-commits",
+  "name": "better-commits",
   "private": false,
-  "version": "1.0.0",
-  "description": "A CLI for creating even better commits following the conventional commits specification, but for Swifties",
-  "author": "Christina Martinez (https://github.com/christina-de-martinez) and Chris Pennington (https://github.com/coding-in-public)",
+  "version": "1.15.4",
+  "description": "A CLI for creating better commits following the conventional commits specification",
+  "author": "Erik Verduin (https://github.com/everduin94)",
+  "type": "module",
+  "sideEffects": false,
   "keywords": [
     "typescript",
     "cli",
