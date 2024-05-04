@@ -167,15 +167,30 @@ export async function main(config: Output<typeof Config>) {
     commit_state.ticket = "#" + commit_state.ticket;
   }
 
-  const commit_title = async (): Promise<string> => {
-    const mood = await p.select({
-      message: "What’s your commit’s Swiftie mood?",
-      options: Object.keys(data).map((key) => ({ value: key, label: key })),
-    });
-    return get_random_lyric_from_mood(mood as keyof typeof data);
-  };
+  const commit_title = await p.text({
+    message: "Write a brief title describing the commit",
+    placeholder: "",
+    validate: (value) => {
+      if (!value) return "Please enter a title";
+      const commit_scope_size = commit_state.scope
+        ? commit_state.scope.length + 2
+        : 0;
+      const commit_type_size = commit_state.type.length;
+      const commit_ticket_size = config.check_ticket.add_to_title
+        ? commit_state.ticket.length
+        : 0;
+      if (
+        commit_scope_size +
+          commit_type_size +
+          commit_ticket_size +
+          value.length >
+        config.commit_title.max_size
+      )
+        return `Exceeded max length. Title max [${config.commit_title.max_size}]`;
+    },
+  });
   if (p.isCancel(commit_title)) process.exit(0);
-  commit_state.title = await commit_title();
+  commit_state.title = clean_commit_title(commit_title);
 
   p.note(`Your Swiftie Title: ${color.cyan(commit_state.title)}`);
 
@@ -197,7 +212,7 @@ export async function main(config: Output<typeof Config>) {
       message: `Select optional footers ${SPACE_TO_SELECT}`,
       initialValues: config.commit_footer.initial_value,
       options: COMMIT_FOOTER_OPTIONS as {
-        value: z.infer<typeof Z_FOOTER_OPTIONS>;
+        value: Output<typeof V_FOOTER_OPTIONS>;
         label: string;
         hint: string;
       }[],
@@ -272,9 +287,9 @@ export async function main(config: Output<typeof Config>) {
         config,
         false,
         true,
-        false
+        false,
       )}" ${trailer} --edit`,
-      options
+      options,
     );
     process.exit(0);
   }
@@ -309,9 +324,9 @@ export async function main(config: Output<typeof Config>) {
         config,
         false,
         true,
-        false
+        false,
       )}" ${trailer}`,
-      options
+      options,
     )
       .toString()
       .trim();
@@ -322,8 +337,8 @@ export async function main(config: Output<typeof Config>) {
 }
 
 function build_commit_string(
-  commit_state: z.infer<typeof CommitState>,
-  config: z.infer<typeof Config>,
+  commit_state: Output<typeof CommitState>,
+  config: Output<typeof Config>,
   colorize: boolean = false,
   escape_quotes: boolean = false,
   include_trailer: boolean = false,
@@ -454,7 +469,7 @@ function build_commit_string(
   if (commit_state.closes && commit_state.ticket) {
     commit_string += colorize
       ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(
-          commit_state.ticket
+          commit_state.ticket,
         )}`
       : `\n\n${commit_state.closes} ${commit_state.ticket}`;
   }
