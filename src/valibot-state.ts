@@ -189,7 +189,7 @@ export const Config = v.object({
     v.object({
       enable: v.optional(v.boolean(), true),
       required: v.optional(v.boolean(), false),
-      separator: v.optional(v.picklist(["/", "-", "_"]), "/"),
+      separator: v.optional(v.picklist(["/", "-", "_"]), "-"),
     }),
     {},
   ),
