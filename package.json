@@ -15,7 +15,7 @@
   "main": "dist/index.js",
   "bin": {
     "better-commits-init": "./dist/init.js",
-    "better-commits": "./dist/sindex.js",
+    "better-commits": "./dist/index.js",
     "better-branch": "./dist/branch.js",
     "bcommits": "./dist/index.js",
     "git-bc": "./dist/index.js"
