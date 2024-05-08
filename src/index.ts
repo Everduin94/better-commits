@@ -94,6 +94,7 @@ export async function main(config: Output<typeof Config>) {
     const commit_type = await p.select({
       message,
       initialValue: initial_value,
+      maxItems: config.commit_type.max_items,
       options: config.commit_type.options,
     });
     if (p.isCancel(commit_type)) process.exit(0);
@@ -107,6 +108,7 @@ export async function main(config: Output<typeof Config>) {
     let commit_scope = await p.select({
       message: "Select a commit scope",
       initialValue: config.commit_scope.initial_value,
+      maxItems: config.commit_scope.max_items,
       options: config.commit_scope.options,
     });
     if (p.isCancel(commit_scope)) process.exit(0);

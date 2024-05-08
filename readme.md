@@ -91,6 +91,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
   "commit_type": {
     "enable": true,
     "initial_value": "feat",
+    "max_items": Infinity,
     "infer_type_from_branch": true,
     "append_emoji_to_label": false,
     "append_emoji_to_commit": false,
@@ -168,6 +169,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "enable": true,
     "custom_scope": false,
     "initial_value": "app",
+    "max_items": Infinity
     "options": [
       {
         "value": "app",
@@ -281,6 +283,7 @@ Expand to see explanations and possible values
 | `check_status`                             | If true run interactive `git status`                                                                |
 | `commit_type.enable`                       | If true include commit type                                                                         |
 | `commit_type.initial_value`                | Initial selection of commit type                                                                    |
+| `commit_type.max_items`                    | Maximum number of type displayed on the screen                                                      |
 | `commit_type.infer_type_from_branch`       | If true infer type from branch name                                                                 |
 | `commit_type.append_emoji_to_label`        | If true append emoji to prompt                                                                      |
 | `commit_type.append_emoji_to_commit`       | If true append emoji to commit                                                                      |
@@ -292,6 +295,7 @@ Expand to see explanations and possible values
 | `commit_scope.enable`                      | If true include commit scope                                                                        |
 | `commit_scope.custom_scope`                | If true allow custom scope at run-time                                                              |
 | `commit_scope.initial_value`               | Default commit scope selected                                                                       |
+| `commit_scope.max_items`                   | Maximum number of scope displayed on the screen                                                     |
 | `commit_scope.options.value`               | Commit scope value                                                                                  |
 | `commit_scope.options.label`               | Commit scope label                                                                                  |
 | `check_ticket.infer_ticket`                | If true infer ticket from branch name                                                               |
