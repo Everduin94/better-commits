@@ -94,6 +94,7 @@ export async function main(config: Output<typeof Config>) {
     const commit_type = await p.select({
       message,
       initialValue: initial_value,
+      maxItems: config.commit_type.max_items,
       options: config.commit_type.options,
     });
     if (p.isCancel(commit_type)) process.exit(0);

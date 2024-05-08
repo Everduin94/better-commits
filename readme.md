@@ -91,6 +91,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
   "commit_type": {
     "enable": true,
     "initial_value": "feat",
+    "max_items": Infinity,
     "infer_type_from_branch": true,
     "append_emoji_to_label": false,
     "append_emoji_to_commit": false,
@@ -282,6 +283,7 @@ Expand to see explanations and possible values
 | `check_status`                             | If true run interactive `git status`                                                                |
 | `commit_type.enable`                       | If true include commit type                                                                         |
 | `commit_type.initial_value`                | Initial selection of commit type                                                                    |
+| `commit_type.max_items`                    | Maximum number of type displayed on the screen                                                      |
 | `commit_type.infer_type_from_branch`       | If true infer type from branch name                                                                 |
 | `commit_type.append_emoji_to_label`        | If true append emoji to prompt                                                                      |
 | `commit_type.append_emoji_to_commit`       | If true append emoji to commit                                                                      |

@@ -18,6 +18,7 @@ export const Config = v.object({
         {
           enable: v.optional(v.boolean(), true),
           initial_value: v.optional(v.string(), "feat"),
+          max_items: v.optional(v.number(), Infinity),
           infer_type_from_branch: v.optional(v.boolean(), true),
           append_emoji_to_label: v.optional(v.boolean(), false),
           append_emoji_to_commit: v.optional(v.boolean(), false),
