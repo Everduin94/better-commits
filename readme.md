@@ -168,6 +168,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "enable": true,
     "custom_scope": false,
     "initial_value": "app",
+    "max_items": Infinity
     "options": [
       {
         "value": "app",
@@ -292,6 +293,7 @@ Expand to see explanations and possible values
 | `commit_scope.enable`                      | If true include commit scope                                                                        |
 | `commit_scope.custom_scope`                | If true allow custom scope at run-time                                                              |
 | `commit_scope.initial_value`               | Default commit scope selected                                                                       |
+| `commit_scope.max_items`                   | Maximum number of scope displayed on the screen                                                     |
 | `commit_scope.options.value`               | Commit scope value                                                                                  |
 | `commit_scope.options.label`               | Commit scope label                                                                                  |
 | `check_ticket.infer_ticket`                | If true infer ticket from branch name                                                               |

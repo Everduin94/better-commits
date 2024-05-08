@@ -65,6 +65,7 @@ export const Config = v.object({
         {
           enable: v.optional(v.boolean(), true),
           custom_scope: v.optional(v.boolean(), false),
+          max_items: v.optional(v.number(), Infinity),
           initial_value: v.optional(v.string(), "app"),
           options: v.optional(
             v.array(

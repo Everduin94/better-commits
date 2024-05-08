@@ -15,7 +15,7 @@
   "main": "dist/index.js",
   "bin": {
     "better-commits-init": "./dist/init.js",
-    "better-commits": "./dist/index.js",
+    "better-commits": "./dist/sindex.js",
     "better-branch": "./dist/branch.js",
     "bcommits": "./dist/index.js",
     "git-bc": "./dist/index.js"
@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@clack/core": "^0.3.1",
-    "@clack/prompts": "^0.6.2",
+    "@clack/prompts": "^0.7.0",
     "configstore": "^5.0.1",
     "picocolors": "^1.0.0",
     "valibot": "^0.30.0"
