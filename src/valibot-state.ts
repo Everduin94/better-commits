@@ -18,7 +18,7 @@ export const Config = v.object({
         {
           enable: v.optional(v.boolean(), true),
           initial_value: v.optional(v.string(), "feat"),
-          max_items: v.optional(v.number(), Infinity),
+          max_items: v.optional(v.number([v.minValue(1)]), 20),
           infer_type_from_branch: v.optional(v.boolean(), true),
           append_emoji_to_label: v.optional(v.boolean(), false),
           append_emoji_to_commit: v.optional(v.boolean(), false),
@@ -66,7 +66,7 @@ export const Config = v.object({
         {
           enable: v.optional(v.boolean(), true),
           custom_scope: v.optional(v.boolean(), false),
-          max_items: v.optional(v.number(), Infinity),
+          max_items: v.optional(v.number([v.minValue(1)]), 20),
           initial_value: v.optional(v.string(), "app"),
           options: v.optional(
             v.array(
