@@ -6,6 +6,8 @@ import color from "picocolors";
 import { Output, ValiError, parse } from "valibot";
 import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
+import { argv } from "process";
+import { flags } from "./args";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
@@ -60,6 +62,8 @@ export function load_setup(
 ): Output<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
+
+  set_non_configuration_arguments();
 
   let global_config = null;
   const home_path = get_default_config_path();
@@ -125,7 +129,7 @@ function validate_config(config: Output<typeof Config>): Output<typeof Config> {
 export function infer_type_from_branch(types: string[]): string {
   let branch = "";
   try {
-    branch = execSync("git branch --show-current", {
+    branch = execSync(`git ${flags.git_args} branch --show-current`, {
       stdio: "pipe",
     }).toString();
   } catch (err) {
@@ -152,7 +156,9 @@ rev-parse will fail in a --bare repository root
 export function get_git_root(): string {
   let path = ".";
   try {
-    path = execSync("git rev-parse --show-toplevel").toString().trim();
+    path = execSync(`git ${flags.git_args} rev-parse --show-toplevel`)
+      .toString()
+      .trim();
   } catch (err) {
     p.log.warn(
       "Could not find git root. If in a --bare repository, ignore this warning.",
@@ -176,4 +182,8 @@ export function clean_commit_title(title: string): string {
     return title_trimmed.substring(0, title_trimmed.length - 1).trim();
   }
   return title.trim();
+}
+
+function set_non_configuration_arguments() {
+  flags.git_args = `${argv[2] ?? ""} ${argv[3] ?? ""}`.trim();
 }

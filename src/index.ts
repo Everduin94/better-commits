@@ -24,6 +24,7 @@ import {
 } from "./utils";
 import { git_add, git_status } from "./git";
 import { CUSTOM_SCOPE_KEY, V_FOOTER_OPTIONS } from "./valibot-consts";
+import { flags } from "./args";
 
 main(load_setup());
 
@@ -124,7 +125,7 @@ export async function main(config: Output<typeof Config>) {
 
   if (config.check_ticket.infer_ticket) {
     try {
-      const branch = execSync("git branch --show-current", {
+      const branch = execSync(`git ${flags.git_args} branch --show-current`, {
         stdio: "pipe",
       }).toString();
       const found: string[] = [
@@ -282,7 +283,7 @@ export async function main(config: Output<typeof Config>) {
       ? `--trailer="${commit_state.trailer}"`
       : "";
     execSync(
-      `git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer} --edit`,
+      `git ${flags.git_args} commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer} --edit`,
       options,
     );
     process.exit(0);
@@ -313,7 +314,7 @@ export async function main(config: Output<typeof Config>) {
       ? `--trailer="${commit_state.trailer}"`
       : "";
     const output = execSync(
-      `git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`,
+      `git ${flags.git_args} commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`,
       options,
     )
       .toString()

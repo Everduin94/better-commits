@@ -18,6 +18,7 @@ import {
   OPTIONAL_PROMPT,
   load_setup,
 } from "./utils";
+import { flags } from "./args";
 
 main(load_setup(" better-branch "));
 
@@ -126,7 +127,7 @@ async function main(config: Output<typeof Config>) {
   const branch_flag = verify_branch_name(branch_name);
   if (checkout_type === "branch") {
     try {
-      execSync(`git checkout ${branch_flag} ${branch_name}`, {
+      execSync(`git ${flags.git_args} checkout ${branch_flag} ${branch_name}`, {
         stdio: "inherit",
       });
       p.log.info(
