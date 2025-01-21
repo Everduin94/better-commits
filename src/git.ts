@@ -2,15 +2,18 @@
 import { execSync } from "child_process";
 import * as p from "@clack/prompts";
 import color from "picocolors";
+import { flags } from "./args";
 
 const porcelain_states = ["M", "T", "R", "D", "A", "C"];
 
 export function git_status(): { index: string[]; work_tree: string[] } {
   let status = "";
   try {
-    status = execSync("git status --porcelain", { stdio: "pipe" }).toString();
+    status = execSync(`git ${flags.git_args} status --porcelain`, {
+      stdio: "pipe",
+    }).toString();
   } catch (err) {
-    p.log.error(color.red("Failed to git status"));
+    p.log.error(color.red("Failed to git status" + err));
     return { index: [], work_tree: [] };
   }
 
@@ -46,7 +49,7 @@ export function git_add(files: string[]) {
   const space_delimited_files = files.join(" ");
   if (space_delimited_files) {
     try {
-      execSync(`git add ${space_delimited_files}`, {
+      execSync(`git ${flags.git_args} add ${space_delimited_files}`, {
         stdio: "pipe",
       }).toString();
       p.log.success(color.green("Changes successfully staged"));

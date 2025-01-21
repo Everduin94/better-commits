@@ -24,6 +24,7 @@ import {
 } from "./utils";
 import { git_add, git_status } from "./git";
 import { CUSTOM_SCOPE_KEY, V_FOOTER_OPTIONS } from "./valibot-consts";
+import { flags } from "./args";
 
 main(load_setup());
 
@@ -69,6 +70,17 @@ export async function main(config: Output<typeof Config>) {
     }
   }
 
+  const value_to_data: Record<string, { emoji: string; trailer: string }> =
+    config.commit_type.options.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr.value]: {
+          emoji: curr.emoji ?? "",
+          trailer: curr.trailer ?? "",
+        },
+      }),
+      {},
+    );
   if (config.commit_type.enable) {
     let message = "Select a commit type";
     let initial_value = config.commit_type.initial_value;
@@ -80,17 +92,6 @@ export async function main(config: Output<typeof Config>) {
         initial_value = type_from_branch;
       }
     }
-    const value_to_data: Record<string, { emoji: string; trailer: string }> =
-      config.commit_type.options.reduce(
-        (acc, curr) => ({
-          ...acc,
-          [curr.value]: {
-            emoji: curr.emoji ?? "",
-            trailer: curr.trailer ?? "",
-          },
-        }),
-        {},
-      );
     const commit_type = await p.select({
       message,
       initialValue: initial_value,
@@ -99,9 +100,11 @@ export async function main(config: Output<typeof Config>) {
     });
     if (p.isCancel(commit_type)) process.exit(0);
     commit_state.trailer = value_to_data[commit_type].trailer;
-    commit_state.type = config.commit_type.append_emoji_to_commit
-      ? `${value_to_data[commit_type].emoji} ${commit_type}`.trim()
-      : commit_type;
+    commit_state.type =
+      config.commit_type.append_emoji_to_commit &&
+      config.commit_type.emoji_commit_position === "Start"
+        ? `${value_to_data[commit_type].emoji} ${commit_type}`.trim()
+        : commit_type;
   }
 
   if (config.commit_scope.enable) {
@@ -124,7 +127,7 @@ export async function main(config: Output<typeof Config>) {
 
   if (config.check_ticket.infer_ticket) {
     try {
-      const branch = execSync("git branch --show-current", {
+      const branch = execSync(`git ${flags.git_args} branch --show-current`, {
         stdio: "pipe",
       }).toString();
       const found: string[] = [
@@ -192,7 +195,13 @@ export async function main(config: Output<typeof Config>) {
     },
   });
   if (p.isCancel(commit_title)) process.exit(0);
-  commit_state.title = clean_commit_title(commit_title);
+  let commit_title_with_emoji = commit_title;
+  if (
+    config.commit_type.append_emoji_to_commit &&
+    config.commit_type.emoji_commit_position === "After-Colon"
+  )
+    commit_title_with_emoji = `${value_to_data[commit_state.type].emoji} ${commit_title}`;
+  commit_state.title = clean_commit_title(commit_title_with_emoji);
 
   if (config.commit_body.enable) {
     const commit_body = await p.text({
@@ -282,7 +291,7 @@ export async function main(config: Output<typeof Config>) {
       ? `--trailer="${commit_state.trailer}"`
       : "";
     execSync(
-      `git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer} --edit`,
+      `git ${flags.git_args} commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer} --edit`,
       options,
     );
     process.exit(0);
@@ -313,7 +322,7 @@ export async function main(config: Output<typeof Config>) {
       ? `--trailer="${commit_state.trailer}"`
       : "";
     const output = execSync(
-      `git commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`,
+      `git ${flags.git_args} commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`,
       options,
     )
       .toString()
