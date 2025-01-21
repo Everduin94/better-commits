@@ -12,7 +12,7 @@
 A CLI for writing better commits, following the conventional commits specification.
 </p>
 
-https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-80d9-79abe0a2a00a
+<https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-80d9-79abe0a2a00a>
 
 ## ✨ Features
 
@@ -95,12 +95,13 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "infer_type_from_branch": true,
     "append_emoji_to_label": false,
     "append_emoji_to_commit": false,
+    "emoji_commit_position": "Start",
     "options": [
       {
         "value": "feat",
         "label": "feat",
         "hint": "A new feature",
-        "emoji": "✨",
+        "emoji": "🌟",
         "trailer": "Changelog: feature"
       },
       {
@@ -259,7 +260,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
 </details>
 
 > [!NOTE]<br>
-> Some properties allow a set of specifc string values
+> Some properties allow a set of specific string values
 >
 > - See _config file explanations_ for possible values
 
@@ -287,6 +288,7 @@ Expand to see explanations and possible values
 | `commit_type.infer_type_from_branch`       | If true infer type from branch name                                                                 |
 | `commit_type.append_emoji_to_label`        | If true append emoji to prompt                                                                      |
 | `commit_type.append_emoji_to_commit`       | If true append emoji to commit                                                                      |
+| `commit_type.emoji_commit_position`        | Emoji position, "Start" (default) or "After-Colon"                                                  |
 | `commit_type.options.value`                | Commit type prompt value                                                                            |
 | `commit_type.options.label`                | Commit type prompt label                                                                            |
 | `commit_type.options.hint`                 | Commit type inline hint (like this)                                                                 |
@@ -432,6 +434,16 @@ You can add this badge to your repository to display that you're using a better-
 | Markdown                                                                                                                                                                                                          | Result                                                                                                                                                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)` | [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits) |
+
+### Git Arguments
+
+You can pass arguments to `git` through `better-commits` like so:
+
+```sh
+better-commits --git-dir="$HOME/.config" --work-tree="$HOME"
+```
+
+A practical example of this would be managing dotfiles, as described in this [Atlassian Article](https://www.atlassian.com/git/tutorials/dotfiles)
 
 ---
 

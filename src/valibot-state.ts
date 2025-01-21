@@ -22,6 +22,10 @@ export const Config = v.object({
           infer_type_from_branch: v.optional(v.boolean(), true),
           append_emoji_to_label: v.optional(v.boolean(), false),
           append_emoji_to_commit: v.optional(v.boolean(), false),
+          emoji_commit_position: v.optional(
+            v.picklist(["Start", "After-Colon"]),
+            "Start",
+          ),
           options: v.optional(
             v.array(
               v.object({
@@ -83,6 +87,7 @@ export const Config = v.object({
           v.custom(
             (val) => {
               const options = val.options.map((v) => v.value);
+              if (val.custom_scope) options.push(CUSTOM_SCOPE_KEY);
               return options.includes(val.initial_value);
             },
             (val) => {

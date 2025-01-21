@@ -51,7 +51,7 @@ export const DEFAULT_TYPE_OPTIONS = [
     value: "feat",
     label: "feat",
     hint: "A new feature",
-    emoji: "✨",
+    emoji: "🌟",
     trailer: "Changelog: feature",
   },
   {
