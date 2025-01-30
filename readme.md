@@ -36,8 +36,16 @@ As a side-effect of formatting messages
 
 ## 📦 Installation
 
+### Using npm
+
 ```sh
 npm install -g better-commits
+```
+
+### Using AUR
+
+```sh
+yay -S better-commits
 ```
 
 ## 🚀 Usage
