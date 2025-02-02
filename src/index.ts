@@ -2,7 +2,7 @@
 
 import * as p from "@clack/prompts";
 import color from "picocolors";
-import { execSync } from "child_process";
+import { StdioOptions, execSync } from "child_process";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
 import { CommitState, Config } from "./valibot-state";
@@ -285,8 +285,8 @@ export async function main(config: Output<typeof Config>) {
 
   if (config.confirm_with_editor) {
     const options = config.overrides.shell
-      ? { shell: config.overrides.shell, stdio: "inherit" }
-      : { stdio: "inherit" };
+      ? { shell: config.overrides.shell, stdio: "inherit" as StdioOptions }
+      : { stdio: "inherit" as StdioOptions };
     const trailer = commit_state.trailer
       ? `--trailer="${commit_state.trailer}"`
       : "";
@@ -298,10 +298,12 @@ export async function main(config: Output<typeof Config>) {
   }
 
   let continue_commit = true;
-  p.note(
-    build_commit_string(commit_state, config, true, false, true),
-    "Commit Preview",
-  );
+  if (config.print_commit_output) {
+    p.note(
+      build_commit_string(commit_state, config, true, false, true),
+      "Commit Preview",
+    );
+  }
   if (config.confirm_commit) {
     continue_commit = (await p.confirm({
       message: "Confirm Commit?",
@@ -315,22 +317,21 @@ export async function main(config: Output<typeof Config>) {
   }
 
   try {
+    p.log.info("Committing changes...");
     const options = config.overrides.shell
-      ? { shell: config.overrides.shell }
-      : {};
+      ? { shell: config.overrides.shell, stdio: "inherit" as StdioOptions }
+      : { stdio: "inherit" as StdioOptions };
     const trailer = commit_state.trailer
       ? `--trailer="${commit_state.trailer}"`
       : "";
-    const output = execSync(
+    execSync(
       `git ${flags.git_args} commit -m "${build_commit_string(commit_state, config, false, true, false)}" ${trailer}`,
       options,
-    )
-      .toString()
-      .trim();
-    if (config.print_commit_output) p.log.info(output);
+    );
   } catch (err) {
     p.log.error("Something went wrong when committing: " + err);
   }
+  p.log.success("Commit Completed");
 }
 
 function build_commit_string(
