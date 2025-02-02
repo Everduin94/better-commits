@@ -331,7 +331,7 @@ export async function main(config: Output<typeof Config>) {
   } catch (err) {
     p.log.error("Something went wrong when committing: " + err);
   }
-  p.log.success("Commit Completed");
+  p.log.success("Commit Complete");
 }
 
 function build_commit_string(
