@@ -203,7 +203,9 @@ export function get_value_from_cache(
   try {
     return config_store.get(key) ?? "";
   } catch (err) {
-    /* Silent error - return empty string */
+    p.log.warn(
+      `Could not access ${key} from cache. Check that "~/.config" exists. Set "cache_last_value" to false to disable.`,
+    );
   }
 
   return "";
@@ -217,6 +219,8 @@ export function set_value_cache(
   try {
     config_store.set(key, value);
   } catch (err) {
-    /* Silent error - return empty string */
+    p.log.warn(
+      `Could not access ${key} from cache. Check that "~/.config" exists. Set "cache_last_value" to false to disable.`,
+    );
   }
 }
