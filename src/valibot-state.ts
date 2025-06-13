@@ -162,6 +162,7 @@ export const Config = v.object({
     }),
     {},
   ),
+  cache_last_value: v.optional(v.boolean(), true),
   confirm_with_editor: v.optional(v.boolean(), false),
   confirm_commit: v.optional(v.boolean(), true),
   print_commit_output: v.optional(v.boolean(), true),

@@ -91,7 +91,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
   "commit_type": {
     "enable": true,
     "initial_value": "feat",
-    "max_items": Infinity,
+    "max_items": 20,
     "infer_type_from_branch": true,
     "append_emoji_to_label": false,
     "append_emoji_to_commit": false,
@@ -170,7 +170,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "enable": true,
     "custom_scope": false,
     "initial_value": "app",
-    "max_items": Infinity
+    "max_items": 20
     "options": [
       {
         "value": "app",
@@ -219,6 +219,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "add_exclamation_to_title": true
   },
   "confirm_commit": true,
+  "cache_last_value": true,
   "confirm_with_editor": false,
   "print_commit_output": true,
   "branch_pre_commands": [],
@@ -316,6 +317,7 @@ Expand to see explanations and possible values
 | `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes                                         |
 | `confirm_commit`                           | If true manually confirm commit at end                                                              |
 | `confirm_with_editor`                      | Confirm / Edit commit with $GIT_EDITOR / $EDITOR                                                    |
+| `cache_last_value`                         | Reuse last prompt value after cancel                                                                |
 | `print_commit_output`                      | If true pretty print commit preview                                                                 |
 | `overrides.shell`                          | Override default shell, useful for windows users                                                    |
 

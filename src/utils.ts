@@ -8,6 +8,7 @@ import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { argv } from "process";
 import { flags } from "./args";
+import Configstore from "configstore";
 
 export const CONFIG_FILE_NAME = ".better-commits.json";
 export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
@@ -56,6 +57,12 @@ export const BRANCH_ACTION_OPTIONS: {
   { value: "worktree", label: "Worktree" },
 ];
 
+export const NOOP_PROMPT_CACHE = {
+  get: () => "",
+  set: (key: string, value: string) => {},
+  clear: () => {},
+} as unknown as Configstore;
+
 /* LOAD */
 export function load_setup(
   cli_name = " better-commits ",
@@ -84,6 +91,7 @@ export function load_setup(
             ? global_config.overrides
             : repo_config.overrides,
           confirm_with_editor: global_config.confirm_with_editor,
+          cache_last_value: global_config.cache_last_value,
         }
       : repo_config;
   }
@@ -186,4 +194,29 @@ export function clean_commit_title(title: string): string {
 
 function set_non_configuration_arguments() {
   flags.git_args = `${argv[2] ?? ""} ${argv[3] ?? ""}`.trim();
+}
+
+export function get_value_from_cache(
+  config_store: Configstore,
+  key: string,
+): string {
+  try {
+    return config_store.get(key) ?? "";
+  } catch (err) {
+    /* Silent error - return empty string */
+  }
+
+  return "";
+}
+
+export function set_value_cache(
+  config_store: Configstore,
+  key: string,
+  value: string,
+): void {
+  try {
+    config_store.set(key, value);
+  } catch (err) {
+    /* Silent error - return empty string */
+  }
 }
