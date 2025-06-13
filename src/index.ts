@@ -21,16 +21,23 @@ import {
   get_git_root,
   REGEX_SLASH_UND,
   REGEX_START_UND,
+  get_value_from_cache,
+  set_value_cache,
+  NOOP_PROMPT_CACHE,
 } from "./utils";
 import { git_add, git_status } from "./git";
 import { CUSTOM_SCOPE_KEY, V_FOOTER_OPTIONS } from "./valibot-consts";
 import { flags } from "./args";
+import Configstore from "configstore";
 
 main(load_setup());
 
 export async function main(config: Output<typeof Config>) {
   let commit_state = parse(CommitState, {});
   chdir(get_git_root());
+  const prompt_cache = config.cache_last_value
+    ? new Configstore("better-commits")
+    : NOOP_PROMPT_CACHE;
 
   if (config.check_status) {
     let { index, work_tree } = git_status();
@@ -94,11 +101,13 @@ export async function main(config: Output<typeof Config>) {
     }
     const commit_type = await p.select({
       message,
-      initialValue: initial_value,
+      initialValue:
+        get_value_from_cache(prompt_cache, "commit_type") || initial_value,
       maxItems: config.commit_type.max_items,
       options: config.commit_type.options,
     });
     if (p.isCancel(commit_type)) process.exit(0);
+    set_value_cache(prompt_cache, "commit_type", commit_type);
     commit_state.trailer = value_to_data[commit_type].trailer;
     commit_state.type =
       config.commit_type.append_emoji_to_commit &&
@@ -110,11 +119,15 @@ export async function main(config: Output<typeof Config>) {
   if (config.commit_scope.enable) {
     let commit_scope = await p.select({
       message: "Select a commit scope",
-      initialValue: config.commit_scope.initial_value,
+      initialValue:
+        get_value_from_cache(prompt_cache, "commit_scope") ||
+        config.commit_scope.initial_value,
       maxItems: config.commit_scope.max_items,
       options: config.commit_scope.options,
     });
     if (p.isCancel(commit_scope)) process.exit(0);
+    set_value_cache(prompt_cache, "commit_scope", commit_scope);
+
     if (commit_scope === CUSTOM_SCOPE_KEY && config.commit_scope.custom_scope) {
       commit_scope = await p.text({
         message: "Write a custom scope",
@@ -158,9 +171,12 @@ export async function main(config: Output<typeof Config>) {
         ? `Ticket / issue inferred from branch ${color.dim("(confirm / edit)")}`
         : `Add ticket / issue ${OPTIONAL_PROMPT}`,
       placeholder: "",
-      initialValue: commit_state.ticket,
+      initialValue:
+        get_value_from_cache(prompt_cache, "commit_ticket") ||
+        commit_state.ticket,
     });
     if (p.isCancel(user_commit_ticket)) process.exit(0);
+    set_value_cache(prompt_cache, "commit_ticket", user_commit_ticket);
     commit_state.ticket = user_commit_ticket ?? "";
   }
 
@@ -174,6 +190,7 @@ export async function main(config: Output<typeof Config>) {
 
   const commit_title = await p.text({
     message: "Write a brief title describing the commit",
+    initialValue: get_value_from_cache(prompt_cache, "commit_title") || "",
     placeholder: "",
     validate: (value) => {
       if (!value) return "Please enter a title";
@@ -195,6 +212,8 @@ export async function main(config: Output<typeof Config>) {
     },
   });
   if (p.isCancel(commit_title)) process.exit(0);
+  set_value_cache(prompt_cache, "commit_title", commit_title);
+
   let commit_title_with_emoji = commit_title;
   if (
     config.commit_type.append_emoji_to_commit &&
@@ -206,6 +225,7 @@ export async function main(config: Output<typeof Config>) {
   if (config.commit_body.enable) {
     const commit_body = await p.text({
       message: `Write a detailed description of the changes ${OPTIONAL_PROMPT}`,
+      initialValue: get_value_from_cache(prompt_cache, "commit_body") || "",
       placeholder: "",
       validate: (val) => {
         if (config.commit_body.required && !val)
@@ -213,13 +233,18 @@ export async function main(config: Output<typeof Config>) {
       },
     });
     if (p.isCancel(commit_body)) process.exit(0);
+    set_value_cache(prompt_cache, "commit_body", commit_body);
     commit_state.body = commit_body ?? "";
   }
 
   if (config.commit_footer.enable) {
+    const cache_footer = get_value_from_cache(
+      prompt_cache,
+      "commit_footer",
+    ).split(",");
     const commit_footer = await p.multiselect({
       message: `Select optional footers ${SPACE_TO_SELECT}`,
-      initialValues: config.commit_footer.initial_value,
+      initialValues: cache_footer || config.commit_footer.initial_value,
       options: COMMIT_FOOTER_OPTIONS as {
         value: Output<typeof V_FOOTER_OPTIONS>;
         label: string;
@@ -228,6 +253,7 @@ export async function main(config: Output<typeof Config>) {
       required: false,
     });
     if (p.isCancel(commit_footer)) process.exit(0);
+    set_value_cache(prompt_cache, "commit_footer", commit_footer.join(","));
 
     if (commit_footer.includes("breaking-change")) {
       const breaking_changes_title = await p.text({
@@ -332,6 +358,7 @@ export async function main(config: Output<typeof Config>) {
     p.log.error("Something went wrong when committing: " + err);
   }
   p.log.success("Commit Complete");
+  prompt_cache.clear();
 }
 
 function build_commit_string(
