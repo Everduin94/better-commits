@@ -502,7 +502,7 @@ function build_commit_string(
   }
 
   if (escape_quotes) {
-    commit_string = commit_string.replaceAll('"', '\\"');
+    commit_string = commit_string.replaceAll('"', '\\"').replaceAll("`", "\\`");
   }
 
   return commit_string;
