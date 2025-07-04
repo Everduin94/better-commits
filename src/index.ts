@@ -449,8 +449,7 @@ function build_commit_string(
     const temp = commit_state.body.split("\\n"); // literal \n, not new-line.
     const res = temp
       .map((v) => (colorize ? color.reset(v.trim()) : v.trim()))
-      .join("\n")
-      .replaceAll("`", "`");
+      .join("\n");
     commit_string += colorize ? `\n\n${res}` : `\n\n${res}`;
   }
 
