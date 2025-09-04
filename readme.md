@@ -42,16 +42,15 @@ npm install -g better-commits
 
 ## 🚀 Usage
 
-When you're ready to commit. To run the CLI in your terminal:
+To run the CLI in your terminal:
 
 ```sh
-better-commits
-# or
-npx better-commits
+better-commits # Create a new commit
+better-branch # Create a new branch
 ```
 
-It will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
-Some of the values in these prompts will be infered by your branch name and auto populated. You can adjust this in your `.better-commits.json` configuration file.
+`better-commits` will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
+Some of the values in these prompts will be inferred by your branch name and auto populated. You can adjust this in your `.better-commits.json` configuration file.
 
 To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
 
@@ -251,10 +250,10 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
   },
   "branch_action_default": "branch",
   "branch_order": ["user", "version", "type", "ticket", "description"],
-  "enable_worktrees": true,
-  "worktree_config": {
-    "base_path": "../",
-    "folder_template": "{{repo_name}}-{{branch_description}}"
+  "worktrees": {
+    "enable": true,
+    "base_path": "..",
+    "folder_template": "{{repo_name}}-{{ticket}}-{{branch_description}}"
   },
   "overrides": {
     "shell": "/bin/sh"
@@ -327,30 +326,31 @@ Expand to see explanations and possible values
 
 Branch configuration (same config file, split for readability)
 
-| Property                        | Description                                               |
-| ------------------------------- | --------------------------------------------------------- |
-| `branch_pre_commands`           | Array of shell commands to run before branching           |
-| `branch_post_commands`          | Array of shell commands to run after branching            |
-| `worktree_pre_commands`         | Array of shell commands to run before creating worktree   |
-| `worktree_post_commands`        | Array of shell commands to run after creating worktree    |
-| `branch_user.enable`            | If enabled include user name                              |
-| `branch_user.required`          | If enabled require user name                              |
-| `branch_user.separator`         | Branch delimeter - "/" (default), "-", "\_"               |
-| `branch_type.enable`            | If enabled include type                                   |
-| `branch_type.separator`         | Branch delimeter - "/" (default), "-", "\_"               |
-| `branch_ticket.enable`          | If enabled include ticket                                 |
-| `branch_ticket.required`        | If enabled require ticket                                 |
-| `branch_ticket.separator`       | Branch delimeter - "/", "-" (default), "\_"               |
-| `branch_description.max_length` | Max length branch name                                    |
-| `branch_description.separator`  | Branch delimeter - "" (default), "/", "-", "\_"           |
-| `branch_version.enable`         | If enabled include version                                |
-| `branch_version.required`       | If enabled require version                                |
-| `branch_version.separator`      | Branch delimeter - "", "/" (default), "-", "\_"           |
-| `branch_order`                  | Order of branch name values (doesn't effect prompt order) |
-| `branch_action_default`         | "branch" or "worktree"                                    |
-| `enable_worktrees`              | If false, always default to branch action                 |
-| `worktree_config.base_path`     | Directory where worktrees are created (default: "../")    |
-| `worktree_config.folder_template` | Template for worktree folder names with variables like {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}} |
+| Property                        | Description                                                                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `branch_pre_commands`           | Array of shell commands to run before branching                                                                                           |
+| `branch_post_commands`          | Array of shell commands to run after branching                                                                                            |
+| `worktree_pre_commands`         | Array of shell commands to run before creating worktree                                                                                   |
+| `worktree_post_commands`        | Array of shell commands to run after creating worktree                                                                                    |
+| `branch_user.enable`            | If enabled include user name                                                                                                              |
+| `branch_user.required`          | If enabled require user name                                                                                                              |
+| `branch_user.separator`         | Branch delimeter - "/" (default), "-", "\_"                                                                                               |
+| `branch_type.enable`            | If enabled include type                                                                                                                   |
+| `branch_type.separator`         | Branch delimeter - "/" (default), "-", "\_"                                                                                               |
+| `branch_ticket.enable`          | If enabled include ticket                                                                                                                 |
+| `branch_ticket.required`        | If enabled require ticket                                                                                                                 |
+| `branch_ticket.separator`       | Branch delimeter - "/", "-" (default), "\_"                                                                                               |
+| `branch_description.max_length` | Max length branch name                                                                                                                    |
+| `branch_description.separator`  | Branch delimeter - "" (default), "/", "-", "\_"                                                                                           |
+| `branch_version.enable`         | If enabled include version                                                                                                                |
+| `branch_version.required`       | If enabled require version                                                                                                                |
+| `branch_version.separator`      | Branch delimeter - "", "/" (default), "-", "\_"                                                                                           |
+| `branch_order`                  | Order of branch name values (doesn't effect prompt order)                                                                                 |
+| `branch_action_default`         | "branch" or "worktree"                                                                                                                    |
+| `enable_worktrees`              | `Deprecated` see `worktrees.enable`                                                                                                       |
+| `worktrees.enable`              | If false, always default to branch action                                                                                                 |
+| `worktrees.base_path`           | Directory where worktrees are created (default: "..")                                                                                     |
+| `worktrees.folder_template`     | Template for worktree folder names with variables like {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}} |
 
 </details>
 
@@ -368,16 +368,13 @@ Branch configuration (same config file, split for readability)
 
 ## 🌳 Better Branch
 
-> [!NOTE]<br>
-> Using `better-branch` with `better-commits` can supercharge your git workflow.
-> Make sure to try it out!
-
 Better branch is a secondary feature that works with better commits
 
 - Supports consistent branch naming conventions
 - Uses same type-list/prompt from your config
 - Enables better-commits to infer type & ticket
 - Caches your username for speedy branching
+- Convenient worktree creation
 
 To run the CLI in your terminal:
 
@@ -387,12 +384,13 @@ better-branch
 
 ### Worktree Support
 
-`better-branch` will prompt for **Branch** or **Worktree**. Creating a **Worktree** with `better-branch` is a great way to create worktrees while maintaining consistent branch naming conventions.
-
-The worktree flow creates a folder/worktree with your **branch description** and a git branch inside with your **full branch name**.
+`better-branch` will prompt for **Branch** or **Worktree**. The Worktree flow creates a folder/worktree from your **branch description** and a git branch inside with your **full branch name**.
 
 > [!NOTE]<br>
 > Creating a worktree named `everduin94/feat/TAC-123-add-worktrees` with the native git command would create a nested folder for each `/`. `better-branch` removes the hassle by creating 1 folder while still using the full name for the branch.
+
+> [!TIP]
+> By default, `better-branch` will create **worktrees** as a sibling folder. To change this, see `worktrees.base_path`.
 
 ### Pre/Post Branch Checkout Hooks
 
@@ -425,7 +423,7 @@ If you're using Github issues to track your work, and select the `closes` footer
 
 `better-commits` can append a commit trailer per commit type. This allows you to [automate change logs](https://docs.gitlab.com/ee/user/project/changelogs.html) with tools like Gitlab.
 
-### Fun Facts
+### Misc
 
 `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
 
@@ -433,9 +431,6 @@ Setting `confirm_with_editor=true` will allow you to edit/confirm a commit with 
 
 - For example, to edit with Neovim: `git config --global core.editor "nvim"`
 - For VS Code, `git config --global core.editor "code -n --wait"`
-
-> [!NOTE]<br>
-> Enjoy learning, open source technology, and note-taking? [Join our Discord!](https://discord.gg/grHVnZwYup)
 
 You can add this badge to your repository to display that you're using a better-commits repository config
 

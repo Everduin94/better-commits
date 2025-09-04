@@ -17,7 +17,7 @@ import {
   CACHE_PROMPT,
   OPTIONAL_PROMPT,
   load_setup,
-  get_repo_name,
+  get_git_root,
 } from "./utils";
 import { flags } from "./args";
 
@@ -25,9 +25,10 @@ main(load_setup(" better-branch "));
 
 async function main(config: Output<typeof Config>) {
   const branch_state = parse(BranchState, {});
+  chdir(get_git_root());
 
   let checkout_type: Output<typeof V_BRANCH_ACTIONS> = "branch";
-  if (config.enable_worktrees) {
+  if (config.worktrees.enable) {
     const branch_or_worktree = await p.select({
       message: `Checkout a branch or create a worktree?`,
       initialValue: config.branch_action_default,
@@ -198,26 +199,26 @@ function build_worktree_path(
   branch_state: Output<typeof BranchState>,
   config: Output<typeof Config>,
 ): string {
-  const repo_name = get_repo_name();
-  let worktree_name = config.worktree_config.folder_template;
-  
-  // Replace template variables
+  const gitRoot = get_git_root();
+  const repo_name = gitRoot.split("/").pop() || "repo";
+
+  let worktree_name = config.worktrees.folder_template;
+
   worktree_name = worktree_name
-    .replace(/\{\{repo_name\}\}/g, repo_name)
-    .replace(/\{\{branch_description\}\}/g, branch_state.description)
-    .replace(/\{\{user\}\}/g, branch_state.user || "")
-    .replace(/\{\{type\}\}/g, branch_state.type || "")
-    .replace(/\{\{ticket\}\}/g, branch_state.ticket || "")
-    .replace(/\{\{version\}\}/g, branch_state.version || "");
-  
-  // Clean up any double hyphens or leading/trailing hyphens
+    .replace("{{repo_name}}", repo_name)
+    .replace("{{branch_description}}", branch_state.description)
+    .replace("{{user}}", branch_state.user || "")
+    .replace("{{type}}", branch_state.type || "")
+    .replace("{{ticket}}", branch_state.ticket || "")
+    .replace("{{version}}", branch_state.version || "");
+
   worktree_name = worktree_name
+    .replace(/\s/g, "")
     .replace(/--+/g, "-")
     .replace(/^-+|-+$/g, "");
-  
-  // Combine with base path
-  const base_path = config.worktree_config.base_path;
-  return `${base_path}${base_path.endsWith('/') ? '' : '/'}${worktree_name}`;
+
+  const base_path = config.worktrees.base_path;
+  return `${base_path}${base_path.endsWith("/") ? "" : "/"}${worktree_name}`;
 }
 
 function get_user_from_cache(): string {

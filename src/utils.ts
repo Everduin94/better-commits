@@ -224,29 +224,3 @@ export function set_value_cache(
     );
   }
 }
-
-export function get_repo_name(): string {
-  try {
-    // First try to get repo name from git remote
-    const remote = execSync(`git ${flags.git_args} remote get-url origin`, {
-      stdio: "pipe",
-    }).toString().trim();
-    
-    // Extract repo name from remote URL
-    const match = remote.match(/\/([^\/]+?)(\.git)?$/);
-    if (match && match[1]) {
-      return match[1];
-    }
-  } catch (err) {
-    // If git remote fails, fall back to directory name
-  }
-  
-  try {
-    // Fall back to git root directory name
-    const gitRoot = get_git_root();
-    const repoName = gitRoot.split('/').pop() || 'repo';
-    return repoName;
-  } catch (err) {
-    return 'repo';
-  }
-}
