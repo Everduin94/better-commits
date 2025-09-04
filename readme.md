@@ -72,8 +72,6 @@ To create a **repository-specific config**, navigate to the root of your project
 
 ### Options
 
-Better-commits (& better-branch) are highly flexible with sane defaults. These options allow you specify whats best for your workflow.
-
 > [!NOTE]<br>
 > All properties are optional and can be removed from the config. It will be replaced by the default at run-time.
 >
