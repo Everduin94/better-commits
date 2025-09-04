@@ -41,5 +41,9 @@
     "git checkout main",
     "git pull -r origin main",
     "npm install"
-  ]
+  ],
+  "worktree_config": {
+    "base_path": "../",
+    "folder_template": "{{repo_name}}-{{user}}-{{type}}-{{branch_description}}"
+  }
 }

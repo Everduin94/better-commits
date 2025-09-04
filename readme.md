@@ -170,7 +170,7 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
     "enable": true,
     "custom_scope": false,
     "initial_value": "app",
-    "max_items": 20
+    "max_items": 20,
     "options": [
       {
         "value": "app",
@@ -252,6 +252,10 @@ Better-commits (& better-branch) are highly flexible with sane defaults. These o
   "branch_action_default": "branch",
   "branch_order": ["user", "version", "type", "ticket", "description"],
   "enable_worktrees": true,
+  "worktree_config": {
+    "base_path": "../",
+    "folder_template": "{{repo_name}}-{{branch_description}}"
+  },
   "overrides": {
     "shell": "/bin/sh"
   }
@@ -345,6 +349,8 @@ Branch configuration (same config file, split for readability)
 | `branch_order`                  | Order of branch name values (doesn't effect prompt order) |
 | `branch_action_default`         | "branch" or "worktree"                                    |
 | `enable_worktrees`              | If false, always default to branch action                 |
+| `worktree_config.base_path`     | Directory where worktrees are created (default: "../")    |
+| `worktree_config.folder_template` | Template for worktree folder names with variables like {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}} |
 
 </details>
 

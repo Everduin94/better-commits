@@ -17,6 +17,7 @@ import {
   CACHE_PROMPT,
   OPTIONAL_PROMPT,
   load_setup,
+  get_repo_name,
 } from "./utils";
 import { flags } from "./args";
 
@@ -140,8 +141,7 @@ async function main(config: Output<typeof Config>) {
     }
   } else {
     try {
-      const ticket = branch_state.ticket ? `${branch_state.ticket}-` : "";
-      const worktree_name = `${ticket}${branch_state.description}`;
+      const worktree_name = build_worktree_path(branch_state, config);
       execSync(
         `git worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
         {
@@ -192,6 +192,32 @@ function build_branch(
     return res.slice(0, -1).trim();
   }
   return res.trim();
+}
+
+function build_worktree_path(
+  branch_state: Output<typeof BranchState>,
+  config: Output<typeof Config>,
+): string {
+  const repo_name = get_repo_name();
+  let worktree_name = config.worktree_config.folder_template;
+  
+  // Replace template variables
+  worktree_name = worktree_name
+    .replace(/\{\{repo_name\}\}/g, repo_name)
+    .replace(/\{\{branch_description\}\}/g, branch_state.description)
+    .replace(/\{\{user\}\}/g, branch_state.user || "")
+    .replace(/\{\{type\}\}/g, branch_state.type || "")
+    .replace(/\{\{ticket\}\}/g, branch_state.ticket || "")
+    .replace(/\{\{version\}\}/g, branch_state.version || "");
+  
+  // Clean up any double hyphens or leading/trailing hyphens
+  worktree_name = worktree_name
+    .replace(/--+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  
+  // Combine with base path
+  const base_path = config.worktree_config.base_path;
+  return `${base_path}${base_path.endsWith('/') ? '' : '/'}${worktree_name}`;
 }
 
 function get_user_from_cache(): string {

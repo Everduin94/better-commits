@@ -211,6 +211,16 @@ export const Config = v.object({
   branch_action_default: v.optional(V_BRANCH_ACTIONS, "branch"),
   branch_order: v.optional(v.array(V_BRANCH_FIELDS), BRANCH_ORDER_DEFAULTS),
   enable_worktrees: v.optional(v.boolean(), true),
+  worktree_config: v.optional(
+    v.object({
+      base_path: v.optional(v.string(), "../"),
+      folder_template: v.optional(v.string(), "{{repo_name}}-{{branch_description}}"),
+    }),
+    {
+      base_path: "../",
+      folder_template: "{{repo_name}}-{{branch_description}}",
+    },
+  ),
   overrides: v.optional(
     v.object({
       shell: v.optional(v.string()),
