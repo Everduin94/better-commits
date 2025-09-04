@@ -17,6 +17,7 @@ import {
   CACHE_PROMPT,
   OPTIONAL_PROMPT,
   load_setup,
+  get_git_root,
 } from "./utils";
 import { flags } from "./args";
 
@@ -24,9 +25,10 @@ main(load_setup(" better-branch "));
 
 async function main(config: Output<typeof Config>) {
   const branch_state = parse(BranchState, {});
+  chdir(get_git_root());
 
   let checkout_type: Output<typeof V_BRANCH_ACTIONS> = "branch";
-  if (config.enable_worktrees) {
+  if (config.worktrees.enable) {
     const branch_or_worktree = await p.select({
       message: `Checkout a branch or create a worktree?`,
       initialValue: config.branch_action_default,
@@ -140,8 +142,7 @@ async function main(config: Output<typeof Config>) {
     }
   } else {
     try {
-      const ticket = branch_state.ticket ? `${branch_state.ticket}-` : "";
-      const worktree_name = `${ticket}${branch_state.description}`;
+      const worktree_name = build_worktree_path(branch_state, config);
       execSync(
         `git worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
         {
@@ -192,6 +193,32 @@ function build_branch(
     return res.slice(0, -1).trim();
   }
   return res.trim();
+}
+
+function build_worktree_path(
+  branch_state: Output<typeof BranchState>,
+  config: Output<typeof Config>,
+): string {
+  const gitRoot = get_git_root();
+  const repo_name = gitRoot.split("/").pop() || "repo";
+
+  let worktree_name = config.worktrees.folder_template;
+
+  worktree_name = worktree_name
+    .replace("{{repo_name}}", repo_name)
+    .replace("{{branch_description}}", branch_state.description)
+    .replace("{{user}}", branch_state.user || "")
+    .replace("{{type}}", branch_state.type || "")
+    .replace("{{ticket}}", branch_state.ticket || "")
+    .replace("{{version}}", branch_state.version || "");
+
+  worktree_name = worktree_name
+    .replace(/\s/g, "")
+    .replace(/--+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  const base_path = config.worktrees.base_path;
+  return `${base_path}${base_path.endsWith("/") ? "" : "/"}${worktree_name}`;
 }
 
 function get_user_from_cache(): string {
