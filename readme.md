@@ -343,7 +343,7 @@ Branch configuration (same config file, split for readability)
 | `branch_version.enable`         | If enabled include version                                                                                                                |
 | `branch_version.required`       | If enabled require version                                                                                                                |
 | `branch_version.separator`      | Branch delimeter - "", "/" (default), "-", "\_"                                                                                           |
-| `branch_order`                  | Order of branch name values (doesn't effect prompt order)                                                                                 |
+| `branch_order`                  | Order of branch name values (doesn't affect prompt order)                                                                                 |
 | `branch_action_default`         | "branch" or "worktree"                                                                                                                    |
 | `enable_worktrees`              | `Deprecated` see `worktrees.enable`                                                                                                       |
 | `worktrees.enable`              | If false, always default to branch action                                                                                                 |
