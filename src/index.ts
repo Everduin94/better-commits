@@ -358,7 +358,11 @@ export async function main(config: Output<typeof Config>) {
     p.log.error("Something went wrong when committing: " + err);
   }
   p.log.success("Commit Complete");
+
+  // Instead of deleting individual keys, just get what we need and clear.
+  const user_name = prompt_cache.get("username");
   prompt_cache.clear();
+  if (user_name) prompt_cache.set("username", user_name);
 }
 
 function build_commit_string(
