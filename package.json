@@ -1,7 +1,7 @@
 {
   "name": "better-commits",
   "private": false,
-  "version": "1.18.2",
+  "version": "1.18.1",
   "description": "A CLI for creating better commits following the conventional commits specification",
   "author": "Erik Verduin (https://github.com/everduin94)",
   "type": "module",
@@ -21,6 +21,10 @@
     "git-bc": "./dist/index.js"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Everduin94/better-commits"
+  },
   "dependencies": {
     "@clack/core": "^0.3.1",
     "@clack/prompts": "^0.7.0",
