@@ -9,6 +9,11 @@ jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -18,6 +23,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "lts/*"
+          registry-url: "https://registry.npmjs.org"
       - name: Install dependencies
         run: npm ci
       - name: Build package
@@ -25,5 +31,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
