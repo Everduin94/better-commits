@@ -158,7 +158,7 @@ export const Config = v.object({
   ),
   breaking_change: v.optional(
     v.object({
-      add_exclamation_to_title: v.optional(v.boolean(), false),
+      add_exclamation_to_title: v.optional(v.boolean(), true),
     }),
     {},
   ),
