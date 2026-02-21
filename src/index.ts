@@ -236,11 +236,12 @@ export async function main(config: Output<typeof Config>) {
 
     commit_state.body = commit_body ?? "";
     if (config.commit_body.split_by_period) {
-      const sentences = commit_body.split(".").map((s) => s.trim());
+      const sentences = commit_state.body.split(/\.\s+/).map((s) => s.trim());
       commit_state.body = sentences.join(".\n");
     }
 
-    set_value_cache(prompt_cache, "commit_body", commit_state.body);
+    // Cache unsplit version for editing.
+    set_value_cache(prompt_cache, "commit_body", commit_body);
   }
 
   if (config.commit_footer.enable) {
@@ -362,7 +363,9 @@ export async function main(config: Output<typeof Config>) {
     );
   } catch (err) {
     p.log.error("Something went wrong when committing: " + err);
+    return;
   }
+
   p.log.success("Commit Complete");
 
   // Instead of deleting individual keys, just get what we need and clear.
