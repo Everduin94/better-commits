@@ -205,7 +205,8 @@ To create a **repository-specific config**, navigate to the root of your project
   },
   "commit_body": {
     "enable": true,
-    "required": false
+    "required": false,
+    "split_by_period": false
   },
   "commit_footer": {
     "enable": true,
@@ -312,6 +313,7 @@ Expand to see explanations and possible values
 | `commit_title.max_size`                    | Max size of title including scope, type, etc...                                                     |
 | `commit_body.enable`                       | If true include body                                                                                |
 | `commit_body.required`                     | If true body is required                                                                            |
+| `commit_body.split_by_period`              | Automatically split sentences into new lines                                                        |
 | `commit_footer.enable`                     | If true include footer                                                                              |
 | `commit_footer.initial_value`              | Initial values selected in footer                                                                   |
 | `commit_footer.options`                    | Footer options                                                                                      |
