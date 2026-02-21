@@ -233,8 +233,14 @@ export async function main(config: Output<typeof Config>) {
       },
     });
     if (p.isCancel(commit_body)) process.exit(0);
-    set_value_cache(prompt_cache, "commit_body", commit_body);
+
     commit_state.body = commit_body ?? "";
+    if (config.commit_body.split_by_period) {
+      const sentences = commit_body.split(".").map((s) => s.trim());
+      commit_state.body = sentences.join(".\n");
+    }
+
+    set_value_cache(prompt_cache, "commit_body", commit_state.body);
   }
 
   if (config.commit_footer.enable) {

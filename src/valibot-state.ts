@@ -145,6 +145,7 @@ export const Config = v.object({
     v.object({
       enable: v.optional(v.boolean(), true),
       required: v.optional(v.boolean(), false),
+      split_by_period: v.optional(v.boolean(), false),
     }),
     {},
   ),

@@ -3,13 +3,16 @@
     "append_emoji_to_label": true,
     "append_emoji_to_commit": false
   },
+  "commit_body": {
+    "split_by_period": true
+  },
   "commit_scope": {
     "enable": true,
-    "initial_value": "main",
+    "initial_value": "commit",
     "options": [
       {
-        "value": "main",
-        "label": "main"
+        "value": "commit",
+        "label": "commit"
       },
       {
         "value": "branch",
