@@ -37,7 +37,8 @@
     "branch": "jiti ./src/branch.ts",
     "init": "jiti ./src/init.ts",
     "build": "tsup",
-    "commit": "jiti ./src/index.ts"
+    "commit": "jiti ./src/index.ts",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@semantic-release/git": "^10.0.1",
@@ -49,7 +50,8 @@
     "semantic-release": "^25.0.2",
     "tsup": "^8.0.2",
     "tsx": "^3.12.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^3.2.4"
   },
   "release": {
     "branches": [
