@@ -16,7 +16,6 @@ export const A_FOR_ALL = `${color.dim(
   "(<space> to select, <a> to select all)",
 )}`;
 export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
-export const CACHE_PROMPT = `${color.dim("(value will be saved)")}`;
 export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/);
 export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/);
 export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/);

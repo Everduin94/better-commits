@@ -12,13 +12,8 @@ import {
   V_BRANCH_FIELDS,
 } from "./valibot-consts";
 import { BranchState, CommitState, Config } from "./valibot-state";
-import {
-  BRANCH_ACTION_OPTIONS,
-  CACHE_PROMPT,
-  OPTIONAL_PROMPT,
-  load_setup,
-  get_git_root,
-} from "./utils";
+import { BRANCH_ACTION_OPTIONS, load_setup, get_git_root } from "./utils";
+import { optional_message } from "./utils/messages";
 import { flags } from "./args";
 
 main(load_setup(" better-branch "));
@@ -43,9 +38,9 @@ async function main(config: Output<typeof Config>) {
     const cache_user_name = get_user_from_cache();
     const user_name_required = config.branch_user.required;
     const user_name = await p.text({
-      message: `Type your git username ${
-        user_name_required ? "" : OPTIONAL_PROMPT
-      } ${CACHE_PROMPT}`.trim(),
+      message: user_name_required
+        ? "Type your git username"
+        : optional_message("Type your git username"),
       placeholder: "",
       initialValue: cache_user_name,
       validate: (val) => {
@@ -71,9 +66,9 @@ async function main(config: Output<typeof Config>) {
   if (config.branch_ticket.enable) {
     const ticked_required = config.branch_ticket.required;
     const ticket = await p.text({
-      message: `Type ticket / issue number ${
-        ticked_required ? "" : OPTIONAL_PROMPT
-      }`.trim(),
+      message: ticked_required
+        ? "Type ticket / issue number"
+        : optional_message("Type ticket / issue number"),
       placeholder: "",
       validate: (val) => {
         if (ticked_required && !val) return "Please enter a ticket / issue";
@@ -86,9 +81,9 @@ async function main(config: Output<typeof Config>) {
   if (config.branch_version.enable) {
     const version_required = config.branch_version.required;
     const version = await p.text({
-      message: `Type version number ${
-        version_required ? "" : OPTIONAL_PROMPT
-      }`.trim(),
+      message: version_required
+        ? "Type version number"
+        : optional_message("Type version number"),
       placeholder: "",
       validate: (val) => {
         if (version_required && !val) return "Please enter a version";
