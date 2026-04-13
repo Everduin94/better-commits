@@ -231,24 +231,23 @@ export const Config = v.object({
   ),
 });
 
-export const CommitState = v.optional(
-  v.object({
-    type: v.optional(v.string(), ""),
-    scope: v.optional(v.string(), ""),
-    title: v.optional(v.string(), ""),
-    body: v.optional(v.string(), ""),
-    closes: v.optional(v.string(), ""),
-    ticket: v.optional(v.string(), ""),
-    breaking_title: v.optional(v.string(), ""),
-    breaking_body: v.optional(v.string(), ""),
-    deprecates: v.optional(v.string(), ""),
-    deprecates_title: v.optional(v.string(), ""),
-    deprecates_body: v.optional(v.string(), ""),
-    custom_footer: v.optional(v.string(), ""),
-    trailer: v.optional(v.string(), ""),
-  }),
-  {},
-);
+export const COMMIT_STATE_ENTRIES = {
+  type: v.optional(v.string(), ""),
+  scope: v.optional(v.string(), ""),
+  title: v.optional(v.string(), ""),
+  body: v.optional(v.string(), ""),
+  closes: v.optional(v.string(), ""),
+  ticket: v.optional(v.string(), ""),
+  breaking_title: v.optional(v.string(), ""),
+  breaking_body: v.optional(v.string(), ""),
+  deprecates: v.optional(v.string(), ""),
+  deprecates_title: v.optional(v.string(), ""),
+  deprecates_body: v.optional(v.string(), ""),
+  custom_footer: v.optional(v.string(), ""),
+  trailer: v.optional(v.string(), ""),
+};
+
+export const CommitState = v.optional(v.object(COMMIT_STATE_ENTRIES), {});
 
 export const BranchState = v.optional(
   v.object({

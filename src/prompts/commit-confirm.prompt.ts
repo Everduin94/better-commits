@@ -3,6 +3,7 @@ import color from "picocolors";
 import { StdioOptions, execSync } from "child_process";
 import { flags } from "../args";
 import { Runnable } from "./runnable";
+import { dry_run_message } from "../utils/messages";
 
 export class CommitConfirmPrompt extends Runnable {
   async run(): Promise<void> {
@@ -29,8 +30,17 @@ export class CommitConfirmPrompt extends Runnable {
     }
 
     try {
-      p.log.info("Committing changes...");
-      execSync(this.#commit_command, this.#git_command_options);
+      p.log.info(
+        flags.dry_run
+          ? dry_run_message("Committing changes...")
+          : "Committing changes...",
+      );
+      execSync(
+        this.#commit_command,
+        flags.dry_run
+          ? this.#git_command_options_quiet
+          : this.#git_command_options,
+      );
     } catch (err) {
       p.log.error("Something went wrong when committing: " + err);
       return;
@@ -40,7 +50,7 @@ export class CommitConfirmPrompt extends Runnable {
   }
 
   get #confirm_with_editor(): boolean {
-    return this.config.confirm_with_editor;
+    return flags.interactive && this.config.confirm_with_editor;
   }
 
   get #print_commit_output(): boolean {
@@ -57,6 +67,12 @@ export class CommitConfirmPrompt extends Runnable {
       : { stdio: "inherit" as StdioOptions };
   }
 
+  get #git_command_options_quiet(): { stdio: StdioOptions; shell?: string } {
+    return this.config.overrides.shell
+      ? { shell: this.config.overrides.shell, stdio: "pipe" as StdioOptions }
+      : { stdio: "pipe" as StdioOptions };
+  }
+
   get #trailer_arg(): string {
     return this.commit_state.trailer
       ? `--trailer="${this.commit_state.trailer}"`
@@ -68,14 +84,22 @@ export class CommitConfirmPrompt extends Runnable {
       colorize: false,
       escape_quotes: true,
       include_trailer: false,
-    })}" ${this.#trailer_arg}`.trim();
+    })}" ${this.#trailer_arg} ${this.#dry_run_args}`.trim();
+  }
+
+  get #dry_run_args(): string {
+    return flags.dry_run ? "--dry-run --porcelain --untracked-files=no" : "";
   }
 
   async #get_continue_commit(): Promise<boolean> {
+    if (!flags.interactive) return true;
     if (!this.#confirm_commit) return true;
 
+    // dry_run_message
     const continue_commit = (await p.confirm({
-      message: "Confirm Commit?",
+      message: flags.dry_run
+        ? dry_run_message("Confirm Commit?")
+        : "Confirm Commit?",
     })) as boolean;
     if (p.isCancel(continue_commit)) process.exit(0);
     return continue_commit;

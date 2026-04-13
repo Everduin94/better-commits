@@ -6,7 +6,6 @@ import color from "picocolors";
 import { Output, ValiError, parse } from "valibot";
 import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
-import { argv } from "process";
 import { flags } from "./args";
 import Configstore from "configstore";
 
@@ -16,18 +15,6 @@ export const A_FOR_ALL = `${color.dim(
   "(<space> to select, <a> to select all)",
 )}`;
 export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
-export const REGEX_SLASH_TAG = new RegExp(/\/(\w+-\d+)/);
-export const REGEX_START_TAG = new RegExp(/^(\w+-\d+)/);
-export const REGEX_START_UND = new RegExp(/^([A-Z]+-[\[a-zA-Z\]\d]+)_/);
-export const REGEX_SLASH_UND = new RegExp(/\/([A-Z]+-[\[a-zA-Z\]\d]+)_/);
-
-// TODO: This might conflict with version from better-branch
-// - Maybe negative lookup against .
-// - Maybe check the order
-// - Maybe use order to split and check values
-export const REGEX_SLASH_NUM = new RegExp(/\/(\d+)/);
-export const REGEX_START_NUM = new RegExp(/^(\d+)/);
-
 export const COMMIT_FOOTER_OPTIONS = [
   {
     value: "closes",
@@ -68,8 +55,6 @@ export function load_setup(
 ): Output<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
-
-  set_non_configuration_arguments();
 
   let global_config = null;
   const home_path = get_default_config_path();
@@ -133,30 +118,6 @@ function validate_config(config: Output<typeof Config>): Output<typeof Config> {
 }
 /* END LOAD */
 
-export function infer_type_from_branch(types: string[]): string {
-  let branch = "";
-  try {
-    branch = execSync(`git ${flags.git_args} branch --show-current`, {
-      stdio: "pipe",
-    }).toString();
-  } catch (err) {
-    return "";
-  }
-  const found = types.find((t) => {
-    const start_dash = new RegExp(`^${t}-`);
-    const between_dash = new RegExp(`-${t}-`);
-    const before_slash = new RegExp(`${t}\/`);
-    const re = [
-      branch.match(start_dash),
-      branch.match(between_dash),
-      branch.match(before_slash),
-    ].filter((v) => v != null);
-    return re?.length;
-  });
-
-  return found ?? "";
-}
-
 /*
 rev-parse will fail in a --bare repository root
 */
@@ -189,10 +150,6 @@ export function clean_commit_title(title: string): string {
     return title_trimmed.substring(0, title_trimmed.length - 1).trim();
   }
   return title.trim();
-}
-
-function set_non_configuration_arguments() {
-  flags.git_args = `${argv[2] ?? ""} ${argv[3] ?? ""}`.trim();
 }
 
 export function get_value_from_cache(

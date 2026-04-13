@@ -26,6 +26,7 @@
     "url": "https://github.com/Everduin94/better-commits"
   },
   "dependencies": {
+    "@bomb.sh/args": "^0.3.1",
     "@clack/core": "^1.2.0",
     "@clack/prompts": "^1.2.0",
     "configstore": "^5.0.1",
@@ -33,11 +34,11 @@
     "valibot": "^0.30.0"
   },
   "scripts": {
-    "start": "jiti ./src/index.ts",
-    "branch": "jiti ./src/branch.ts",
-    "init": "jiti ./src/init.ts",
+    "start": "tsx ./src/index.ts",
+    "branch": "tsx ./src/branch.ts",
+    "init": "tsx ./src/init.ts",
     "build": "tsup",
-    "commit": "jiti ./src/index.ts",
+    "commit": "tsx ./src/index.ts",
     "test": "vitest run"
   },
   "devDependencies": {

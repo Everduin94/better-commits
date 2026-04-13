@@ -49,10 +49,14 @@ better-commits # Create a new commit
 better-branch # Create a new branch
 ```
 
-`better-commits` will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit.
+`better-commits` will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit. - To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
+
 Some of the values in these prompts will be inferred by your branch name and auto populated. You can adjust this in your `.better-commits.json` configuration file.
 
-To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
+For documentation on passing commit values to `better-commits` via the CLI, see [CLI Flags](#cli-flags).
+
+> [!TIP]
+> The --no-interactive flag, allows automated workflows or AI agents like OpenCode and Claude Code, to use better-commits to generate consistent commit messages using less tokens.
 
 ## ⚙️ Configuration
 
@@ -437,6 +441,18 @@ You can add this badge to your repository to display that you're using a better-
 | Markdown                                                                                                                                                                                                          | Result                                                                                                                                                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)` | [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits) |
+
+### CLI Flags
+
+Use CLI flags to pass commit values directly instead of answering prompts.
+
+- Use `--no-interactive` to skip prompts, confirmation, and editor flows. This is the recommended mode for OpenCode, Claude Code, and other coding agents.
+- Use `--dry-run` to validate the generated `git commit` command without creating a commit.
+- Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
+
+```sh
+better-commits --no-interactive --dry-run --type feat --scope cli --title "add parser"
+```
 
 ### Git Arguments
 

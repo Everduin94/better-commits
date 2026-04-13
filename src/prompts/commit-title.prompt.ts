@@ -5,6 +5,7 @@ import {
   set_value_cache,
 } from "../utils";
 import { cache_message } from "../utils/messages";
+import { get_commit_title_size } from "../utils/commit-title-size";
 import { Runnable } from "./runnable";
 
 export class CommitTitlePrompt extends Runnable {
@@ -30,8 +31,9 @@ export class CommitTitlePrompt extends Runnable {
       };
     }
 
+    // this.commit_state.title will pull from flag if populated
     return {
-      initial_value: "",
+      initial_value: this.commit_state.title,
       message: "Write a brief title describing the commit",
     };
   }
@@ -49,16 +51,16 @@ export class CommitTitlePrompt extends Runnable {
   }
 
   #get_size(value: string): number {
-    const commit_scope_size = this.commit_state.scope
-      ? this.commit_state.scope.length + 2
-      : 0;
-    const commit_type_size = this.commit_state.type.length;
-    const commit_ticket_size = this.config.check_ticket.add_to_title
-      ? this.commit_state.ticket.length
-      : 0;
-
-    return (
-      commit_scope_size + commit_type_size + commit_ticket_size + value.length
+    return get_commit_title_size(
+      {
+        type: this.commit_state.type,
+        scope: this.commit_state.scope,
+        ticket: this.commit_state.ticket,
+        title: value,
+      },
+      {
+        include_ticket: this.config.check_ticket.add_to_title,
+      },
     );
   }
 

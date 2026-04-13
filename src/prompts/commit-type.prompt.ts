@@ -1,9 +1,7 @@
 import * as p from "@clack/prompts";
-import {
-  get_value_from_cache,
-  infer_type_from_branch,
-  set_value_cache,
-} from "../utils";
+import { flags } from "../args";
+import { get_value_from_cache, set_value_cache } from "../utils";
+import { infer_type_from_git } from "../utils/infer";
 import { cache_message, inferred_message } from "../utils/messages";
 import { Runnable } from "./runnable";
 
@@ -36,8 +34,10 @@ export class CommitTypePrompt extends Runnable {
       };
 
     if (this.config.commit_type.infer_type_from_branch) {
-      const options = this.#options.map((o) => o.value);
-      const type_from_branch = infer_type_from_branch(options);
+      const type_from_branch = infer_type_from_git(
+        this.#options,
+        flags.git_args,
+      );
       if (type_from_branch) {
         return {
           message: inferred_message("Commit type"),
