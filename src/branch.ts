@@ -6,15 +6,12 @@ import Configstore from "configstore";
 import color from "picocolors";
 import { chdir } from "process";
 import { Output, parse } from "valibot";
-import {
-  V_BRANCH_ACTIONS,
-  V_BRANCH_CONFIG_FIELDS,
-  V_BRANCH_FIELDS,
-} from "./valibot-consts";
+import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { BranchState, CommitState, Config } from "./valibot-state";
 import { BRANCH_ACTION_OPTIONS, load_setup, get_git_root } from "./utils";
 import { optional_message } from "./utils/messages";
 import { flags } from "./args";
+import { build_branch, build_worktree_path } from "./utils/build-branch";
 
 main(load_setup(" better-branch "));
 
@@ -137,7 +134,11 @@ async function main(config: Output<typeof Config>) {
     }
   } else {
     try {
-      const worktree_name = build_worktree_path(branch_state, config);
+      const worktree_name = build_worktree_path(
+        branch_state,
+        config,
+        get_git_root(),
+      );
       execSync(
         `git worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
         {
@@ -173,47 +174,6 @@ async function main(config: Output<typeof Config>) {
       process.exit(0);
     }
   });
-}
-
-function build_branch(
-  branch: Output<typeof BranchState>,
-  config: Output<typeof Config>,
-) {
-  let res = "";
-  config.branch_order.forEach((b: Output<typeof V_BRANCH_FIELDS>) => {
-    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
-    if (branch[b]) res += branch[b] + config[config_key].separator;
-  });
-  if (res.endsWith("-") || res.endsWith("/") || res.endsWith("_")) {
-    return res.slice(0, -1).trim();
-  }
-  return res.trim();
-}
-
-function build_worktree_path(
-  branch_state: Output<typeof BranchState>,
-  config: Output<typeof Config>,
-): string {
-  const gitRoot = get_git_root();
-  const repo_name = gitRoot.split("/").pop() || "repo";
-
-  let worktree_name = config.worktrees.folder_template;
-
-  worktree_name = worktree_name
-    .replace("{{repo_name}}", repo_name)
-    .replace("{{branch_description}}", branch_state.description)
-    .replace("{{user}}", branch_state.user || "")
-    .replace("{{type}}", branch_state.type || "")
-    .replace("{{ticket}}", branch_state.ticket || "")
-    .replace("{{version}}", branch_state.version || "");
-
-  worktree_name = worktree_name
-    .replace(/\s/g, "")
-    .replace(/--+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  const base_path = config.worktrees.base_path;
-  return `${base_path}${base_path.endsWith("/") ? "" : "/"}${worktree_name}`;
 }
 
 function get_user_from_cache(): string {
