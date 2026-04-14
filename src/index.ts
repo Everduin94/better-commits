@@ -1,10 +1,17 @@
 #! /usr/bin/env node
 
+import fs from "fs";
 import { chdir } from "process";
 import * as p from "@clack/prompts";
 import { Input, Output, ValiError, parse } from "valibot";
 import { CommitState, Config } from "./valibot-state";
-import { load_setup, get_git_root, NOOP_PROMPT_CACHE } from "./utils";
+import {
+  CONFIG_FILE_NAME,
+  load_setup,
+  get_default_config_path,
+  get_git_root,
+  NOOP_PROMPT_CACHE,
+} from "./utils";
 import { create_strict_commit_state } from "./utils/no-interactive-validation";
 import Configstore from "configstore";
 import { CommitTypePrompt } from "./prompts/commit-type.prompt";
@@ -17,7 +24,8 @@ import { CommitFooterPrompt } from "./prompts/commit-footer.prompt";
 import { CommitConfirmPrompt } from "./prompts/commit-confirm.prompt";
 import { CommitStatusPrompt } from "./prompts/commit-status.prompt";
 import { flags } from "./args";
-import { infer_ticket_from_git, infer_type_from_git } from "./utils/infer";
+import { infer_not_interactive } from "./utils/infer";
+import { print_help_text } from "./help";
 
 type PromptCtor = new (
   config: Output<typeof Config>,
@@ -36,36 +44,27 @@ const promptCtors: PromptCtor[] = [
   CommitConfirmPrompt,
 ];
 
-main(load_setup());
+const root = get_git_root();
+const has_repo_config = fs.existsSync(`${root}/${CONFIG_FILE_NAME}`);
+const has_global_config = fs.existsSync(get_default_config_path());
+const config_source = has_repo_config
+  ? "repository"
+  : has_global_config
+    ? "global"
+    : "none";
 
-// TODO: Hypothetically, we could just do this, then remove code from prompts?
-function infer_not_interactive(config: Output<typeof Config>) {
-  if (flags.interactive) return;
+main(load_setup(), config_source);
 
-  let inferred_state = { ticket: "", type: "" };
-
-  if (config.check_ticket.infer_ticket) {
-    const inferred_ticket = infer_ticket_from_git(
-      {
-        append_hashtag: config.check_ticket.append_hashtag,
-        prepend_hashtag: config.check_ticket.prepend_hashtag,
-      },
-      flags.git_args,
-    );
-    inferred_state.ticket = inferred_ticket;
-  }
-
-  const inferred_type = infer_type_from_git(
-    config.commit_type.options,
-    flags.git_args,
-  );
-  inferred_state.type = inferred_type;
-
-  return inferred_state;
-}
-
-export async function main(config: Output<typeof Config>) {
+export async function main(
+  config: Output<typeof Config>,
+  config_source: "repository" | "global" | "none",
+) {
   chdir(get_git_root());
+
+  if (flags.help) {
+    print_help_text(config, config_source);
+    return;
+  }
 
   const infer_state = infer_not_interactive(config);
   const flags_plus_infer: Input<typeof CommitState> = {

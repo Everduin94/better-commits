@@ -31,6 +31,10 @@
         "label": "build"
       },
       {
+        "value": "help",
+        "label": "help"
+      },
+      {
         "value": "",
         "label": "none"
       }

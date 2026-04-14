@@ -59,14 +59,13 @@ export function load_setup(
   let global_config = null;
   const home_path = get_default_config_path();
   if (fs.existsSync(home_path)) {
-    p.log.step("Found global config");
     global_config = read_config_from_path(home_path);
   }
 
   const root = get_git_root();
   const root_path = `${root}/${CONFIG_FILE_NAME}`;
   if (fs.existsSync(root_path)) {
-    p.log.step("Found repository config");
+    p.log.step("Reading from Repository Config");
     const repo_config = read_config_from_path(root_path);
     return global_config
       ? {
@@ -80,7 +79,10 @@ export function load_setup(
       : repo_config;
   }
 
-  if (global_config) return global_config;
+  if (global_config) {
+    p.log.step("Reading from Global Config");
+    return global_config;
+  }
 
   const default_config = parse(Config, {});
   p.log.step(

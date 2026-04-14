@@ -1,4 +1,7 @@
 import { execSync } from "child_process";
+import { flags } from "../args";
+import { Output } from "valibot";
+import { Config } from "../valibot-state";
 
 type PrependHashtag = "Never" | "Always" | "Prompt";
 
@@ -8,6 +11,32 @@ const REGEX_START_UND = /^([A-Z]+-[\[a-zA-Z\]\d]+)_/;
 const REGEX_SLASH_UND = /\/([A-Z]+-[\[a-zA-Z\]\d]+)_/;
 const REGEX_SLASH_NUM = /\/(\d+)/;
 const REGEX_START_NUM = /^(\d+)/;
+
+// TODO: Hypothetically, we could just do this, then remove code from prompts?
+export function infer_not_interactive(config: Output<typeof Config>) {
+  if (flags.interactive) return;
+
+  let inferred_state = { ticket: "", type: "" };
+
+  if (config.check_ticket.infer_ticket) {
+    const inferred_ticket = infer_ticket_from_git(
+      {
+        append_hashtag: config.check_ticket.append_hashtag,
+        prepend_hashtag: config.check_ticket.prepend_hashtag,
+      },
+      flags.git_args,
+    );
+    inferred_state.ticket = inferred_ticket;
+  }
+
+  const inferred_type = infer_type_from_git(
+    config.commit_type.options,
+    flags.git_args,
+  );
+  inferred_state.type = inferred_type;
+
+  return inferred_state;
+}
 
 export function infer_type_from_git(
   options: { value: string }[],

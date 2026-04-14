@@ -5,13 +5,14 @@ import { CommitState } from "./valibot-state";
 type CommitStateRuntime = Output<typeof CommitState>;
 
 type ParsedRuntimeFlags = {
+  help: boolean;
   git_args: string;
   no_interactive: boolean;
   dry_run: boolean;
   commit_state: Partial<CommitStateRuntime>;
 };
 
-const COMMIT_OPTIONS = [
+export const COMMIT_OPTIONS = [
   "type",
   "scope",
   "title",
@@ -27,9 +28,9 @@ const COMMIT_OPTIONS = [
   "custom-footer",
 ] as const;
 
-const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
+export const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
 
-const BOOLEAN_FLAGS = ["interactive", "dry-run"] as const;
+export const BOOLEAN_FLAGS = ["interactive", "dry-run", "help"] as const;
 
 class Flags {
   #runtime: ParsedRuntimeFlags;
@@ -48,6 +49,10 @@ class Flags {
 
   get dry_run(): boolean {
     return this.#runtime.dry_run;
+  }
+
+  get help(): boolean {
+    return this.#runtime.help;
   }
 
   get commit_state(): Partial<CommitStateRuntime> {
@@ -73,6 +78,7 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
   });
 
   return {
+    help: parsed["help"] === true,
     git_args: get_git_args(parsed["git-dir"], parsed["work-tree"]),
     no_interactive: parsed.interactive === false,
     dry_run: parsed["dry-run"] === true,
