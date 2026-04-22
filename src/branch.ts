@@ -14,6 +14,7 @@ import { BranchTicketPrompt } from "./prompts/branch-ticket.prompt";
 import { BranchVersionPrompt } from "./prompts/branch-version.prompt";
 import { BranchDescriptionPrompt } from "./prompts/branch-description.prompt";
 import { BranchConfirmPrompt } from "./prompts/branch-confirm.prompt";
+import { branch_flags } from "./branch-args";
 
 main(load_setup(" better-branch "));
 
@@ -36,7 +37,7 @@ const promptCtors: PromptCtor[] = [
 async function main(config: InferOutput<typeof Config>) {
   chdir(get_git_root());
 
-  const branch_state = parse(BranchState, {});
+  const branch_state = parse(BranchState, branch_flags.branch_state);
   const prompt_cache = config.cache_last_value
     ? new Configstore("better-commits")
     : NOOP_PROMPT_CACHE;
