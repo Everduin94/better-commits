@@ -257,6 +257,7 @@ export const BranchState = v.optional(
     ticket: v.optional(v.string(), ""),
     description: v.optional(v.string(), ""),
     version: v.optional(v.string(), ""),
+    checkout_type: v.optional(V_BRANCH_ACTIONS, "branch"),
   }),
   {},
 );
