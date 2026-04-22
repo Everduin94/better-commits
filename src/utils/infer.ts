@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { flags } from "../args";
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { Config } from "../valibot-state";
 
 type PrependHashtag = "Never" | "Always" | "Prompt";
@@ -13,7 +13,7 @@ const REGEX_SLASH_NUM = /\/(\d+)/;
 const REGEX_START_NUM = /^(\d+)/;
 
 // TODO: Hypothetically, we could just do this, then remove code from prompts?
-export function infer_not_interactive(config: Output<typeof Config>) {
+export function infer_not_interactive(config: InferOutput<typeof Config>) {
   if (flags.interactive) return;
 
   let inferred_state = { ticket: "", type: "" };
@@ -78,7 +78,7 @@ function infer_ticket_from_branch(
 
   if (!found.length || !found[0]) return "";
 
-  return options.append_hashtag || options.prepend_hashtag === "Prompt"
+  return options.append_hashtag || options.prepend_hashtag === "Always"
     ? `#${found[0]}`
     : found[0];
 }

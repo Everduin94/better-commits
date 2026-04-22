@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
 import color from "picocolors";
-import { Output, ValiError, parse } from "valibot";
+import { InferOutput, ValiError, parse } from "valibot";
 import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { flags } from "./args";
@@ -35,7 +35,7 @@ export const COMMIT_FOOTER_OPTIONS = [
   { value: "custom", label: "custom", hint: "Add a custom footer" },
 ];
 export const BRANCH_ACTION_OPTIONS: {
-  value: Output<typeof V_BRANCH_ACTIONS>;
+  value: InferOutput<typeof V_BRANCH_ACTIONS>;
   label: string;
   hint?: string;
 }[] = [
@@ -52,7 +52,7 @@ export const NOOP_PROMPT_CACHE = {
 /* LOAD */
 export function load_setup(
   cli_name = " better-commits ",
-): Output<typeof Config> {
+): InferOutput<typeof Config> {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
@@ -104,13 +104,18 @@ function read_config_from_path(config_path: string) {
   return validate_config(res);
 }
 
-function validate_config(config: Output<typeof Config>): Output<typeof Config> {
+function validate_config(config: unknown): InferOutput<typeof Config> {
   try {
     return parse(Config, config);
   } catch (err: any) {
     if (err instanceof ValiError) {
       const first_issue_path = err.issues[0].path ?? [];
-      const dot_path = first_issue_path.map((item) => item.key).join(".");
+      const dot_path = first_issue_path
+        .map((item: { key?: unknown }) => item.key)
+        .filter((key: unknown): key is string | number =>
+          typeof key === "string" || typeof key === "number",
+        )
+        .join(".");
       p.log.error(
         `Invalid Configuration: ${color.red(dot_path)}\n` + err.message,
       );

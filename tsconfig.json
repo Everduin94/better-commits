@@ -3,12 +3,13 @@
     "module": "ESNext",
     "target": "ESNext",
     "declaration": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDeclarationOnly": true,
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "types": ["node"]
-  }
+  },
+  "exclude": ["dist", "node_modules", ".svelte-kit", ".opencode"]
 }

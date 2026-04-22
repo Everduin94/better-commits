@@ -1,7 +1,7 @@
 import * as v from "valibot";
 
 export const CUSTOM_SCOPE_KEY: "custom" = "custom";
-export const FOOTER_OPTION_VALUES: v.Output<typeof V_FOOTER_OPTIONS>[] = [
+export const FOOTER_OPTION_VALUES: v.InferOutput<typeof V_FOOTER_OPTIONS>[] = [
   "closes",
   "trailer",
   "breaking-change",
@@ -30,7 +30,7 @@ export const V_BRANCH_CONFIG_FIELDS = v.picklist([
   "branch_ticket",
   "branch_description",
 ]);
-export const BRANCH_ORDER_DEFAULTS: v.Output<typeof V_BRANCH_FIELDS>[] = [
+export const BRANCH_ORDER_DEFAULTS: v.InferOutput<typeof V_BRANCH_FIELDS>[] = [
   "user",
   "version",
   "type",

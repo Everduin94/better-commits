@@ -1,14 +1,14 @@
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { V_BRANCH_CONFIG_FIELDS, V_BRANCH_FIELDS } from "../valibot-consts";
 import { BranchState, Config } from "../valibot-state";
 
 export function build_branch(
-  branch: Output<typeof BranchState>,
-  config: Output<typeof Config>,
+  branch: InferOutput<typeof BranchState>,
+  config: InferOutput<typeof Config>,
 ): string {
   let res = "";
-  config.branch_order.forEach((b: Output<typeof V_BRANCH_FIELDS>) => {
-    const config_key: Output<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
+  config.branch_order.forEach((b: InferOutput<typeof V_BRANCH_FIELDS>) => {
+    const config_key: InferOutput<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
     if (branch[b]) res += branch[b] + config[config_key].separator;
   });
 
@@ -20,8 +20,8 @@ export function build_branch(
 }
 
 export function build_worktree_path(
-  branch_state: Output<typeof BranchState>,
-  config: Output<typeof Config>,
+  branch_state: InferOutput<typeof BranchState>,
+  config: InferOutput<typeof Config>,
   git_root: string,
 ): string {
   const repo_name = git_root.split("/").pop() || "repo";

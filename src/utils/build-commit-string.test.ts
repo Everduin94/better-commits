@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { Output, parse } from "valibot";
+import { InferOutput, parse } from "valibot";
 import { CommitState, Config } from "../valibot-state";
 import { build_commit_string } from "./build-commit-string";
 
-type ConfigOutput = Output<typeof Config>;
+type ConfigOutput = InferOutput<typeof Config>;
 type ConfigOverrides = Partial<
   Omit<ConfigOutput, "check_ticket" | "breaking_change">
 > & {

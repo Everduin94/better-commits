@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import fs from "fs";
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { flags } from "./args";
 import { infer_ticket_from_git, infer_type_from_git } from "./utils/infer";
 import { Config } from "./valibot-state";
@@ -56,7 +56,7 @@ function to_definition_lines(definitions: Record<string, string>): string {
 }
 
 export function print_help_text(
-  config: Output<typeof Config>,
+  config: InferOutput<typeof Config>,
   config_source: "repository" | "global" | "none",
 ) {
   let version = "unknown";

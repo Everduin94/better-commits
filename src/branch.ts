@@ -5,7 +5,7 @@ import { execSync } from "child_process";
 import Configstore from "configstore";
 import color from "picocolors";
 import { chdir } from "process";
-import { Output, parse } from "valibot";
+import { InferOutput, parse } from "valibot";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { BranchState, CommitState, Config } from "./valibot-state";
 import { BRANCH_ACTION_OPTIONS, load_setup, get_git_root } from "./utils";
@@ -15,11 +15,11 @@ import { build_branch, build_worktree_path } from "./utils/build-branch";
 
 main(load_setup(" better-branch "));
 
-async function main(config: Output<typeof Config>) {
+async function main(config: InferOutput<typeof Config>) {
   const branch_state = parse(BranchState, {});
   chdir(get_git_root());
 
-  let checkout_type: Output<typeof V_BRANCH_ACTIONS> = "branch";
+  let checkout_type: InferOutput<typeof V_BRANCH_ACTIONS> = "branch";
   if (config.worktrees.enable) {
     const branch_or_worktree = await p.select({
       message: `Checkout a branch or create a worktree?`,

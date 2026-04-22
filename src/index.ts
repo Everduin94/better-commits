@@ -3,7 +3,7 @@
 import fs from "fs";
 import { chdir } from "process";
 import * as p from "@clack/prompts";
-import { Input, Output, ValiError, parse } from "valibot";
+import { InferInput, InferOutput, ValiError, parse } from "valibot";
 import { CommitState, Config } from "./valibot-state";
 import {
   CONFIG_FILE_NAME,
@@ -28,8 +28,8 @@ import { infer_not_interactive } from "./utils/infer";
 import { print_help_text } from "./help";
 
 type PromptCtor = new (
-  config: Output<typeof Config>,
-  commit_state: Output<typeof CommitState>,
+  config: InferOutput<typeof Config>,
+  commit_state: InferOutput<typeof CommitState>,
   prompt_cache: Configstore,
 ) => Runnable;
 
@@ -56,7 +56,7 @@ const config_source = has_repo_config
 main(load_setup(), config_source);
 
 export async function main(
-  config: Output<typeof Config>,
+  config: InferOutput<typeof Config>,
   config_source: "repository" | "global" | "none",
 ) {
   chdir(get_git_root());
@@ -67,7 +67,7 @@ export async function main(
   }
 
   const infer_state = infer_not_interactive(config);
-  const flags_plus_infer: Input<typeof CommitState> = {
+  const flags_plus_infer: InferInput<typeof CommitState> = {
     ...flags.commit_state,
     type: (flags.commit_state.type || infer_state?.type) ?? "",
     ticket: (flags.commit_state.ticket || infer_state?.ticket) ?? "",

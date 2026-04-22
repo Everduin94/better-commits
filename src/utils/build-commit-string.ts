@@ -1,10 +1,10 @@
 import color from "picocolors";
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { CommitState, Config } from "../valibot-state";
 
 type BuildCommitStringInput = {
-  commit_state: Output<typeof CommitState>;
-  config: Output<typeof Config>;
+  commit_state: InferOutput<typeof CommitState>;
+  config: InferOutput<typeof Config>;
   colorize?: boolean;
   escape_quotes?: boolean;
   include_trailer?: boolean;

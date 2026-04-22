@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { V_FOOTER_OPTIONS } from "../valibot-consts";
 import {
   COMMIT_FOOTER_OPTIONS,
@@ -13,7 +13,7 @@ import {
 } from "../utils/messages";
 import { Runnable } from "./runnable";
 
-type FooterOption = Output<typeof V_FOOTER_OPTIONS>;
+type FooterOption = InferOutput<typeof V_FOOTER_OPTIONS>;
 type FooterPromptOption = {
   value: FooterOption;
   label: string;

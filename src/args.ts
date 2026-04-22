@@ -1,8 +1,8 @@
 import { parse } from "@bomb.sh/args";
-import { Output } from "valibot";
+import { InferOutput } from "valibot";
 import { CommitState } from "./valibot-state";
 
-type CommitStateRuntime = Output<typeof CommitState>;
+type CommitStateRuntime = InferOutput<typeof CommitState>;
 
 type ParsedRuntimeFlags = {
   help: boolean;
