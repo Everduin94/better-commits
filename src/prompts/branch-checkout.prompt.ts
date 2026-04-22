@@ -27,10 +27,10 @@ export class BranchCheckoutPrompt extends BranchRunnable {
   }
 
   get #initival_values() {
-    return this.config.branch_action_default;
+    return this.branch_state.checkout || this.config.branch_action_default;
   }
 
   #post_run_effects(value: InferOutput<typeof V_BRANCH_ACTIONS>) {
-    this.branch_state.checkout_type = value;
+    this.branch_state.checkout = value;
   }
 }

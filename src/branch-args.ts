@@ -61,7 +61,7 @@ export function parse_branch_runtime_flags(argv: string[]): ParsedRuntimeFlags {
     const cli_value = parsed[value];
     if (cli_value) {
       const str = value.replace("-", "_") as keyof BranchStateRuntime;
-      if (str === "checkout_type")
+      if (str === "checkout")
         branch_state[str] =
           (cli_value as "worktree" | "branch" | undefined) ?? "branch";
       else branch_state[str] = cli_value;

@@ -10,6 +10,7 @@ export class BranchTicketPrompt extends BranchRunnable {
       message: this.#message,
       placeholder: "",
       validate: (value) => this.#validate(value),
+      initialValue: this.branch_state.ticket,
     });
 
     if (p.isCancel(ticket)) process.exit(0);

@@ -2,10 +2,9 @@
 
 import Configstore from "configstore";
 import { chdir } from "process";
-import { InferOutput, parse } from "valibot";
+import { InferOutput, ValiError, parse } from "valibot";
 import { BranchState, CommitState, Config } from "./valibot-state";
 import { load_setup, get_git_root, NOOP_PROMPT_CACHE } from "./utils";
-import { flags } from "./args";
 import { BranchRunnable } from "./prompts/branch-runnable";
 import { BranchCheckoutPrompt } from "./prompts/branch-checkout.prompt";
 import { BranchUserPrompt } from "./prompts/branch-user.prompt";
@@ -15,8 +14,8 @@ import { BranchVersionPrompt } from "./prompts/branch-version.prompt";
 import { BranchDescriptionPrompt } from "./prompts/branch-description.prompt";
 import { BranchConfirmPrompt } from "./prompts/branch-confirm.prompt";
 import { branch_flags } from "./branch-args";
-
-main(load_setup(" better-branch "));
+import { create_strict_branch_state } from "./utils/no-interactive-validation";
+import * as p from "@clack/prompts";
 
 type PromptCtor = new (
   config: InferOutput<typeof Config>,
@@ -34,14 +33,30 @@ const promptCtors: PromptCtor[] = [
   BranchConfirmPrompt,
 ];
 
+main(load_setup(" better-branch "));
+
 async function main(config: InferOutput<typeof Config>) {
   chdir(get_git_root());
 
   const branch_state = parse(BranchState, branch_flags.branch_state);
+
+  if (!branch_flags.interactive) {
+    try {
+      parse(create_strict_branch_state(config), branch_state);
+    } catch (err) {
+      if (err instanceof ValiError) {
+        p.log.error(`Invalid branch input: ${err.message}`);
+      } else {
+        p.log.error(`Failed to validate branch input: ${err}`);
+      }
+      process.exit(0);
+    }
+  }
+
   const prompt_cache = config.cache_last_value
     ? new Configstore("better-commits")
     : NOOP_PROMPT_CACHE;
-  const prompts_to_run = flags.interactive
+  const prompts_to_run = branch_flags.interactive
     ? promptCtors
     : [BranchConfirmPrompt];
   for (const Prompt of prompts_to_run) {

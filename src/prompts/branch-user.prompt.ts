@@ -33,7 +33,10 @@ export class BranchUserPrompt extends BranchRunnable {
   }
 
   get #initial_value(): string {
-    return get_value_from_cache(this.prompt_cache, "username");
+    return (
+      this.branch_state.user ||
+      get_value_from_cache(this.prompt_cache, "username")
+    );
   }
 
   #validate(value: string | undefined): string | undefined {

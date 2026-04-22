@@ -250,14 +250,16 @@ export const COMMIT_STATE_ENTRIES = {
 
 export const CommitState = v.optional(v.object(COMMIT_STATE_ENTRIES), {});
 
+export const BRANCH_STATE_ENTRIES = {
+  user: v.optional(v.string(), ""),
+  type: v.optional(v.string(), ""),
+  ticket: v.optional(v.string(), ""),
+  description: v.optional(v.string(), ""),
+  version: v.optional(v.string(), ""),
+  checkout: v.optional(V_BRANCH_ACTIONS, "branch"),
+};
+
 export const BranchState = v.optional(
-  v.object({
-    user: v.optional(v.string(), ""),
-    type: v.optional(v.string(), ""),
-    ticket: v.optional(v.string(), ""),
-    description: v.optional(v.string(), ""),
-    version: v.optional(v.string(), ""),
-    checkout_type: v.optional(V_BRANCH_ACTIONS, "branch"),
-  }),
+  v.object(BRANCH_STATE_ENTRIES),
   {},
 );

@@ -24,7 +24,7 @@ export class BranchTypePrompt extends BranchRunnable {
   }
 
   get #initial_value(): string {
-    return this.config.commit_type.initial_value;
+    return this.branch_state.type || this.config.commit_type.initial_value;
   }
 
   get #options(): {

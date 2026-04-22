@@ -15,7 +15,7 @@ export class BranchConfirmPrompt extends BranchRunnable {
   }
 
   get #is_worktree(): boolean {
-    return this.branch_state.checkout_type === "worktree";
+    return this.branch_state.checkout === "worktree";
   }
 
   get #pre_commands(): string[] {

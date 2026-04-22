@@ -7,6 +7,7 @@ export class BranchDescriptionPrompt extends BranchRunnable {
       message: this.#message,
       placeholder: "",
       validate: (value) => this.#validate(value),
+      initialValue: this.branch_state.description,
     });
 
     if (p.isCancel(description)) process.exit(0);

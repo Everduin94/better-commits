@@ -53,7 +53,7 @@ export const NOOP_PROMPT_CACHE = {
 export function load_setup(
   cli_name = " better-commits ",
 ): InferOutput<typeof Config> {
-  console.clear();
+  /* console.clear(); */ /* TODO: TESTING */
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
   let global_config = null;
@@ -112,8 +112,9 @@ function validate_config(config: unknown): InferOutput<typeof Config> {
       const first_issue_path = err.issues[0].path ?? [];
       const dot_path = first_issue_path
         .map((item: { key?: unknown }) => item.key)
-        .filter((key: unknown): key is string | number =>
-          typeof key === "string" || typeof key === "number",
+        .filter(
+          (key: unknown): key is string | number =>
+            typeof key === "string" || typeof key === "number",
         )
         .join(".");
       p.log.error(

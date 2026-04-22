@@ -10,6 +10,7 @@ export class BranchVersionPrompt extends BranchRunnable {
       message: this.#message,
       placeholder: "",
       validate: (value) => this.#validate(value),
+      initialValue: this.branch_state.version,
     });
 
     if (p.isCancel(version)) process.exit(0);
