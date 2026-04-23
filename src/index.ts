@@ -78,9 +78,9 @@ export async function main(
       parse(create_strict_commit_state(config), commit_state);
     } catch (err) {
       if (err instanceof ValiError) {
-        p.log.error(`Invalid --no-interactive commit input: ${err.message}`);
+        p.log.error(`Invalid commit input: ${err.message}`);
       } else {
-        p.log.error(`Failed to validate --no-interactive commit input: ${err}`);
+        p.log.error(`Failed to validate commit input: ${err}`);
       }
       process.exit(0);
     }

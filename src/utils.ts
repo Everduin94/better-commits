@@ -2,19 +2,20 @@ import * as p from "@clack/prompts";
 import { execSync } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
+import { parse as parse_jsonc } from "jsonc-parser";
 import color from "picocolors";
 import { InferOutput, ValiError, parse } from "valibot";
 import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { flags } from "./args";
 import Configstore from "configstore";
+import { DEFAULT_CONFIG_TEMPLATE } from "./default-config-template";
 
-export const CONFIG_FILE_NAME = ".better-commits.json";
-export const SPACE_TO_SELECT = `${color.dim("(<space> to select)")}`;
-export const A_FOR_ALL = `${color.dim(
-  "(<space> to select, <a> to select all)",
-)}`;
-export const OPTIONAL_PROMPT = `${color.dim("(optional)")}`;
+export const CONFIG_FILE_NAMES = [
+  ".better-commits.jsonc",
+  ".better-commits.json",
+] as const;
+export const CONFIG_FILE_NAME = CONFIG_FILE_NAMES[0];
 export const COMMIT_FOOTER_OPTIONS = [
   {
     value: "closes",
@@ -71,8 +72,8 @@ export function load_setup(
   }
 
   const root = get_git_root(git_args);
-  const root_path = `${root}/${CONFIG_FILE_NAME}`;
-  if (fs.existsSync(root_path)) {
+  const root_path = get_repository_config_path(root);
+  if (root_path) {
     p.log.step("Reading from Repository Config");
     const repo_config = read_config_from_path(root_path);
     return {
@@ -100,9 +101,9 @@ export function load_setup(
 
   const default_config = parse(Config, {});
   p.log.step(
-    "Config not found. Generating default .better-commit.json at $HOME",
+    `Config not found. Generating default ${CONFIG_FILE_NAME} at $HOME`,
   );
-  fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
+  fs.writeFileSync(home_path, DEFAULT_CONFIG_TEMPLATE);
   return {
     config: default_config,
     config_source: "none",
@@ -112,7 +113,7 @@ export function load_setup(
 function read_config_from_path(config_path: string) {
   let res = null;
   try {
-    res = JSON.parse(fs.readFileSync(config_path, "utf8"));
+    res = parse_jsonc(fs.readFileSync(config_path, "utf8"));
   } catch (err) {
     p.log.error("Invalid JSON file. Exiting.\n" + err);
     process.exit(0);
@@ -161,7 +162,20 @@ export function get_git_root(git_args = flags.git_args): string {
 }
 
 export function get_default_config_path(): string {
-  return homedir() + "/" + CONFIG_FILE_NAME;
+  return get_config_path(homedir()) ?? homedir() + "/" + CONFIG_FILE_NAME;
+}
+
+export function get_repository_config_path(root: string): string | null {
+  return get_config_path(root);
+}
+
+function get_config_path(base_path: string): string | null {
+  for (const file_name of CONFIG_FILE_NAMES) {
+    const config_path = `${base_path}/${file_name}`;
+    if (fs.existsSync(config_path)) return config_path;
+  }
+
+  return null;
 }
 
 export function get_package_version(): string {

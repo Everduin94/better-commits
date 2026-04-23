@@ -3,23 +3,44 @@
 import * as p from "@clack/prompts";
 import fs from "fs";
 import color from "picocolors";
-import { parse } from "valibot";
-import { CONFIG_FILE_NAME, get_git_root } from "./utils";
-import { Config } from "./valibot-state";
+import { DEFAULT_CONFIG_TEMPLATE } from "./default-config-template";
+import {
+  CONFIG_FILE_NAME,
+  get_git_root,
+  get_repository_config_path,
+} from "./utils";
 
 try {
+  await create_init_config();
+} catch {
+  p.log.error(
+    `${color.red("Could not determine git root folder. better-commits-init must be used in a git repository")}`,
+  );
+}
+
+export async function create_init_config() {
   console.clear();
   p.intro(`${color.bgCyan(color.black(" better-commits-init "))}`);
   const root = get_git_root();
-  const root_path = `${root}/${CONFIG_FILE_NAME}`;
-  const default_config = parse(Config, {});
-  fs.writeFileSync(root_path, JSON.stringify(default_config, null, 4));
-  p.log.success(`${color.green("Successfully created .better-commits.json")}`);
+  const existing_config_path = get_repository_config_path(root);
+  const root_path = existing_config_path ?? `${root}/${CONFIG_FILE_NAME}`;
+
+  if (existing_config_path) {
+    const should_overwrite = (await p.confirm({
+      message: `${root_path.split("/").pop()} already exists. Replace with default .better-commits.jsonc?`,
+    })) as boolean;
+
+    if (p.isCancel(should_overwrite) || !should_overwrite) {
+      p.outro("Cancelled");
+      return;
+    }
+  }
+
+  fs.writeFileSync(root_path, DEFAULT_CONFIG_TEMPLATE);
+  p.log.success(
+    `${color.green(`Successfully created ${root_path.split("/").pop()}`)}`,
+  );
   p.outro(
     `Run ${color.bgBlack(color.white("better-commits"))} to start the CLI`,
-  );
-} catch (err: any) {
-  p.log.error(
-    `${color.red("Could not determine git root folder. better-commits-init must be used in a git repository")}`,
   );
 }

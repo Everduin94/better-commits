@@ -76,289 +76,205 @@ To create a **repository-specific config**, navigate to the root of your project
 - This will create a default config named `.better-commits.json`
 - Properties such as `confirm_with_editor` and `overrides` will prefer the global config
 
-### Options
+### 💫 Properties
 
 > [!NOTE]<br>
-> All properties are optional and can be removed from the config. It will be replaced by the default at run-time.
+> All properties are optional and can be removed from the config. They will be replaced by the default at run-time.
 >
 > - See `.better-commits.json` in this repository as an example
 
-### 💫 Default JSON Config
-
-<details open>
-<summary>Expand / Collapse</summary>
-
-```json
+```jsonc
 {
+  // Run interactive `git status` before composing a commit
   "check_status": true,
+
+  /* COMMIT FIELDS */
   "commit_type": {
     "enable": true,
+
+    // Default selected type from options
     "initial_value": "feat",
-    "max_items": 20,
+
+    // Infer type from the current branch name: user/TYPE/my-branch
     "infer_type_from_branch": true,
+
+    // Include emoji in prompt label
     "append_emoji_to_label": false,
+
+    // Include emoji from prompt label in commit message
     "append_emoji_to_commit": false,
+
+    // "Start" | "After-Colon"
     "emoji_commit_position": "Start",
+
     "options": [
       {
         "value": "feat",
         "label": "feat",
         "hint": "A new feature",
         "emoji": "🌟",
-        "trailer": "Changelog: feature"
+        "trailer": "Changelog: feature",
       },
       {
         "value": "fix",
         "label": "fix",
         "hint": "A bug fix",
         "emoji": "🐛",
-        "trailer": "Changelog: fix"
-      },
-      {
-        "value": "docs",
-        "label": "docs",
-        "hint": "Documentation only changes",
-        "emoji": "📚",
-        "trailer": "Changelog: documentation"
-      },
-      {
-        "value": "refactor",
-        "label": "refactor",
-        "hint": "A code change that neither fixes a bug nor adds a feature",
-        "emoji": "🔨",
-        "trailer": "Changelog: refactor"
-      },
-      {
-        "value": "perf",
-        "label": "perf",
-        "hint": "A code change that improves performance",
-        "emoji": "🚀",
-        "trailer": "Changelog: performance"
-      },
-      {
-        "value": "test",
-        "label": "test",
-        "hint": "Adding missing tests or correcting existing tests",
-        "emoji": "🚨",
-        "trailer": "Changelog: test"
-      },
-      {
-        "value": "build",
-        "label": "build",
-        "hint": "Changes that affect the build system or external dependencies",
-        "emoji": "🚧",
-        "trailer": "Changelog: build"
-      },
-      {
-        "value": "ci",
-        "label": "ci",
-        "hint": "Changes to our CI configuration files and scripts",
-        "emoji": "🤖",
-        "trailer": "Changelog: ci"
-      },
-      {
-        "value": "chore",
-        "label": "chore",
-        "hint": "Other changes that do not modify src or test files",
-        "emoji": "🧹",
-        "trailer": "Changelog: chore"
+        "trailer": "Changelog: fix",
       },
       {
         "value": "",
-        "label": "none"
-      }
-    ]
+        "label": "none",
+      },
+    ],
   },
+
   "commit_scope": {
     "enable": true,
+
+    // If true, users can type a scope not listed in options
     "custom_scope": false,
+
+    // Default selected scope from options
     "initial_value": "app",
+
     "max_items": 20,
     "options": [
-      {
-        "value": "app",
-        "label": "app"
-      },
-      {
-        "value": "shared",
-        "label": "shared"
-      },
-      {
-        "value": "server",
-        "label": "server"
-      },
-      {
-        "value": "tools",
-        "label": "tools"
-      },
-      {
-        "value": "",
-        "label": "none"
-      }
-    ]
+      { "value": "app", "label": "app" },
+      { "value": "shared", "label": "shared" },
+      { "value": "", "label": "none" },
+    ],
   },
+
   "check_ticket": {
+    // Infer ticket / issue from the branch name - user/type/TICKET-my-branch
     "infer_ticket": true,
+
+    // Prompt for confirmation / edit before using an inferred ticket
     "confirm_ticket": true,
+
+    // Add the ticket to the commit title - feat(app): TICKET my commit title
     "add_to_title": true,
+
+    // Deprecated, prefer `prepend_hashtag`
     "append_hashtag": false,
+
+    // "Never" | "Prompt" | "Always" - 12345 --> #12345
     "prepend_hashtag": "Never",
+
+    // Wrap the ticket in the commit title: "" | "[]" | "()" | "{}"
     "surround": "",
-    "title_position": "start"
+
+    // "start" | "end" | "before-colon" | "beginning"
+    "title_position": "start",
   },
+
   "commit_title": {
-    "max_size": 70
+    // Includes total size of title + type + scope + ticket
+    "max_size": 70,
   },
+
   "commit_body": {
     "enable": true,
     "required": false,
-    "split_by_period": false
+
+    // Split sentences into multiple lines automatically
+    "split_by_period": false,
   },
+
   "commit_footer": {
     "enable": true,
     "initial_value": [],
-    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom"]
+
+    // "closes", "trailer", "breaking-change", "deprecated", "custom"
+    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom"],
   },
+
   "breaking_change": {
-    "add_exclamation_to_title": true
+    // Adds `!` to the commit title when a breaking change is selected
+    "add_exclamation_to_title": true,
   },
-  "confirm_commit": true,
-  "cache_last_value": true,
+
+  // Confirm / edit with $GIT_EDITOR or $EDITOR
   "confirm_with_editor": false,
+
+  // Show a final confirmation prompt before running git commit
+  "confirm_commit": true,
+
+  // Reuse the last known value from a previous canceled or failed commit
+  "cache_last_value": true,
+
+  // Pretty-print the final commit preview before execution
   "print_commit_output": true,
+
+  /* BRANCH FIELDS */
+  // Optional shell commands to run before / after creating branches or worktrees
   "branch_pre_commands": [],
   "branch_post_commands": [],
   "worktree_pre_commands": [],
   "worktree_post_commands": [],
+
   "branch_user": {
     "enable": true,
     "required": false,
-    "separator": "/"
+
+    // "/" | "-" | "_" - user/feat/my-branch
+    "separator": "/",
   },
+
   "branch_type": {
     "enable": true,
-    "separator": "/"
+    "separator": "/",
   },
-  "branch_version": {
-    "enable": false,
-    "required": false,
-    "separator": "/"
-  },
+
   "branch_ticket": {
     "enable": true,
     "required": false,
-    "separator": "-"
+    "separator": "-",
   },
+
+  "branch_version": {
+    "enable": false,
+    "required": false,
+    "separator": "/",
+  },
+
   "branch_description": {
+    // Maximum length for the description segment of the branch name
     "max_length": 70,
-    "separator": ""
+
+    // Allowed values: "" | "/" | "-" | "_"
+    "separator": "",
   },
+
+  // "branch" | "worktree"
   "branch_action_default": "branch",
+
+  // Order of values in the final branch name
   "branch_order": ["user", "version", "type", "ticket", "description"],
+
+  // Deprecated, prefer `worktrees.enable`
+  "enable_worktrees": true,
+
   "worktrees": {
+    // If false, always create a branch instead of prompting for a worktree
     "enable": true,
+
+    // Directory where worktrees are created
     "base_path": "..",
-    "folder_template": "{{repo_name}}-{{ticket}}-{{branch_description}}"
+
+    // Available template variables include:
+    // {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}}
+    "folder_template": "{{repo_name}}-{{ticket}}-{{branch_description}}",
   },
+
+  /* OTHER FIELDS */
   "overrides": {
-    "shell": "/bin/sh"
-  }
+    // Useful on Windows or for shells with different multiline behavior
+    "shell": "/bin/sh",
+  },
 }
 ```
-
-</details>
-
-> [!NOTE]<br>
-> Some properties allow a set of specific string values
->
-> - See _config file explanations_ for possible values
-
-### 🔭 Config File Explanations
-
-Expand to see explanations and possible values
-
-<details>
-<summary>Expand / Collapse</summary>
-
-`.` refers to nesting. i.e. if a property is `commit_type.enable` then expect in the config for it to be:
-
-```json
-"commit_type": {
-  "enable": true
-}
-```
-
-| Property                                   | Description                                                                                         |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `check_status`                             | If true run interactive `git status`                                                                |
-| `commit_type.enable`                       | If true include commit type                                                                         |
-| `commit_type.initial_value`                | Initial selection of commit type                                                                    |
-| `commit_type.max_items`                    | Maximum number of type displayed on the screen                                                      |
-| `commit_type.infer_type_from_branch`       | If true infer type from branch name                                                                 |
-| `commit_type.append_emoji_to_label`        | If true append emoji to prompt                                                                      |
-| `commit_type.append_emoji_to_commit`       | If true append emoji to commit                                                                      |
-| `commit_type.emoji_commit_position`        | Emoji position, "Start" (default) or "After-Colon"                                                  |
-| `commit_type.options.value`                | Commit type prompt value                                                                            |
-| `commit_type.options.label`                | Commit type prompt label                                                                            |
-| `commit_type.options.hint`                 | Commit type inline hint (like this)                                                                 |
-| `commit_type.options.emoji`                | Commit type emoji                                                                                   |
-| `commit_type.options.trailer`              | Commit type trailer                                                                                 |
-| `commit_scope.enable`                      | If true include commit scope                                                                        |
-| `commit_scope.custom_scope`                | If true allow custom scope at run-time                                                              |
-| `commit_scope.initial_value`               | Default commit scope selected                                                                       |
-| `commit_scope.max_items`                   | Maximum number of scope displayed on the screen                                                     |
-| `commit_scope.options.value`               | Commit scope value                                                                                  |
-| `commit_scope.options.label`               | Commit scope label                                                                                  |
-| `check_ticket.infer_ticket`                | If true infer ticket from branch name                                                               |
-| `check_ticket.confirm_ticket`              | If true manually confirm inference                                                                  |
-| `check_ticket.add_to_title`                | If true add ticket to title                                                                         |
-| `check_ticket.append_hashtag`              | **Deprecated**: see prepend_hashtag                                                                 |
-| `check_ticket.prepend_hashtag`             | "Never" (default), "Prompt", or "Always"                                                            |
-| `check_ticket.title_position`              | "start" (of description) (default), "end", "before-colon", "beginning" (of the entire commit title) |
-| `check_ticket.surround`                    | "" (default), "[]", "()", "{}" - Wraps ticket in title                                              |
-| `commit_title.max_size`                    | Max size of title including scope, type, etc...                                                     |
-| `commit_body.enable`                       | If true include body                                                                                |
-| `commit_body.required`                     | If true body is required                                                                            |
-| `commit_body.split_by_period`              | Automatically split sentences into new lines                                                        |
-| `commit_footer.enable`                     | If true include footer                                                                              |
-| `commit_footer.initial_value`              | Initial values selected in footer                                                                   |
-| `commit_footer.options`                    | Footer options                                                                                      |
-| `breaking_change.add_exclamation_to_title` | If true adds exclamation mark to title for breaking changes                                         |
-| `confirm_commit`                           | If true manually confirm commit at end                                                              |
-| `confirm_with_editor`                      | Confirm / Edit commit with $GIT_EDITOR / $EDITOR                                                    |
-| `cache_last_value`                         | Reuse last prompt value after cancel                                                                |
-| `print_commit_output`                      | If true pretty print commit preview                                                                 |
-| `overrides.shell`                          | Override default shell, useful for windows users                                                    |
-
-Branch configuration (same config file, split for readability)
-
-| Property                        | Description                                                                                                                               |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `branch_pre_commands`           | Array of shell commands to run before branching                                                                                           |
-| `branch_post_commands`          | Array of shell commands to run after branching                                                                                            |
-| `worktree_pre_commands`         | Array of shell commands to run before creating worktree                                                                                   |
-| `worktree_post_commands`        | Array of shell commands to run after creating worktree                                                                                    |
-| `branch_user.enable`            | If enabled include user name                                                                                                              |
-| `branch_user.required`          | If enabled require user name                                                                                                              |
-| `branch_user.separator`         | Branch delimeter - "/" (default), "-", "\_"                                                                                               |
-| `branch_type.enable`            | If enabled include type                                                                                                                   |
-| `branch_type.separator`         | Branch delimeter - "/" (default), "-", "\_"                                                                                               |
-| `branch_ticket.enable`          | If enabled include ticket                                                                                                                 |
-| `branch_ticket.required`        | If enabled require ticket                                                                                                                 |
-| `branch_ticket.separator`       | Branch delimeter - "/", "-" (default), "\_"                                                                                               |
-| `branch_description.max_length` | Max length branch name                                                                                                                    |
-| `branch_description.separator`  | Branch delimeter - "" (default), "/", "-", "\_"                                                                                           |
-| `branch_version.enable`         | If enabled include version                                                                                                                |
-| `branch_version.required`       | If enabled require version                                                                                                                |
-| `branch_version.separator`      | Branch delimeter - "", "/" (default), "-", "\_"                                                                                           |
-| `branch_order`                  | Order of branch name values (doesn't affect prompt order)                                                                                 |
-| `branch_action_default`         | "branch" or "worktree"                                                                                                                    |
-| `enable_worktrees`              | `Deprecated` see `worktrees.enable`                                                                                                       |
-| `worktrees.enable`              | If false, always default to branch action                                                                                                 |
-| `worktrees.base_path`           | Directory where worktrees are created (default: "..")                                                                                     |
-| `worktrees.folder_template`     | Template for worktree folder names with variables like {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}} |
-
-</details>
 
 ### 🔎 Inference
 
