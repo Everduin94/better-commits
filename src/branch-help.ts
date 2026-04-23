@@ -1,37 +1,24 @@
 import { execSync } from "child_process";
 import { InferOutput } from "valibot";
-import { flags } from "./args";
+import { branch_flags } from "./branch-args";
 import { get_package_version } from "./utils";
 import { infer_ticket_from_git, infer_type_from_git } from "./utils/infer";
 import { Config } from "./valibot-state";
 import color from "picocolors";
 
-const ADDITIONAL_COMMAND_DEFINITIONS: Record<string, string> = {
-  "better-branch": "Create a branch or worktree from a guided prompt flow.",
-  "better-commits-init":
-    "Create a .better-commits.json config in this repository.",
-};
-
 const CLI_FLAG_DEFINITIONS: Record<string, string> = {
   "--interactive": "Run in interactive prompt mode (default behavior).",
-  "--dry-run": "Print the commit command without creating a commit.",
+  "--dry-run": "Print branch commands without creating a branch or worktree.",
   "--help": "Show help information and exit.",
 };
 
-const COMMIT_FLAG_DEFINITIONS: Record<string, string> = {
-  "--type": "Set commit type (for example feat, fix, docs).",
-  "--scope": "Set commit scope.",
-  "--title": "Set commit title/description.",
-  "--body": "Set commit body text.",
-  "--closes": "Set issue/ticket id for a closes footer.",
-  "--ticket": "Set ticket value used in the title.",
-  "--trailer": "Set trailer footer value.",
-  "--deprecates": "Set issue/ticket id for a deprecates footer.",
-  "--breaking-title": "Set breaking-change title footer.",
-  "--breaking-body": "Set breaking-change body footer.",
-  "--deprecates-title": "Set deprecates footer title text.",
-  "--deprecates-body": "Set deprecates footer body text.",
-  "--custom-footer": "Set a custom footer line.",
+const BRANCH_FLAG_DEFINITIONS: Record<string, string> = {
+  "--user": "Set branch username segment.",
+  "--type": "Set branch type (for example feat, fix, docs).",
+  "--description": "Set branch description segment.",
+  "--ticket": "Set branch ticket/issue segment.",
+  "--branch-version": "Set branch version segment.",
+  "--checkout": "Choose branch or worktree checkout mode.",
 };
 
 const GIT_FLAG_DEFINITIONS: Record<string, string> = {
@@ -64,7 +51,9 @@ export function print_help_text(
   let branch = "(none)";
   try {
     branch =
-      execSync(`git ${flags.git_args} branch --show-current`, { stdio: "pipe" })
+      execSync(`git ${branch_flags.git_args} branch --show-current`, {
+        stdio: "pipe",
+      })
         .toString()
         .trim() || "(none)";
   } catch {
@@ -72,7 +61,7 @@ export function print_help_text(
   }
 
   const inferred_type =
-    infer_type_from_git(config.commit_type.options, flags.git_args) ||
+    infer_type_from_git(config.commit_type.options, branch_flags.git_args) ||
     "Unknown";
   const inferred_ticket = config.check_ticket.infer_ticket
     ? infer_ticket_from_git(
@@ -80,7 +69,7 @@ export function print_help_text(
           append_hashtag: config.check_ticket.append_hashtag,
           prepend_hashtag: config.check_ticket.prepend_hashtag,
         },
-        flags.git_args,
+        branch_flags.git_args,
       ) || "Unknown"
     : "Infer Disabled";
 
@@ -94,13 +83,10 @@ export function print_help_text(
     .trim();
   const cli_flags = to_definition_lines(CLI_FLAG_DEFINITIONS);
   const git_flags = to_definition_lines(GIT_FLAG_DEFINITIONS);
-  const commit_flags = to_definition_lines(COMMIT_FLAG_DEFINITIONS);
-  const additional_commands = to_definition_lines(
-    ADDITIONAL_COMMAND_DEFINITIONS,
-  );
+  const branch_flags_help = to_definition_lines(BRANCH_FLAG_DEFINITIONS);
 
   console.log(`
-${color.green(" better-commits")} ${color.gray("v" + version)}
+${color.green(" better-branch")} ${color.gray("v" + version)}
 
 ${color.gray("BRANCH")} 
  ${branch}
@@ -118,14 +104,11 @@ ${color.gray("Scopes")}
 ${color.gray("CLI FLAGS")} 
 ${cli_flags}
 
-${color.gray("Commit Flags")} 
-${commit_flags}
+${color.gray("Branch Flags")} 
+${branch_flags_help}
 
 ${color.gray("Git Flags (Advanced)")} 
 ${git_flags}
-
-${color.gray("ADDITIONAL COMMANDS")} 
-${additional_commands}
 
 `);
 }

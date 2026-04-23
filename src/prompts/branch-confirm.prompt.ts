@@ -2,7 +2,7 @@ import * as p from "@clack/prompts";
 import { execSync } from "child_process";
 import color from "picocolors";
 import { chdir } from "process";
-import { flags } from "../args";
+import { branch_flags } from "../branch-args";
 import { get_git_root } from "../utils";
 import { build_branch, build_worktree_path } from "../utils/build-branch";
 import { BranchRunnable } from "./branch-runnable";
@@ -47,9 +47,12 @@ export class BranchConfirmPrompt extends BranchRunnable {
 
     if (!this.#is_worktree) {
       try {
-        execSync(`git ${flags.git_args} checkout ${branch_flag} ${branch_name}`, {
-          stdio: "inherit",
-        });
+        execSync(
+          `git ${branch_flags.git_args} checkout ${branch_flag} ${branch_name}`,
+          {
+            stdio: "inherit",
+          },
+        );
         p.log.info(
           `Switched to a new branch '${color.bgGreen(
             " " + color.black(branch_name) + " ",
@@ -66,11 +69,14 @@ export class BranchConfirmPrompt extends BranchRunnable {
       const worktree_name = build_worktree_path(
         this.branch_state,
         this.config,
-        get_git_root(),
+        get_git_root(branch_flags.git_args),
       );
-      execSync(`git worktree add ${worktree_name} ${branch_flag} ${branch_name}`, {
-        stdio: "inherit",
-      });
+      execSync(
+        `git ${branch_flags.git_args} worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
+        {
+          stdio: "inherit",
+        },
+      );
       p.log.info(
         `Created a new worktree ${color.bgGreen(
           " " + color.black(worktree_name) + " ",
@@ -110,7 +116,9 @@ export class BranchConfirmPrompt extends BranchRunnable {
     // TODO: There has to be a better way 🤦
     let branch_flag = "";
     try {
-      execSync(`git show-ref ${branch_name}`, { encoding: "utf-8" });
+      execSync(`git ${branch_flags.git_args} show-ref ${branch_name}`, {
+        encoding: "utf-8",
+      });
       p.log.warning(
         color.yellow(
           `${branch_name} already exists! Checking out existing branch.`,

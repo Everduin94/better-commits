@@ -4,7 +4,12 @@ import Configstore from "configstore";
 import { chdir } from "process";
 import { InferOutput, ValiError, parse } from "valibot";
 import { BranchState, CommitState, Config } from "./valibot-state";
-import { load_setup, get_git_root, NOOP_PROMPT_CACHE } from "./utils";
+import {
+  load_setup,
+  get_git_root,
+  NOOP_PROMPT_CACHE,
+  ConfigSource,
+} from "./utils";
 import { BranchRunnable } from "./prompts/branch-runnable";
 import { BranchCheckoutPrompt } from "./prompts/branch-checkout.prompt";
 import { BranchUserPrompt } from "./prompts/branch-user.prompt";
@@ -14,7 +19,9 @@ import { BranchVersionPrompt } from "./prompts/branch-version.prompt";
 import { BranchDescriptionPrompt } from "./prompts/branch-description.prompt";
 import { BranchConfirmPrompt } from "./prompts/branch-confirm.prompt";
 import { branch_flags } from "./branch-args";
+import { print_help_text } from "./branch-help";
 import { create_strict_branch_state } from "./utils/no-interactive-validation";
+import { get_package_version } from "./utils";
 import * as p from "@clack/prompts";
 
 type PromptCtor = new (
@@ -33,10 +40,29 @@ const promptCtors: PromptCtor[] = [
   BranchConfirmPrompt,
 ];
 
-main(load_setup(" better-branch "));
+const { config, config_source } = load_setup(
+  " better-branch ",
+  branch_flags.git_args,
+);
 
-async function main(config: InferOutput<typeof Config>) {
-  chdir(get_git_root());
+main(config, config_source);
+
+async function main(
+  config: InferOutput<typeof Config>,
+  config_source: ConfigSource,
+) {
+  chdir(get_git_root(branch_flags.git_args));
+
+  if (branch_flags.version) {
+    const version = get_package_version();
+    p.log.step("Better Commits v" + version);
+    return;
+  }
+
+  if (branch_flags.help) {
+    print_help_text(config, config_source);
+    return;
+  }
 
   const branch_state = parse(BranchState, branch_flags.branch_state);
 

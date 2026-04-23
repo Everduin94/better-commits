@@ -49,11 +49,19 @@ export const NOOP_PROMPT_CACHE = {
   clear: () => {},
 } as unknown as Configstore;
 
+export type ConfigSource = "repository" | "global" | "none";
+
+export type LoadedSetup = {
+  config: InferOutput<typeof Config>;
+  config_source: ConfigSource;
+};
+
 /* LOAD */
 export function load_setup(
   cli_name = " better-commits ",
-): InferOutput<typeof Config> {
-  /* console.clear(); */ /* TODO: TESTING */
+  git_args = flags.git_args,
+): LoadedSetup {
+  console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
 
   let global_config = null;
@@ -62,26 +70,32 @@ export function load_setup(
     global_config = read_config_from_path(home_path);
   }
 
-  const root = get_git_root();
+  const root = get_git_root(git_args);
   const root_path = `${root}/${CONFIG_FILE_NAME}`;
   if (fs.existsSync(root_path)) {
     p.log.step("Reading from Repository Config");
     const repo_config = read_config_from_path(root_path);
-    return global_config
-      ? {
-          ...repo_config,
-          overrides: global_config.overrides.shell
-            ? global_config.overrides
-            : repo_config.overrides,
-          confirm_with_editor: global_config.confirm_with_editor,
-          cache_last_value: global_config.cache_last_value,
-        }
-      : repo_config;
+    return {
+      config: global_config
+        ? {
+            ...repo_config,
+            overrides: global_config.overrides.shell
+              ? global_config.overrides
+              : repo_config.overrides,
+            confirm_with_editor: global_config.confirm_with_editor,
+            cache_last_value: global_config.cache_last_value,
+          }
+        : repo_config,
+      config_source: "repository",
+    };
   }
 
   if (global_config) {
     p.log.step("Reading from Global Config");
-    return global_config;
+    return {
+      config: global_config,
+      config_source: "global",
+    };
   }
 
   const default_config = parse(Config, {});
@@ -89,7 +103,10 @@ export function load_setup(
     "Config not found. Generating default .better-commit.json at $HOME",
   );
   fs.writeFileSync(home_path, JSON.stringify(default_config, null, 4));
-  return default_config;
+  return {
+    config: default_config,
+    config_source: "none",
+  };
 }
 
 function read_config_from_path(config_path: string) {
@@ -129,10 +146,10 @@ function validate_config(config: unknown): InferOutput<typeof Config> {
 /*
 rev-parse will fail in a --bare repository root
 */
-export function get_git_root(): string {
+export function get_git_root(git_args = flags.git_args): string {
   let path = ".";
   try {
-    path = execSync(`git ${flags.git_args} rev-parse --show-toplevel`)
+    path = execSync(`git ${git_args} rev-parse --show-toplevel`)
       .toString()
       .trim();
   } catch (err) {
@@ -145,6 +162,18 @@ export function get_git_root(): string {
 
 export function get_default_config_path(): string {
   return homedir() + "/" + CONFIG_FILE_NAME;
+}
+
+export function get_package_version(): string {
+  try {
+    const package_json = JSON.parse(
+      fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+    ) as { version?: string };
+
+    return package_json.version ?? "unknown";
+  } catch {
+    return "unknown";
+  }
 }
 
 export function addNewLine(arr: string[], i: number) {

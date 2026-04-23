@@ -182,7 +182,7 @@ export function create_strict_branch_state(
       ) {
         addIssue({
           message:
-            "Missing --version. branch_version.required is enabled in config.",
+            "Missing --branch-version. branch_version.required is enabled in config.",
         });
       }
     }),

@@ -1,16 +1,14 @@
 #! /usr/bin/env node
 
-import fs from "fs";
 import { chdir } from "process";
 import * as p from "@clack/prompts";
 import { InferInput, InferOutput, ValiError, parse } from "valibot";
 import { CommitState, Config } from "./valibot-state";
 import {
-  CONFIG_FILE_NAME,
   load_setup,
-  get_default_config_path,
   get_git_root,
   NOOP_PROMPT_CACHE,
+  ConfigSource,
 } from "./utils";
 import { create_strict_commit_state } from "./utils/no-interactive-validation";
 import Configstore from "configstore";
@@ -24,6 +22,7 @@ import { CommitFooterPrompt } from "./prompts/commit-footer.prompt";
 import { CommitConfirmPrompt } from "./prompts/commit-confirm.prompt";
 import { CommitStatusPrompt } from "./prompts/commit-status.prompt";
 import { flags } from "./args";
+import { get_package_version } from "./utils";
 import { infer_not_interactive } from "./utils/infer";
 import { print_help_text } from "./help";
 
@@ -44,22 +43,21 @@ const promptCtors: PromptCtor[] = [
   CommitConfirmPrompt,
 ];
 
-const root = get_git_root();
-const has_repo_config = fs.existsSync(`${root}/${CONFIG_FILE_NAME}`);
-const has_global_config = fs.existsSync(get_default_config_path());
-const config_source = has_repo_config
-  ? "repository"
-  : has_global_config
-    ? "global"
-    : "none";
+const { config, config_source } = load_setup();
 
-main(load_setup(), config_source);
+main(config, config_source);
 
 export async function main(
   config: InferOutput<typeof Config>,
-  config_source: "repository" | "global" | "none",
+  config_source: ConfigSource,
 ) {
   chdir(get_git_root());
+
+  if (flags.version) {
+    const version = get_package_version();
+    p.log.step("Better Commits v" + version);
+    return;
+  }
 
   if (flags.help) {
     print_help_text(config, config_source);

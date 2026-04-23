@@ -28,6 +28,21 @@ describe("create_strict_branch_state", () => {
     expect(result.description).toBe("add-parser");
   });
 
+  it('defaults checkout to "branch" when omitted', () => {
+    const config = make_config();
+    const schema = create_strict_branch_state(config);
+
+    const result = parse(
+      schema,
+      make_state({
+        type: "feat",
+        description: "add-parser",
+      }),
+    );
+
+    expect(result.checkout).toBe("branch");
+  });
+
   it("rejects types that are not in config.commit_type.options", () => {
     const config = make_config();
     const schema = create_strict_branch_state(config);
@@ -111,7 +126,7 @@ describe("create_strict_branch_state", () => {
           description: "add-parser",
         }),
       ),
-    ).toThrow(/Missing --version/);
+    ).toThrow(/Missing --branch-version/);
   });
 
   it("rejects missing user when branch_user.required is enabled", () => {

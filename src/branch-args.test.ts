@@ -12,7 +12,7 @@ describe("parse_branch_runtime_flags", () => {
       "ABC-123",
       "--description",
       "add-parser",
-      "--version",
+      "--branch-version",
       "1.2.0",
     ]);
 
@@ -33,6 +33,20 @@ describe("parse_branch_runtime_flags", () => {
     });
   });
 
+  it("does not set checkout when --checkout is omitted", () => {
+    const parsed = parse_branch_runtime_flags([
+      "--type",
+      "feat",
+      "--description",
+      "add-parser",
+    ]);
+
+    expect(parsed.branch_state).toEqual({
+      type: "feat",
+      description: "add-parser",
+    });
+  });
+
   it("honors interactive flag semantics", () => {
     const default_flags = parse_branch_runtime_flags([]);
     const explicit_interactive = parse_branch_runtime_flags(["--interactive"]);
@@ -41,5 +55,18 @@ describe("parse_branch_runtime_flags", () => {
     expect(default_flags.no_interactive).toBe(false);
     expect(explicit_interactive.no_interactive).toBe(false);
     expect(no_interactive.no_interactive).toBe(true);
+  });
+
+  it("parses git-dir and work-tree into git_args", () => {
+    const parsed = parse_branch_runtime_flags([
+      "--git-dir",
+      "/tmp/repo/.git",
+      "--work-tree",
+      "/tmp/repo",
+    ]);
+
+    expect(parsed.git_args).toBe(
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
   });
 });

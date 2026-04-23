@@ -18,6 +18,14 @@ describe("parse_runtime_flags", () => {
     expect(parsed.dry_run).toBe(true);
   });
 
+  it("parses --version and -v", () => {
+    const long_flag = parse_runtime_flags(["--version"]);
+    const short_flag = parse_runtime_flags(["-v"]);
+
+    expect(long_flag.version).toBe(true);
+    expect(short_flag.version).toBe(true);
+  });
+
   it("maps commit flags into commit_state keys", () => {
     const parsed = parse_runtime_flags([
       "--type",
