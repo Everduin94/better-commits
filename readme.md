@@ -56,7 +56,9 @@ Some of the values in these prompts will be inferred by your branch name and aut
 For documentation on passing commit values to `better-commits` via the CLI, see [CLI Flags](#cli-flags).
 
 > [!TIP]
-> The --no-interactive flag, allows automated workflows or AI agents like OpenCode and Claude Code, to use better-commits to generate consistent commit messages using less tokens.
+> The `--no-interactive` flag, allows automated workflows or AI agents like OpenCode and Claude Code, to use better-commits to generate consistent commit messages using less tokens.
+>
+> Run `better-commits --help` / `better-branch --help` for more information.
 
 ## ⚙️ Configuration
 
@@ -406,7 +408,7 @@ Optionally configure pre and post checkout commands, for example:
 
 See _branch_pre_commands_ and _branch_post_commands_ in default config. (or _worktree_pre_commands_ and _worktree_post_commands_ for creating worktrees)
 
-## 🌌 Mildly Interesting
+## 💡 Tips & Tricks
 
 ### Building / Versioning
 
@@ -427,7 +429,7 @@ If you're using Github issues to track your work, and select the `closes` footer
 
 `better-commits` can append a commit trailer per commit type. This allows you to [automate change logs](https://docs.gitlab.com/ee/user/project/changelogs.html) with tools like Gitlab.
 
-### Misc
+### Git
 
 `better-commits` uses native `git` commands under the hood. So any hooks, tools, or staging should work as if it was a normal commit.
 
@@ -436,11 +438,13 @@ Setting `confirm_with_editor=true` will allow you to edit/confirm a commit with 
 - For example, to edit with Neovim: `git config --global core.editor "nvim"`
 - For VS Code, `git config --global core.editor "code -n --wait"`
 
-You can add this badge to your repository to display that you're using a better-commits repository config
+You can pass arguments to `git` through `better-commits` like so:
 
-| Markdown                                                                                                                                                                                                          | Result                                                                                                                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits)` | [![better commits is enabled](https://img.shields.io/badge/better--commits-enabled?style=for-the-badge&logo=git&color=a6e3a1&logoColor=D9E0EE&labelColor=302D41)](https://github.com/Everduin94/better-commits) |
+```sh
+better-commits --git-dir="$HOME/.config" --work-tree="$HOME"
+```
+
+A practical example of this would be managing dotfiles, as described in this [Atlassian Article](https://www.atlassian.com/git/tutorials/dotfiles)
 
 ### CLI Flags
 
@@ -449,20 +453,15 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 - Use `--no-interactive` to skip prompts, confirmation, and editor flows. This is the recommended mode for OpenCode, Claude Code, and other coding agents.
 - Use `--dry-run` to validate the generated `git commit` command without creating a commit.
 - Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
+- Supported branch field flags: `--user`, `--type`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
+
+**Examples**
 
 ```sh
 better-commits --no-interactive --dry-run --type feat --scope cli --title "add parser"
+
+better-branch --no-interactive --type feat --ticket TAC-123 --description "add parser" --checkout worktree
 ```
-
-### Git Arguments
-
-You can pass arguments to `git` through `better-commits` like so:
-
-```sh
-better-commits --git-dir="$HOME/.config" --work-tree="$HOME"
-```
-
-A practical example of this would be managing dotfiles, as described in this [Atlassian Article](https://www.atlassian.com/git/tutorials/dotfiles)
 
 ---
 
