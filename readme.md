@@ -95,6 +95,8 @@ To create a **repository-specific config**, navigate to the root of your project
     // Default selected type from options
     "initial_value": "feat",
 
+    "max_items": 20,
+
     // Infer type from the current branch name: user/TYPE/my-branch
     "infer_type_from_branch": true,
 
@@ -123,6 +125,55 @@ To create a **repository-specific config**, navigate to the root of your project
         "trailer": "Changelog: fix",
       },
       {
+        "value": "docs",
+        "label": "docs",
+        "hint": "Documentation only changes",
+        "emoji": "📚",
+        "trailer": "Changelog: documentation",
+      },
+      {
+        "value": "refactor",
+        "label": "refactor",
+        "hint": "A code change that neither fixes a bug nor adds a feature",
+        "emoji": "🔨",
+        "trailer": "Changelog: refactor",
+      },
+      {
+        "value": "perf",
+        "label": "perf",
+        "hint": "A code change that improves performance",
+        "emoji": "🚀",
+        "trailer": "Changelog: performance",
+      },
+      {
+        "value": "test",
+        "label": "test",
+        "hint": "Adding missing tests or correcting existing tests",
+        "emoji": "🚨",
+        "trailer": "Changelog: test",
+      },
+      {
+        "value": "build",
+        "label": "build",
+        "hint": "Changes that affect the build system or external dependencies",
+        "emoji": "🚧",
+        "trailer": "Changelog: build",
+      },
+      {
+        "value": "ci",
+        "label": "ci",
+        "hint": "Changes to our CI configuration files and scripts",
+        "emoji": "🤖",
+        "trailer": "Changelog: ci",
+      },
+      {
+        "value": "chore",
+        "label": "chore",
+        "hint": "Other changes that do not modify src or test files",
+        "emoji": "🧹",
+        "trailer": "Changelog: chore",
+      },
+      {
         "value": "",
         "label": "none",
       },
@@ -142,6 +193,8 @@ To create a **repository-specific config**, navigate to the root of your project
     "options": [
       { "value": "app", "label": "app" },
       { "value": "shared", "label": "shared" },
+      { "value": "server", "label": "server" },
+      { "value": "tools", "label": "tools" },
       { "value": "", "label": "none" },
     ],
   },
