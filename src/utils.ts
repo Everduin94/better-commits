@@ -115,7 +115,9 @@ function read_config_from_path(config_path: string) {
   try {
     res = parse_jsonc(fs.readFileSync(config_path, "utf8"));
   } catch (err) {
-    p.log.error("Invalid JSON file. Exiting.\n" + err);
+    p.log.error(
+      `Invalid JSON/JSONC config file at ${config_path}. Exiting.\n` + err,
+    );
     process.exit(0);
   }
 

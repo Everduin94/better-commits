@@ -10,13 +10,7 @@ import {
   get_repository_config_path,
 } from "./utils";
 
-try {
-  await create_init_config();
-} catch {
-  p.log.error(
-    `${color.red("Could not determine git root folder. better-commits-init must be used in a git repository")}`,
-  );
-}
+await create_init_config();
 
 export async function create_init_config() {
   console.clear();
@@ -36,7 +30,13 @@ export async function create_init_config() {
     }
   }
 
-  fs.writeFileSync(root_path, DEFAULT_CONFIG_TEMPLATE);
+  try {
+    fs.writeFileSync(root_path, DEFAULT_CONFIG_TEMPLATE);
+  } catch {
+    p.log.error(
+      `${color.red("Could not determine git root folder. better-commits-init must be used in a git repository")}`,
+    );
+  }
   p.log.success(
     `${color.green(`Successfully created ${root_path.split("/").pop()}`)}`,
   );

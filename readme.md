@@ -442,7 +442,7 @@ better-branch --no-interactive --type feat --ticket TAC-123 --description "add p
 
 #### Multi-line
 
-If your are having issues with multilines for commits on windows, you can override the shell via your `.better-commits.jsonc` config.
+If you are having issues with multilines for commits on windows, you can override the shell via your `.better-commits.jsonc` config.
 
 Example
 
