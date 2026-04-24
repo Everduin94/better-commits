@@ -23,11 +23,11 @@ export async function create_init_config() {
   p.intro(`${color.bgCyan(color.black(" better-commits-init "))}`);
   const root = get_git_root();
   const existing_config_path = get_repository_config_path(root);
-  const root_path = existing_config_path ?? `${root}/${CONFIG_FILE_NAME}`;
+  const root_path = `${root}/${CONFIG_FILE_NAME}`;
 
   if (existing_config_path) {
     const should_overwrite = (await p.confirm({
-      message: `${root_path.split("/").pop()} already exists. Replace with default .better-commits.jsonc?`,
+      message: `${existing_config_path.split("/").pop()} already exists. Replace with default ${CONFIG_FILE_NAME}?`,
     })) as boolean;
 
     if (p.isCancel(should_overwrite) || !should_overwrite) {

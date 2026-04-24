@@ -51,7 +51,7 @@ better-branch # Create a new branch
 
 `better-commits` will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit. - To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
 
-Some of the values in these prompts will be inferred by your branch name and auto populated. You can adjust this in your `.better-commits.json` configuration file.
+Some of the values in these prompts will be inferred by your branch name and auto populated. You can adjust this in your `.better-commits.jsonc` (or `.better-commits.json`) configuration file.
 
 For documentation on passing commit values to `better-commits` via the CLI, see [CLI Flags](#cli-flags).
 
@@ -64,7 +64,7 @@ For documentation on passing commit values to `better-commits` via the CLI, see 
 
 ### Global
 
-Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.json`
+Your first time running `better-commits`, a default config will be generated in your `$HOME` directory, named `.better-commits.jsonc` (formerly `.better-commits.json`)
 
 - This config will be used if a repository-specific config cannot be found.
 
@@ -73,7 +73,7 @@ Your first time running `better-commits`, a default config will be generated in 
 To create a **repository-specific config**, navigate to the root of your project.
 
 - Run `better-commits-init`
-- This will create a default config named `.better-commits.json`
+- This will create a default config named `.better-commits.jsonc`
 - Properties such as `confirm_with_editor` and `overrides` will prefer the global config
 
 ### 💫 Properties
@@ -389,7 +389,7 @@ better-branch --no-interactive --type feat --ticket TAC-123 --description "add p
 
 #### Multi-line
 
-If your are having issues with multilines for commits on windows, you can override the shell via your `.better-commits.json` config.
+If your are having issues with multilines for commits on windows, you can override the shell via your `.better-commits.jsonc` config.
 
 Example
 

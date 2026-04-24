@@ -87,6 +87,24 @@ describe("create_init_config", () => {
     );
   });
 
+  it("writes the canonical jsonc file when a legacy json config exists", async () => {
+    mocked.get_repository_config_path.mockReturnValue("/repo/.better-commits.json");
+    mocked.confirm.mockResolvedValue(true);
+
+    const { create_init_config } = await import("./init");
+    mocked.writeFileSync.mockClear();
+    mocked.confirm.mockClear();
+    mocked.outro.mockClear();
+
+    await create_init_config();
+
+    expect(mocked.confirm).toHaveBeenCalledTimes(1);
+    expect(mocked.writeFileSync).toHaveBeenCalledWith(
+      "/repo/.better-commits.jsonc",
+      expect.any(String),
+    );
+  });
+
   it("does not overwrite when confirmation is declined", async () => {
     mocked.get_repository_config_path.mockReturnValue("/repo/.better-commits.jsonc");
     mocked.confirm.mockResolvedValue(false);
