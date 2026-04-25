@@ -1,11 +1,7 @@
 import * as p from "@clack/prompts";
 import color from "picocolors";
 import { addNewLine } from "../utils";
-import {
-  a_for_all_message,
-  ctrl_a_for_all_message,
-  space_to_select_message,
-} from "../utils/messages";
+import { a_for_all_message } from "../utils/messages";
 import { git_add, git_status } from "../git";
 import { autocompleteMultiselect } from "./autocomplete-multiselect";
 import { Runnable } from "./runnable";

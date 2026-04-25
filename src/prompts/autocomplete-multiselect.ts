@@ -128,7 +128,7 @@ class AutocompleteMultiselectPrompt<Value> extends AutocompletePrompt<
             const instructions = [
               `${styleText("dim", "↑/↓")} to navigate`,
               `${styleText("dim", this.isNavigating ? "Space/Tab:" : "Tab:")} select`,
-              // `${styleText("dim", "Ctrl+A:")} all visible`,
+              `${styleText("dim", "Ctrl+a:")} select all`,
               `${styleText("dim", "Enter:")} confirm`,
               `${styleText("dim", "Type:")} to search`,
             ];
