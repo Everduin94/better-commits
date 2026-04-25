@@ -87,6 +87,7 @@ To create a **repository-specific config**, navigate to the root of your project
 {
   // Run interactive `git status` before composing a commit
   "check_status": true,
+  "check_status_autocomplete": true,
 
   /* COMMIT FIELDS */
   "commit_type": {
@@ -108,6 +109,8 @@ To create a **repository-specific config**, navigate to the root of your project
 
     // "Start" | "After-Colon"
     "emoji_commit_position": "Start",
+
+    "autocomplete": true,
 
     "options": [
       {
@@ -190,6 +193,7 @@ To create a **repository-specific config**, navigate to the root of your project
     "initial_value": "app",
 
     "max_items": 20,
+    "autocomplete": true,
     "options": [
       { "value": "app", "label": "app" },
       { "value": "shared", "label": "shared" },

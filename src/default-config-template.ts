@@ -1,6 +1,7 @@
 export const DEFAULT_CONFIG_TEMPLATE = `{
   // Run interactive \`git status\` before composing a commit
   "check_status": true,
+  "check_status_autocomplete": true,
 
   /* COMMIT FIELDS */
   "commit_type": {
@@ -8,6 +9,8 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
 
     // Default selected type from options
     "initial_value": "feat",
+
+    "max_items": 20,
 
     // Infer type from the current branch name: user/TYPE/my-branch
     "infer_type_from_branch": true,
@@ -20,6 +23,8 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
 
     // "Start" | "After-Colon"
     "emoji_commit_position": "Start",
+
+    "autocomplete": true,
 
     "options": [
       {
@@ -102,6 +107,7 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     "initial_value": "app",
 
     "max_items": 20,
+    "autocomplete": true,
     "options": [
       { "value": "app", "label": "app" },
       { "value": "shared", "label": "shared" },
