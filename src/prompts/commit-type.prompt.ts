@@ -9,7 +9,10 @@ export class CommitTypePrompt extends Runnable {
   async run() {
     if (this.#is_enabled) {
       const { initial_value, message } = this.#initial_value;
-      const commit_type = await p.select({
+      const prompt_type = this.config.commit_type.autocomplete
+        ? p.autocomplete
+        : p.select;
+      const commit_type = await prompt_type({
         message,
         initialValue: initial_value,
         maxItems: this.#max_items,

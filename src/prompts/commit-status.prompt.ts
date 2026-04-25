@@ -1,8 +1,13 @@
 import * as p from "@clack/prompts";
 import color from "picocolors";
 import { addNewLine } from "../utils";
-import { space_to_select_message } from "../utils/messages";
+import {
+  a_for_all_message,
+  ctrl_a_for_all_message,
+  space_to_select_message,
+} from "../utils/messages";
 import { git_add, git_status } from "../git";
+import { autocompleteMultiselect } from "./autocomplete-multiselect";
 import { Runnable } from "./runnable";
 
 export class CommitStatusPrompt extends Runnable {
@@ -47,14 +52,15 @@ export class CommitStatusPrompt extends Runnable {
   }
 
   async #select_for_staging(work_tree: string[]): Promise<string[]> {
-    const selected_for_staging = (await p.multiselect({
-      message: space_to_select_message(
-        "Some files have not been staged, would you like to add them now?",
-      ),
-      options: [
-        { value: ".", label: "." },
-        ...work_tree.map((v) => ({ value: v, label: v })),
-      ],
+    const prompt_type = this.config.check_status_autocomplete
+      ? autocompleteMultiselect
+      : p.multiselect;
+
+    const selected_for_staging = (await prompt_type({
+      message: this.config.check_status_autocomplete
+        ? "Some files have not been staged, add them now?"
+        : a_for_all_message("Some files have not been staged, add them now?"),
+      options: work_tree.map((v) => ({ value: v, label: v })),
       required: false,
     })) as string[];
     if (p.isCancel(selected_for_staging)) process.exit(0);

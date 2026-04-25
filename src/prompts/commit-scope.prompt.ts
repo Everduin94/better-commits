@@ -9,7 +9,10 @@ export class CommitScopePrompt extends Runnable {
     if (!this.#is_enabled) return;
     const { initial_value, message } = this.#get_initial_value();
 
-    let commit_scope = await p.select({
+    const prompt_type = this.config.commit_scope.autocomplete
+      ? p.autocomplete
+      : p.select;
+    let commit_scope = await prompt_type({
       message,
       initialValue: initial_value,
       maxItems: this.#max_items,

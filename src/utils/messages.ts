@@ -17,7 +17,7 @@ export function space_to_select_message(message: string): string {
 }
 
 export function a_for_all_message(message: string): string {
-  return `${message} ${color.dim("· <space> to select | <a> to select all")}`;
+  return `${message} ${color.dim("· <space> to select · <a> to select all")}`;
 }
 
 export function dry_run_message(message: string): string {

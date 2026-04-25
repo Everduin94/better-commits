@@ -23,6 +23,7 @@ const CommitTypeConfig = v.pipe(
         v.picklist(["Start", "After-Colon"]),
         "Start",
       ),
+      autocomplete: v.optional(v.boolean(), true),
       options: v.optional(
         v.array(
           v.object({
@@ -69,6 +70,7 @@ const CommitScopeConfig = v.pipe(
       custom_scope: v.optional(v.boolean(), false),
       max_items: v.optional(v.pipe(v.number(), v.minValue(1)), 20),
       initial_value: v.optional(v.string(), "app"),
+      autocomplete: v.optional(v.boolean(), true),
       options: v.optional(
         v.array(
           v.object({
@@ -116,6 +118,7 @@ const CommitScopeConfig = v.pipe(
 
 export const Config = v.object({
   check_status: v.optional(v.boolean(), true),
+  check_status_autocomplete: v.optional(v.boolean(), true),
   commit_type: CommitTypeConfig,
   commit_scope: CommitScopeConfig,
   check_ticket: v.optional(
@@ -259,7 +262,4 @@ export const BRANCH_STATE_ENTRIES = {
   checkout: v.optional(V_BRANCH_ACTIONS, "branch"),
 };
 
-export const BranchState = v.optional(
-  v.object(BRANCH_STATE_ENTRIES),
-  {},
-);
+export const BranchState = v.optional(v.object(BRANCH_STATE_ENTRIES), {});
