@@ -282,6 +282,7 @@ To create a **repository-specific config**, navigate to the root of your project
   "branch_type": {
     "enable": true,
     "separator": "/",
+    "autocomplete": true,
   },
 
   "branch_ticket": {

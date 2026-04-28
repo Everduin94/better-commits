@@ -5,7 +5,10 @@ export class BranchTypePrompt extends BranchRunnable {
   async run(): Promise<void> {
     if (!this.#is_enabled) return;
 
-    const branch_type = await p.select({
+    const prompt_type = this.config.branch_type.autocomplete
+      ? p.autocomplete
+      : p.select;
+    const branch_type = await prompt_type({
       message: this.#message,
       initialValue: this.#initial_value,
       options: this.#options,

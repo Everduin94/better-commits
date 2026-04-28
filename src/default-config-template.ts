@@ -195,7 +195,8 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
 
   "branch_type": {
     "enable": true,
-    "separator": "/"
+    "separator": "/",
+    "autocomplete": true,
   },
 
   "branch_ticket": {

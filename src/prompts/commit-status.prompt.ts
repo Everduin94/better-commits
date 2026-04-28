@@ -48,17 +48,18 @@ export class CommitStatusPrompt extends Runnable {
   }
 
   async #select_for_staging(work_tree: string[]): Promise<string[]> {
-    const prompt_type = this.config.check_status_autocomplete
-      ? autocompleteMultiselect
-      : p.multiselect;
+    const selected_for_staging = (this.config.check_status_autocomplete
+      ? await autocompleteMultiselect({
+          message: "Some files have not been staged, add them now?",
+          options: work_tree.map((v) => ({ value: v, label: v })),
+          required: false,
+        })
+      : await p.multiselect({
+          message: a_for_all_message("Some files have not been staged, add them now?"),
+          options: work_tree.map((v) => ({ value: v, label: v })),
+          required: false,
+        })) as string[];
 
-    const selected_for_staging = (await prompt_type({
-      message: this.config.check_status_autocomplete
-        ? "Some files have not been staged, add them now?"
-        : a_for_all_message("Some files have not been staged, add them now?"),
-      options: work_tree.map((v) => ({ value: v, label: v })),
-      required: false,
-    })) as string[];
     if (p.isCancel(selected_for_staging)) process.exit(0);
     return selected_for_staging;
   }

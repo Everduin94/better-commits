@@ -187,6 +187,7 @@ export const Config = v.object({
     v.object({
       enable: v.optional(v.boolean(), true),
       separator: v.optional(v.picklist(["/", "-", "_"]), "/"),
+      autocomplete: v.optional(v.boolean(), true),
     }),
     {},
   ),
