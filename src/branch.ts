@@ -14,6 +14,7 @@ import { BranchRunnable } from "./prompts/branch-runnable";
 import { BranchCheckoutPrompt } from "./prompts/branch-checkout.prompt";
 import { BranchUserPrompt } from "./prompts/branch-user.prompt";
 import { BranchTypePrompt } from "./prompts/branch-type.prompt";
+import { BranchScopePrompt } from "./prompts/branch-scope.prompt";
 import { BranchTicketPrompt } from "./prompts/branch-ticket.prompt";
 import { BranchVersionPrompt } from "./prompts/branch-version.prompt";
 import { BranchDescriptionPrompt } from "./prompts/branch-description.prompt";
@@ -35,6 +36,7 @@ const promptCtors: PromptCtor[] = [
   BranchUserPrompt,
   BranchTypePrompt,
   BranchTicketPrompt,
+  BranchScopePrompt,
   BranchVersionPrompt,
   BranchDescriptionPrompt,
   BranchConfirmPrompt,

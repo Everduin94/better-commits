@@ -106,6 +106,9 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     // Default selected scope from options
     "initial_value": "app",
 
+    // Infer scope from the current branch name: user/type/TICKET-SCOPE-my-branch
+    "infer_scope_from_branch": true,
+
     "max_items": 20,
     "autocomplete": true,
     "options": [
@@ -199,6 +202,12 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     "autocomplete": true,
   },
 
+  "branch_scope": {
+    "enable": true,
+    "separator": "-",
+    "autocomplete": true,
+  },
+
   "branch_ticket": {
     "enable": true,
     "required": false,
@@ -223,7 +232,7 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
   "branch_action_default": "branch",
 
   // Order of values in the final branch name
-  "branch_order": ["user", "version", "type", "ticket", "description"],
+  "branch_order": ["user", "version", "type", "ticket", "scope", "description"],
 
   // Deprecated, prefer \`worktrees.enable\`
   "enable_worktrees": true,
@@ -236,7 +245,7 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     "base_path": "..",
 
     // Available template variables include:
-    // {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}}
+    // {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{scope}}, {{ticket}}, {{version}}
     "folder_template": "{{repo_name}}-{{ticket}}-{{branch_description}}"
   },
 

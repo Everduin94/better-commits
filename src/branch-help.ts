@@ -2,7 +2,11 @@ import { execSync } from "child_process";
 import { InferOutput } from "valibot";
 import { branch_flags } from "./branch-args";
 import { get_package_version } from "./utils";
-import { infer_ticket_from_git, infer_type_from_git } from "./utils/infer";
+import {
+  infer_scope_from_git,
+  infer_ticket_from_git,
+  infer_type_from_git,
+} from "./utils/infer";
 import { Config } from "./valibot-state";
 import color from "picocolors";
 
@@ -15,6 +19,7 @@ const CLI_FLAG_DEFINITIONS: Record<string, string> = {
 const BRANCH_FLAG_DEFINITIONS: Record<string, string> = {
   "--user": "Set branch username segment.",
   "--type": "Set branch type (for example feat, fix, docs).",
+  "--scope": "Set branch scope segment.",
   "--description": "Set branch description segment.",
   "--ticket": "Set branch ticket/issue segment.",
   "--branch-version": "Set branch version segment.",
@@ -72,6 +77,12 @@ export function print_help_text(
         branch_flags.git_args,
       ) || "Unknown"
     : "Infer Disabled";
+  const inferred_scope = config.commit_scope.infer_scope_from_branch
+    ? infer_scope_from_git(
+        config.commit_scope.options,
+        branch_flags.git_args,
+      ) || "Unknown"
+    : "Infer Disabled";
 
   const types = config.commit_type.options
     .map((option) => option.value)
@@ -90,7 +101,7 @@ ${color.green(" better-branch")} ${color.gray("v" + version)}
 
 ${color.gray("BRANCH")} 
  ${branch}
- ${color.gray("Type")} ${color.blue(inferred_type)} ${color.gray("·")} ${color.gray("Ticket")} ${color.magenta(inferred_ticket)}
+ ${color.gray("Type")} ${color.blue(inferred_type)} ${color.gray("·")} ${color.gray("Scope")} ${color.cyan(inferred_scope)} ${color.gray("·")} ${color.gray("Ticket")} ${color.magenta(inferred_ticket)}
 
 ${color.gray("CONFIGURATION")} 
  ${config_source}

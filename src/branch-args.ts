@@ -16,6 +16,7 @@ type ParsedRuntimeFlags = {
 const BRANCH_OPTIONS = [
   "user",
   "type",
+  "scope",
   "description",
   "ticket",
   "branch-version",
@@ -78,9 +79,9 @@ export function parse_branch_runtime_flags(argv: string[]): ParsedRuntimeFlags {
   BRANCH_OPTIONS.forEach((value) => {
     const cli_value = parsed[value];
     if (cli_value) {
-      const str = (value === "branch-version"
-        ? "version"
-        : value.replace("-", "_")) as keyof BranchStateRuntime;
+      const str = (
+        value === "branch-version" ? "version" : value.replace("-", "_")
+      ) as keyof BranchStateRuntime;
       if (str === "checkout")
         branch_state[str] =
           (cli_value as "worktree" | "branch" | undefined) ?? "branch";

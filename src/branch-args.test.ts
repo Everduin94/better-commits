@@ -8,6 +8,8 @@ describe("parse_branch_runtime_flags", () => {
       "erik",
       "--type",
       "feat",
+      "--scope",
+      "cli",
       "--ticket",
       "ABC-123",
       "--description",
@@ -19,6 +21,7 @@ describe("parse_branch_runtime_flags", () => {
     expect(parsed.branch_state).toEqual({
       user: "erik",
       type: "feat",
+      scope: "cli",
       ticket: "ABC-123",
       description: "add-parser",
       version: "1.2.0",

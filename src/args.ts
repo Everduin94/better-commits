@@ -82,9 +82,10 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
   const commit_state: Partial<CommitStateRuntime> = {};
   COMMIT_OPTIONS.forEach((value) => {
     const cli_value = parsed[value];
-    if (cli_value) {
+    const normalized_value = normalize_commit_flag(value, cli_value);
+    if (normalized_value !== undefined) {
       const str = value.replace("-", "_") as keyof CommitStateRuntime;
-      commit_state[str] = cli_value;
+      commit_state[str] = normalized_value;
     }
   });
 
@@ -96,6 +97,25 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
     dry_run: parsed["dry-run"] === true,
     commit_state,
   };
+}
+
+function normalize_commit_flag(
+  option: (typeof COMMIT_OPTIONS)[number],
+  value: string | undefined,
+): string | undefined {
+  if (value === undefined) return undefined;
+  if (option !== "closes") return value;
+
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "false") {
+    return undefined;
+  }
+
+  if (value === "" || normalized) {
+    return "Closes:";
+  }
+
+  return undefined;
 }
 
 function get_git_args(

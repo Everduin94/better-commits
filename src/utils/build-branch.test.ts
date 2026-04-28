@@ -17,13 +17,14 @@ describe("build_branch", () => {
       user: "erik",
       version: "1.2.0",
       type: "feat",
+      scope: "app",
       ticket: "ABC-1",
       description: "add-parser",
     });
     const config = make_config();
 
     expect(build_branch(branch, config)).toBe(
-      "erik/1.2.0/feat/ABC-1-add-parser",
+      "erik/1.2.0/feat/ABC-1-app-add-parser",
     );
   });
 
@@ -57,18 +58,20 @@ describe("build_branch", () => {
     const branch = make_branch({
       user: "erik",
       type: "feat",
+      scope: "app",
       ticket: "ABC-1",
       description: "parser",
     });
     const config = make_config({
       branch_user: { separator: "_" },
       branch_type: { separator: "-" },
+      branch_scope: { separator: "/" },
       branch_ticket: { separator: "_" },
       branch_description: { separator: "" },
-      branch_order: ["user", "type", "ticket", "description"],
+      branch_order: ["user", "type", "ticket", "scope", "description"],
     });
 
-    expect(build_branch(branch, config)).toBe("erik_feat-ABC-1_parser");
+    expect(build_branch(branch, config)).toBe("erik_feat-ABC-1_app/parser");
   });
 });
 
@@ -77,6 +80,7 @@ describe("build_worktree_path", () => {
     const branch = make_branch({
       user: "erik",
       type: "feat",
+      scope: "cli",
       ticket: "ABC-1",
       description: "add-parser",
       version: "1.2.0",
@@ -84,12 +88,13 @@ describe("build_worktree_path", () => {
     const config = make_config({
       worktrees: {
         base_path: "../worktrees",
-        folder_template: "{{repo_name}}-{{ticket}}-{{branch_description}}",
+        folder_template:
+          "{{repo_name}}-{{scope}}-{{ticket}}-{{branch_description}}",
       },
     });
 
     const result = build_worktree_path(branch, config, "/tmp/my-repo");
-    expect(result).toBe("../worktrees/my-repo-ABC-1-add-parser");
+    expect(result).toBe("../worktrees/my-repo-cli-ABC-1-add-parser");
   });
 
   it("handles base_path with trailing slash", () => {

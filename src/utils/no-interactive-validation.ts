@@ -26,7 +26,9 @@ export function create_strict_commit_state(
     v.rawCheck(({ dataset, addIssue }) => {
       if (!dataset.typed) return;
 
-      const received = dataset.value.type ? `"${dataset.value.type}"` : "(empty)";
+      const received = dataset.value.type
+        ? `"${dataset.value.type}"`
+        : "(empty)";
       if (dataset.value.type && !type_values.includes(dataset.value.type)) {
         addIssue({
           message: `Invalid --type ${received}. Valid types: ${format_allowed_values(type_values)}.`,
@@ -120,16 +122,37 @@ export function create_strict_branch_state(
   config: v.InferOutput<typeof Config>,
 ) {
   const type_values = config.commit_type.options.map((option) => option.value);
+  const scope_values = config.commit_scope.options.map(
+    (option) => option.value,
+  );
 
   return v.pipe(
     v.object(BRANCH_STATE_ENTRIES),
     v.rawCheck(({ dataset, addIssue }) => {
       if (!dataset.typed) return;
 
-      const received = dataset.value.type ? `"${dataset.value.type}"` : "(empty)";
+      const received = dataset.value.type
+        ? `"${dataset.value.type}"`
+        : "(empty)";
       if (dataset.value.type && !type_values.includes(dataset.value.type)) {
         addIssue({
           message: `Invalid --type ${received}. Valid types: ${format_allowed_values(type_values)}.`,
+        });
+      }
+    }),
+    v.rawCheck(({ dataset, addIssue }) => {
+      if (!dataset.typed) return;
+
+      const received = dataset.value.scope
+        ? `"${dataset.value.scope}"`
+        : "(empty)";
+      if (
+        dataset.value.scope &&
+        !config.commit_scope.custom_scope &&
+        !scope_values.includes(dataset.value.scope)
+      ) {
+        addIssue({
+          message: `Invalid --scope ${received}. Valid scopes: ${format_allowed_values(scope_values)}.`,
         });
       }
     }),

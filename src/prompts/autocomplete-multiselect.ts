@@ -63,6 +63,13 @@ function is_ctrl_a(char: string | undefined, key: Key): boolean {
 class AutocompleteMultiselectPrompt<Value> extends AutocompletePrompt<
   Option<Value>
 > {
+  protected override _isActionKey(char: string | undefined, key: Key): boolean {
+    return (
+      super._isActionKey(char, key) ||
+      (this.multiple && key.name === "space" && char !== undefined && char !== "")
+    );
+  }
+
   constructor(
     private readonly promptOptions: AutocompleteMultiselectOptions<Value>,
   ) {
@@ -120,7 +127,7 @@ class AutocompleteMultiselectPrompt<Value> extends AutocompletePrompt<
               : "";
             const instructions = [
               `${styleText("dim", "↑/↓")} to navigate`,
-              `${styleText("dim", this.isNavigating ? "Space/Tab:" : "Tab:")} select`,
+              `${styleText("dim", "Space/Tab:")} select`,
               `${styleText("dim", "Ctrl+a:")} select visible`,
               `${styleText("dim", "Enter:")} confirm`,
               `${styleText("dim", "Type:")} to search`,
@@ -187,6 +194,16 @@ class AutocompleteMultiselectPrompt<Value> extends AutocompletePrompt<
     });
 
     this.on("key", (char, key) => {
+      if (
+        key.name === "space" &&
+        !this.isNavigating &&
+        this.focusedValue !== undefined
+      ) {
+        this.toggleSelected(this.focusedValue);
+        this.#restore_cursor_to_end();
+        return;
+      }
+
       if (!is_ctrl_a(char, key)) return;
 
       this.#toggle_all_visible();

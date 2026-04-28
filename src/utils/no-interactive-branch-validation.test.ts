@@ -20,11 +20,13 @@ describe("create_strict_branch_state", () => {
       schema,
       make_state({
         type: "feat",
+        scope: "app",
         description: "add-parser",
       }),
     );
 
     expect(result.type).toBe("feat");
+    expect(result.scope).toBe("app");
     expect(result.description).toBe("add-parser");
   });
 
@@ -56,6 +58,27 @@ describe("create_strict_branch_state", () => {
         }),
       ),
     ).toThrow(/Invalid --type "unknown"/);
+  });
+
+  it("rejects scopes outside configured options when custom_scope is disabled", () => {
+    const config = make_config({
+      commit_scope: {
+        custom_scope: false,
+        options: [{ value: "app", label: "app" }],
+      },
+    });
+    const schema = create_strict_branch_state(config);
+
+    expect(() =>
+      parse(
+        schema,
+        make_state({
+          type: "feat",
+          scope: "custom-auth",
+          description: "add-parser",
+        }),
+      ),
+    ).toThrow(/Invalid --scope "custom-auth"/);
   });
 
   it("rejects missing descriptions", () => {

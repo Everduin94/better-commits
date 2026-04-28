@@ -20,6 +20,7 @@ export const V_BRANCH_FIELDS = v.picklist([
   "user",
   "version",
   "type",
+  "scope",
   "ticket",
   "description",
 ]);
@@ -27,6 +28,7 @@ export const V_BRANCH_CONFIG_FIELDS = v.picklist([
   "branch_user",
   "branch_version",
   "branch_type",
+  "branch_scope",
   "branch_ticket",
   "branch_description",
 ]);
@@ -35,6 +37,7 @@ export const BRANCH_ORDER_DEFAULTS: v.InferOutput<typeof V_BRANCH_FIELDS>[] = [
   "version",
   "type",
   "ticket",
+  "scope",
   "description",
 ];
 

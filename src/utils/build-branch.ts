@@ -8,7 +8,8 @@ export function build_branch(
 ): string {
   let res = "";
   config.branch_order.forEach((b: InferOutput<typeof V_BRANCH_FIELDS>) => {
-    const config_key: InferOutput<typeof V_BRANCH_CONFIG_FIELDS> = `branch_${b}`;
+    const config_key: InferOutput<typeof V_BRANCH_CONFIG_FIELDS> =
+      `branch_${b}`;
     if (branch[b]) res += branch[b] + config[config_key].separator;
   });
 
@@ -33,6 +34,7 @@ export function build_worktree_path(
     .replace("{{branch_description}}", branch_state.description)
     .replace("{{user}}", branch_state.user || "")
     .replace("{{type}}", branch_state.type || "")
+    .replace("{{scope}}", branch_state.scope || "")
     .replace("{{ticket}}", branch_state.ticket || "")
     .replace("{{version}}", branch_state.version || "");
 

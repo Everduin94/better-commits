@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { flags } from "../args";
 import { InferOutput } from "valibot";
 import { Config } from "../valibot-state";
+import { CUSTOM_SCOPE_KEY } from "../valibot-consts";
 
 type PrependHashtag = "Never" | "Always" | "Prompt";
 
@@ -16,7 +17,7 @@ const REGEX_START_NUM = /^(\d+)/;
 export function infer_not_interactive(config: InferOutput<typeof Config>) {
   if (flags.interactive) return;
 
-  let inferred_state = { ticket: "", type: "" };
+  let inferred_state = { ticket: "", type: "", scope: "" };
 
   if (config.check_ticket.infer_ticket) {
     const inferred_ticket = infer_ticket_from_git(
@@ -34,6 +35,17 @@ export function infer_not_interactive(config: InferOutput<typeof Config>) {
     flags.git_args,
   );
   inferred_state.type = inferred_type;
+
+  if (
+    config.commit_scope.enable &&
+    config.commit_scope.infer_scope_from_branch
+  ) {
+    const inferred_scope = infer_scope_from_git(
+      config.commit_scope.options,
+      flags.git_args,
+    );
+    inferred_state.scope = inferred_scope;
+  }
 
   return inferred_state;
 }
@@ -59,6 +71,16 @@ export function infer_ticket_from_git(
   if (!branch) return "";
 
   return infer_ticket_from_branch(branch, options);
+}
+
+export function infer_scope_from_git(
+  options: { value: string }[],
+  git_args: string,
+): string {
+  const branch = get_current_branch(git_args);
+  if (!branch) return "";
+
+  return infer_scope_from_branch(branch, options);
 }
 
 function infer_ticket_from_branch(
@@ -92,6 +114,34 @@ function infer_type_from_branch(branch: string, types: string[]): string {
     const matches = [
       branch.match(start_dash),
       branch.match(between_dash),
+      branch.match(before_slash),
+    ].filter((value) => value != null);
+
+    return matches.length > 0;
+  });
+
+  return found ?? "";
+}
+
+function infer_scope_from_branch(
+  branch: string,
+  options: { value: string }[],
+): string {
+  const scopes = options
+    .map((option) => option.value)
+    .filter((scope) => scope && scope !== CUSTOM_SCOPE_KEY)
+    .sort((a, b) => b.length - a.length);
+
+  const found = scopes.find((scope) => {
+    const start_dash = new RegExp(`^${scope}-`);
+    const between_dash = new RegExp(`-${scope}-`);
+    const between_slash = new RegExp(`/${scope}/`);
+    const before_slash = new RegExp(`${scope}/`);
+
+    const matches = [
+      branch.match(start_dash),
+      branch.match(between_dash),
+      branch.match(between_slash),
       branch.match(before_slash),
     ].filter((value) => value != null);
 

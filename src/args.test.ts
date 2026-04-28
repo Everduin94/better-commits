@@ -46,6 +46,32 @@ describe("parse_runtime_flags", () => {
     });
   });
 
+  it("treats bare --closes as enabling the default closes footer", () => {
+    const parsed = parse_runtime_flags(["--closes"]);
+
+    expect(parsed.commit_state).toEqual({
+      closes: "Closes:",
+    });
+  });
+
+  it("normalizes boolean-style closes values", () => {
+    const enabled = parse_runtime_flags(["--closes=true"]);
+    const disabled = parse_runtime_flags(["--closes=false"]);
+
+    expect(enabled.commit_state).toEqual({
+      closes: "Closes:",
+    });
+    expect(disabled.commit_state).toEqual({});
+  });
+
+  it("treats any truthy closes value as the default closes footer", () => {
+    const parsed = parse_runtime_flags(["--closes", "Resolves:"]);
+
+    expect(parsed.commit_state).toEqual({
+      closes: "Closes:",
+    });
+  });
+
   it("builds git args from --git-dir and --work-tree", () => {
     const parsed = parse_runtime_flags([
       "--git-dir",

@@ -18,7 +18,7 @@ A CLI for writing better commits, following the conventional commits specificati
 
 - Generate conventional commits through a series of prompts
 - Highly configurable with sane defaults
-- Infers ticket and commit-type from branch for consistent & fast commits
+- Infers ticket, commit scope, and commit-type from branch for consistent & fast commits
 - Consistent branch creation with flexible workflow hooks via `better-branch`
 - Interactive git status/add on commit
 - Preview commit messages in color
@@ -192,6 +192,9 @@ To create a **repository-specific config**, navigate to the root of your project
     // Default selected scope from options
     "initial_value": "app",
 
+    // Infer scope from the current branch name: user/type/TICKET-SCOPE-my-branch
+    "infer_scope_from_branch": true,
+
     "max_items": 20,
     "autocomplete": true,
     "options": [
@@ -285,6 +288,12 @@ To create a **repository-specific config**, navigate to the root of your project
     "autocomplete": true,
   },
 
+  "branch_scope": {
+    "enable": true,
+    "separator": "-",
+    "autocomplete": true,
+  },
+
   "branch_ticket": {
     "enable": true,
     "required": false,
@@ -309,7 +318,7 @@ To create a **repository-specific config**, navigate to the root of your project
   "branch_action_default": "branch",
 
   // Order of values in the final branch name
-  "branch_order": ["user", "version", "type", "ticket", "description"],
+  "branch_order": ["user", "version", "type", "ticket", "scope", "description"],
 
   // Deprecated, prefer `worktrees.enable`
   "enable_worktrees": true,
@@ -322,7 +331,7 @@ To create a **repository-specific config**, navigate to the root of your project
     "base_path": "..",
 
     // Available template variables include:
-    // {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{ticket}}, {{version}}
+    // {{repo_name}}, {{branch_description}}, {{user}}, {{type}}, {{scope}}, {{ticket}}, {{version}}
     "folder_template": "{{repo_name}}-{{ticket}}-{{branch_description}}",
   },
 
@@ -336,7 +345,7 @@ To create a **repository-specific config**, navigate to the root of your project
 
 ### 🔎 Inference
 
-`better-commits` will attempt to infer the ticket/issue and the commit-type from your branch name. It will auto populate the corresponding field if found.
+`better-commits` will attempt to infer the ticket/issue, commit-type, and commit scope from your branch name. It will auto populate the corresponding field if found.
 
 **Ticket / Issue-Number**
 
@@ -346,13 +355,19 @@ To create a **repository-specific config**, navigate to the root of your project
 
 - If a type is at the start of the branch or is followed by a `/`
 
+**Commit Scope**
+
+- If a configured scope appears as its own branch word, separated by `/`, `-`, or `_`
+- If scope appears after a ticket, the expected shape is `TICKET-SCOPE-description`
+- Empty scope values and the `custom` scope option are ignored during inference
+
 ## 🌳 Better Branch
 
 Better branch is a secondary feature that works with better commits
 
 - Supports consistent branch naming conventions
 - Uses same type-list/prompt from your config
-- Enables better-commits to infer type & ticket
+- Enables better-commits to infer type, scope, and ticket
 - Caches your username for speedy branching
 - Convenient worktree creation
 
@@ -427,14 +442,14 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 - Use `--no-interactive` to skip prompts, confirmation, and editor flows. This is the recommended mode for OpenCode, Claude Code, and other coding agents.
 - Use `--dry-run` to validate the generated `git commit` command without creating a commit.
 - Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
-- Supported branch field flags: `--user`, `--type`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
+- Supported branch field flags: `--user`, `--type`, `--scope`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
 
 **Examples**
 
 ```sh
 better-commits --no-interactive --dry-run --type feat --scope cli --title "add parser"
 
-better-branch --no-interactive --type feat --ticket TAC-123 --description "add parser" --checkout worktree
+better-branch --no-interactive --type feat --scope cli --ticket TAC-123 --description "add parser" --checkout worktree
 ```
 
 ---

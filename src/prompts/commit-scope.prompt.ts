@@ -1,7 +1,9 @@
 import * as p from "@clack/prompts";
+import { flags } from "../args";
 import { CUSTOM_SCOPE_KEY } from "../valibot-consts";
 import { get_value_from_cache, set_value_cache } from "../utils";
-import { cache_message } from "../utils/messages";
+import { infer_scope_from_git } from "../utils/infer";
+import { cache_message, inferred_message } from "../utils/messages";
 import { Runnable } from "./runnable";
 
 export class CommitScopePrompt extends Runnable {
@@ -34,6 +36,19 @@ export class CommitScopePrompt extends Runnable {
         initial_value: cache_value,
         message: cache_message("Commit scope"),
       };
+    }
+
+    if (this.config.commit_scope.infer_scope_from_branch) {
+      const scope_from_branch = infer_scope_from_git(
+        this.#options,
+        flags.git_args,
+      );
+      if (scope_from_branch) {
+        return {
+          initial_value: scope_from_branch,
+          message: inferred_message("Commit scope"),
+        };
+      }
     }
 
     return {

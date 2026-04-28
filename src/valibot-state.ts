@@ -70,6 +70,7 @@ const CommitScopeConfig = v.pipe(
       custom_scope: v.optional(v.boolean(), false),
       max_items: v.optional(v.pipe(v.number(), v.minValue(1)), 20),
       initial_value: v.optional(v.string(), "app"),
+      infer_scope_from_branch: v.optional(v.boolean(), true),
       autocomplete: v.optional(v.boolean(), true),
       options: v.optional(
         v.array(
@@ -191,6 +192,14 @@ export const Config = v.object({
     }),
     {},
   ),
+  branch_scope: v.optional(
+    v.object({
+      enable: v.optional(v.boolean(), true),
+      separator: v.optional(v.picklist(["/", "-", "_"]), "-"),
+      autocomplete: v.optional(v.boolean(), true),
+    }),
+    {},
+  ),
   branch_version: v.optional(
     v.object({
       enable: v.optional(v.boolean(), false),
@@ -257,6 +266,7 @@ export const CommitState = v.optional(v.object(COMMIT_STATE_ENTRIES), {});
 export const BRANCH_STATE_ENTRIES = {
   user: v.optional(v.string(), ""),
   type: v.optional(v.string(), ""),
+  scope: v.optional(v.string(), ""),
   ticket: v.optional(v.string(), ""),
   description: v.optional(v.string(), ""),
   version: v.optional(v.string(), ""),

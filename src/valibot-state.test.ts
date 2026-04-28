@@ -8,6 +8,15 @@ describe("Config", () => {
 
     expect(config.commit_type.initial_value).toBe("feat");
     expect(config.commit_scope.initial_value).toBe("app");
+    expect(config.commit_scope.infer_scope_from_branch).toBe(true);
+    expect(config.branch_order).toEqual([
+      "user",
+      "version",
+      "type",
+      "ticket",
+      "scope",
+      "description",
+    ]);
     expect(config.commit_type.options.length).toBeGreaterThan(0);
     expect(config.commit_scope.options.length).toBeGreaterThan(0);
   });

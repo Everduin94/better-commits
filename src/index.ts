@@ -68,6 +68,7 @@ export async function main(
   const flags_plus_infer: InferInput<typeof CommitState> = {
     ...flags.commit_state,
     type: (flags.commit_state.type || infer_state?.type) ?? "",
+    scope: (flags.commit_state.scope || infer_state?.scope) ?? "",
     ticket: (flags.commit_state.ticket || infer_state?.ticket) ?? "",
   };
 
