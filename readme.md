@@ -192,7 +192,7 @@ To create a **repository-specific config**, navigate to the root of your project
     // Default selected scope from options
     "initial_value": "app",
 
-    // Infer scope from the current branch name: user/type/TICKET-SCOPE-my-branch
+    // Infer scope from the current branch name: user/type/ticket-SCOPE-my-branch
     "infer_scope_from_branch": true,
 
     "max_items": 20,
