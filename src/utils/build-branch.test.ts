@@ -28,6 +28,19 @@ describe("build_branch", () => {
     );
   });
 
+  it("builds branch without scope when scope is empty", () => {
+    const branch = make_branch({
+      user: "erik",
+      type: "feat",
+      scope: "",
+      ticket: "ABC-1",
+      description: "add-parser",
+    });
+    const config = make_config();
+
+    expect(build_branch(branch, config)).toBe("erik/feat/ABC-1-add-parser");
+  });
+
   it("omits empty fields without leaving trailing separators", () => {
     const branch = make_branch({
       user: "erik",

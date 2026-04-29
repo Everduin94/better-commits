@@ -106,7 +106,7 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     // Default selected scope from options
     "initial_value": "app",
 
-    // Infer scope from the current branch name: user/type/TICKET-SCOPE-my-branch
+    // Infer scope from the current branch name: user/type/ticket-SCOPE-my-branch
     "infer_scope_from_branch": true,
 
     "max_items": 20,

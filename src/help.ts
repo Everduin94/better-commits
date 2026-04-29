@@ -17,20 +17,19 @@ const ADDITIONAL_COMMAND_DEFINITIONS: Record<string, string> = {
 };
 
 const CLI_FLAG_DEFINITIONS: Record<string, string> = {
-  "--interactive": "Run in interactive prompt mode (default behavior).",
+  "--no-interactive": "Run without tui prompts.",
   "--dry-run": "Print the commit command without creating a commit.",
   "--help": "Show help information and exit.",
 };
 
 const COMMIT_FLAG_DEFINITIONS: Record<string, string> = {
-  "--type": "Set commit type (may be inferred from branch).",
-  "--scope": "Set commit scope (may be inferred from branch).",
+  "--type": "Set commit type (can be inferred from branch).",
+  "--scope": "Set commit scope (can be inferred from branch).",
   "--title": "Set commit title/description.",
   "--body": "Set commit body text.",
-  "--closes": "Set closes footer (any truthy value).",
-  "--ticket": "Set ticket / issue (may be inferred from branch).",
+  "--ticket": "Set ticket / issue (can be inferred from branch).",
+  "--closes": "Set closes footer (true/false).",
   "--trailer": "Set trailer footer value.",
-  "--deprecates": "Set issue/ticket id for a deprecates footer.",
   "--breaking-title": "Set breaking-change title footer.",
   "--breaking-body": "Set breaking-change body footer.",
   "--deprecates-title": "Set deprecates footer title text.",
