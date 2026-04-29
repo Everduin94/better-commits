@@ -123,6 +123,10 @@ function infer_type_from_branch(branch: string, types: string[]): string {
   return found ?? "";
 }
 
+function escape_regexp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function infer_scope_from_branch(
   branch: string,
   options: { value: string }[],
@@ -133,19 +137,11 @@ function infer_scope_from_branch(
     .sort((a, b) => b.length - a.length);
 
   const found = scopes.find((scope) => {
-    const start_dash = new RegExp(`^${scope}-`);
-    const between_dash = new RegExp(`-${scope}-`);
-    const between_slash = new RegExp(`/${scope}/`);
-    const before_slash = new RegExp(`${scope}/`);
+    const standalone_scope = new RegExp(
+      `(?:^|[/_-])${escape_regexp(scope)}(?=$|[/_-])`,
+    );
 
-    const matches = [
-      branch.match(start_dash),
-      branch.match(between_dash),
-      branch.match(between_slash),
-      branch.match(before_slash),
-    ].filter((value) => value != null);
-
-    return matches.length > 0;
+    return standalone_scope.test(branch);
   });
 
   return found ?? "";

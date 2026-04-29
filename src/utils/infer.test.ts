@@ -95,6 +95,17 @@ describe("infer", () => {
     expect(result).toBe("server");
   });
 
+  it("infers commit scopes separated by underscores", () => {
+    execSyncMock.mockReturnValue(Buffer.from("feat/TICKET_app_desc\n"));
+
+    const result = infer_scope_from_git(
+      [{ value: "app" }, { value: "server" }],
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
+
+    expect(result).toBe("app");
+  });
+
   it("does not infer scopes from partial branch words", () => {
     execSyncMock.mockReturnValue(
       Buffer.from("feat/application/ABC-123-add-parser\n"),
@@ -106,6 +117,28 @@ describe("infer", () => {
     );
 
     expect(result).toBe("");
+  });
+
+  it("does not infer scopes from partial suffix matches before a slash", () => {
+    execSyncMock.mockReturnValue(Buffer.from("feat/myapp/ABC-123-add-parser\n"));
+
+    const result = infer_scope_from_git(
+      [{ value: "app" }, { value: "server" }],
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
+
+    expect(result).toBe("");
+  });
+
+  it("handles scope values containing regex metacharacters", () => {
+    execSyncMock.mockReturnValue(Buffer.from("feat/ui.v2/ABC-123-add-parser\n"));
+
+    const result = infer_scope_from_git(
+      [{ value: "ui.v2" }, { value: "server" }],
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
+
+    expect(result).toBe("ui.v2");
   });
 
   it("prefers longer scope matches", () => {
