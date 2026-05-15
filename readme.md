@@ -12,7 +12,7 @@
 A CLI for writing better commits, following the conventional commits specification.
 </p>
 
-<https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-80d9-79abe0a2a00a>
+<video src="https://github.com/Everduin94/better-commits/assets/14320878/8fb15d46-17c4-4e5d-80d9-79abe0a2a00a"></video>
 
 ## ✨ Features
 
