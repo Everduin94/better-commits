@@ -43,7 +43,11 @@ const promptCtors: PromptCtor[] = [
   CommitConfirmPrompt,
 ];
 
-const { config, config_source } = load_setup();
+const { config, config_source } = load_setup(
+  " better-commits ",
+  flags.git_args,
+  flags.help && flags.json,
+);
 
 main(config, config_source);
 
@@ -60,7 +64,7 @@ export async function main(
   }
 
   if (flags.help) {
-    print_help_text(config, config_source);
+    print_help_text(config, config_source, flags.json);
     return;
   }
 

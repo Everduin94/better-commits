@@ -26,6 +26,11 @@ describe("parse_runtime_flags", () => {
     expect(short_flag.version).toBe(true);
   });
 
+  it("parses --json", () => {
+    const parsed = parse_runtime_flags(["--json"]);
+    expect(parsed.json).toBe(true);
+  });
+
   it("maps commit flags into commit_state keys", () => {
     const parsed = parse_runtime_flags([
       "--type",

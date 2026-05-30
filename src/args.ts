@@ -6,6 +6,7 @@ type CommitStateRuntime = InferOutput<typeof CommitState>;
 
 type ParsedRuntimeFlags = {
   help: boolean;
+  json: boolean;
   version: boolean;
   git_args: string;
   no_interactive: boolean;
@@ -34,6 +35,7 @@ export const BOOLEAN_FLAGS = [
   "interactive",
   "dry-run",
   "help",
+  "json",
   "version",
 ] as const;
 
@@ -64,6 +66,10 @@ class Flags {
     return this.#runtime.version;
   }
 
+  get json(): boolean {
+    return this.#runtime.json;
+  }
+
   get commit_state(): Partial<CommitStateRuntime> {
     return this.#runtime.commit_state;
   }
@@ -90,6 +96,7 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
 
   return {
     help: parsed["help"] === true,
+    json: parsed["json"] === true,
     version: parsed["version"] === true,
     git_args: get_git_args(parsed["git-dir"], parsed["work-tree"]),
     no_interactive: parsed.interactive === false,

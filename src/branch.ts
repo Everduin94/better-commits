@@ -45,6 +45,7 @@ const promptCtors: PromptCtor[] = [
 const { config, config_source } = load_setup(
   " better-branch ",
   branch_flags.git_args,
+  branch_flags.help && branch_flags.json,
 );
 
 main(config, config_source);
@@ -62,7 +63,7 @@ async function main(
   }
 
   if (branch_flags.help) {
-    print_help_text(config, config_source);
+    print_help_text(config, config_source, branch_flags.json);
     return;
   }
 
