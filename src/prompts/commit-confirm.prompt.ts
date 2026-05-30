@@ -4,9 +4,12 @@ import { flags } from "../args";
 import { Runnable } from "./runnable";
 import { dry_run_message } from "../utils/messages";
 import { build_commit_string } from "../utils/build-commit-string";
+import { ensure_staged_changes } from "../git";
 
 export class CommitConfirmPrompt extends Runnable {
   async run(): Promise<void> {
+    if (!flags.interactive) ensure_staged_changes();
+
     if (this.#confirm_with_editor) {
       execSync(`${this.#commit_command} --edit`, this.#git_command_options);
       process.exit(0);
