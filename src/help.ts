@@ -20,6 +20,7 @@ const CLI_FLAG_DEFINITIONS: Record<string, string> = {
   "--no-interactive": "Run without tui prompts.",
   "--dry-run": "Print the commit command without creating a commit.",
   "--help": "Show help information and exit.",
+  "--json": "Print help as JSON for automation workflows.",
 };
 
 const COMMIT_FLAG_DEFINITIONS: Record<string, string> = {
@@ -61,6 +62,7 @@ function to_definition_lines(definitions: Record<string, string>): string {
 export function print_help_text(
   config: InferOutput<typeof Config>,
   config_source: "repository" | "global" | "none",
+  as_json = false,
 ) {
   const version = get_package_version();
 
@@ -105,6 +107,39 @@ export function print_help_text(
   const additional_commands = to_definition_lines(
     ADDITIONAL_COMMAND_DEFINITIONS,
   );
+
+  if (as_json) {
+    console.log(
+      JSON.stringify(
+        {
+          command: "better-commits",
+          version,
+          branch: {
+            name: branch,
+            inferred: {
+              type: inferred_type,
+              scope: inferred_scope,
+              ticket: inferred_ticket,
+            },
+          },
+          configuration: {
+            source: config_source,
+            types: config.commit_type.options.map((option) => option.value),
+            scopes: config.commit_scope.options.map((option) => option.value),
+          },
+          flags: {
+            cli: CLI_FLAG_DEFINITIONS,
+            commit: COMMIT_FLAG_DEFINITIONS,
+            git: GIT_FLAG_DEFINITIONS,
+          },
+          additional_commands: ADDITIONAL_COMMAND_DEFINITIONS,
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
 
   console.log(`
 ${color.green(" better-commits")} ${color.gray("v" + version)}

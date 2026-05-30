@@ -72,4 +72,9 @@ describe("parse_branch_runtime_flags", () => {
       "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
     );
   });
+
+  it("parses --json", () => {
+    const parsed = parse_branch_runtime_flags(["--json"]);
+    expect(parsed.json).toBe(true);
+  });
 });

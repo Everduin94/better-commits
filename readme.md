@@ -441,6 +441,7 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 
 - Use `--no-interactive` to skip prompts, confirmation, and editor flows. This is the recommended mode for OpenCode, Claude Code, and other coding agents.
 - Use `--dry-run` to validate the generated `git commit` command without creating a commit.
+- Use `--help --json` for structured help output that can be consumed by automation or LLM tooling.
 - Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
 - Supported branch field flags: `--user`, `--type`, `--scope`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
 
@@ -450,6 +451,43 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 better-commits --no-interactive --dry-run --type feat --scope cli --title "add parser"
 
 better-branch --no-interactive --type feat --scope cli --ticket TAC-123 --description "add parser" --checkout worktree
+```
+
+### Automation
+
+Use JSON help output with `jq` to query config-aware values:
+
+```sh
+# all commit scopes from help output
+alias bc-scopes='better-commits --help --json | jq -r ".configuration.scopes[]"'
+
+# all commit types from help output
+alias bc-types='better-commits --help --json | jq -r ".configuration.types[]"'
+
+# branch checkout modes and branch flags from help output
+better-branch --help --json | jq ".flags.branch"
+```
+
+`--no-interactive` works well with branch-based inference:
+
+```sh
+# Branch name: everduin94/feat/TAC-123-main-add-parser
+# If "feat" is a configured type and "main" is a configured scope,
+# better-commits infers type/scope/ticket from the branch:
+better-commits --no-interactive --dry-run --title "add parser"
+
+# Example resulting commit command (preview):
+git commit -m "feat(main): TAC-123 add parser"
+```
+
+`better-branch` also supports full automation for branch or worktree creation:
+
+```sh
+# create a branch (no prompts)
+better-branch --no-interactive --type feat --scope main --ticket TAC-123 --description "add-parser" --checkout branch
+
+# create a worktree (no prompts)
+better-branch --no-interactive --type feat --scope main --ticket TAC-123 --description "add-parser" --checkout worktree
 ```
 
 ---

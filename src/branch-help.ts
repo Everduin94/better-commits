@@ -14,6 +14,7 @@ const CLI_FLAG_DEFINITIONS: Record<string, string> = {
   "--interactive": "Run in interactive prompt mode (default behavior).",
   "--dry-run": "Print branch commands without creating a branch or worktree.",
   "--help": "Show help information and exit.",
+  "--json": "Print help as JSON for automation workflows.",
 };
 
 const BRANCH_FLAG_DEFINITIONS: Record<string, string> = {
@@ -50,6 +51,7 @@ function to_definition_lines(definitions: Record<string, string>): string {
 export function print_help_text(
   config: InferOutput<typeof Config>,
   config_source: "repository" | "global" | "none",
+  as_json = false,
 ) {
   const version = get_package_version();
 
@@ -95,6 +97,38 @@ export function print_help_text(
   const cli_flags = to_definition_lines(CLI_FLAG_DEFINITIONS);
   const git_flags = to_definition_lines(GIT_FLAG_DEFINITIONS);
   const branch_flags_help = to_definition_lines(BRANCH_FLAG_DEFINITIONS);
+
+  if (as_json) {
+    console.log(
+      JSON.stringify(
+        {
+          command: "better-branch",
+          version,
+          branch: {
+            name: branch,
+            inferred: {
+              type: inferred_type,
+              scope: inferred_scope,
+              ticket: inferred_ticket,
+            },
+          },
+          configuration: {
+            source: config_source,
+            types: config.commit_type.options.map((option) => option.value),
+            scopes: config.commit_scope.options.map((option) => option.value),
+          },
+          flags: {
+            cli: CLI_FLAG_DEFINITIONS,
+            branch: BRANCH_FLAG_DEFINITIONS,
+            git: GIT_FLAG_DEFINITIONS,
+          },
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
 
   console.log(`
 ${color.green(" better-branch")} ${color.gray("v" + version)}

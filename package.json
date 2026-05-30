@@ -13,6 +13,12 @@
     "commit"
   ],
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "readme.md",
+    "LICENSE",
+    "skills"
+  ],
   "bin": {
     "better-commits-init": "./dist/init.js",
     "better-commits": "./dist/index.js",

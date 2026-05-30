@@ -61,9 +61,12 @@ export type LoadedSetup = {
 export function load_setup(
   cli_name = " better-commits ",
   git_args = flags.git_args,
+  silent = false,
 ): LoadedSetup {
-  console.clear();
-  p.intro(`${color.bgCyan(color.black(cli_name))}`);
+  if (!silent) {
+    console.clear();
+    p.intro(`${color.bgCyan(color.black(cli_name))}`);
+  }
 
   let global_config = null;
   const home_path = get_default_config_path();
@@ -74,7 +77,7 @@ export function load_setup(
   const root = get_git_root(git_args);
   const root_path = get_repository_config_path(root);
   if (root_path) {
-    p.log.step("Reading from Repository Config");
+    if (!silent) p.log.step("Reading from Repository Config");
     const repo_config = read_config_from_path(root_path);
     return {
       config: global_config
@@ -92,7 +95,7 @@ export function load_setup(
   }
 
   if (global_config) {
-    p.log.step("Reading from Global Config");
+    if (!silent) p.log.step("Reading from Global Config");
     return {
       config: global_config,
       config_source: "global",
@@ -100,9 +103,11 @@ export function load_setup(
   }
 
   const default_config = parse(Config, {});
-  p.log.step(
-    `Config not found. Generating default ${CONFIG_FILE_NAME} at $HOME`,
-  );
+  if (!silent) {
+    p.log.step(
+      `Config not found. Generating default ${CONFIG_FILE_NAME} at $HOME`,
+    );
+  }
   fs.writeFileSync(home_path, DEFAULT_CONFIG_TEMPLATE);
   return {
     config: default_config,
