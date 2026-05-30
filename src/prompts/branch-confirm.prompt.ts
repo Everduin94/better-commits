@@ -46,13 +46,16 @@ export class BranchConfirmPrompt extends BranchRunnable {
     const branch_flag = this.#verify_branch_name(branch_name);
 
     if (!this.#is_worktree) {
+      const command = `git ${branch_flags.git_args} checkout ${branch_flag} ${branch_name}`;
+      if (branch_flags.dry_run) {
+        this.#log_dry_run_command(command);
+        return;
+      }
+
       try {
-        execSync(
-          `git ${branch_flags.git_args} checkout ${branch_flag} ${branch_name}`,
-          {
-            stdio: "inherit",
-          },
-        );
+        execSync(command, {
+          stdio: "inherit",
+        });
         p.log.info(
           `Switched to a new branch '${color.bgGreen(
             " " + color.black(branch_name) + " ",
@@ -71,12 +74,15 @@ export class BranchConfirmPrompt extends BranchRunnable {
         this.config,
         get_git_root(branch_flags.git_args),
       );
-      execSync(
-        `git ${branch_flags.git_args} worktree add ${worktree_name} ${branch_flag} ${branch_name}`,
-        {
-          stdio: "inherit",
-        },
-      );
+      const command = `git ${branch_flags.git_args} worktree add ${worktree_name} ${branch_flag} ${branch_name}`;
+      if (branch_flags.dry_run) {
+        this.#log_dry_run_command(command);
+        return;
+      }
+
+      execSync(command, {
+        stdio: "inherit",
+      });
       p.log.info(
         `Created a new worktree ${color.bgGreen(
           " " + color.black(worktree_name) + " ",
@@ -103,6 +109,11 @@ export class BranchConfirmPrompt extends BranchRunnable {
 
   #run_commands(commands: string[], error_message: string): void {
     commands.forEach((command) => {
+      if (branch_flags.dry_run) {
+        this.#log_dry_run_command(command);
+        return;
+      }
+
       try {
         execSync(command, { stdio: "inherit" });
       } catch (err) {
@@ -110,6 +121,10 @@ export class BranchConfirmPrompt extends BranchRunnable {
         process.exit(0);
       }
     });
+  }
+
+  #log_dry_run_command(command: string): void {
+    p.log.info(`Dry run: ${command}`);
   }
 
   #verify_branch_name(branch_name: string): string {
