@@ -95,10 +95,15 @@ export function build_commit_string({
   }
 
   if (commit_state.body) {
-    const temp = commit_state.body.split("\\n");
+    let body = commit_state.body;
+    if (config.commit_body.split_by_period) {
+      body = body.replace(/\.\s+/g, ".\n");
+    }
+    const temp = body.split("\\n");
     const res = temp
       .map((value) => (colorize ? color.reset(value.trim()) : value.trim()))
       .join("\n");
+
     commit_string += `\n\n${res}`;
   }
 

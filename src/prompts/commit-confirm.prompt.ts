@@ -22,6 +22,7 @@ export class CommitConfirmPrompt extends Runnable {
           include_trailer: true,
         }),
         "Commit Preview",
+        { format: (line) => line },
       );
     }
 
