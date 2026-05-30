@@ -2,7 +2,7 @@ import * as p from "@clack/prompts";
 import color from "picocolors";
 import { addNewLine } from "../utils";
 import { a_for_all_message } from "../utils/messages";
-import { git_add, git_status } from "../git";
+import { ensure_staged_changes, git_add, git_status } from "../git";
 import { autocompleteMultiselect } from "./autocomplete-multiselect";
 import { Runnable } from "./runnable";
 
@@ -22,7 +22,7 @@ export class CommitStatusPrompt extends Runnable {
       }
     }
 
-    this.#ensure_staged_changes();
+    ensure_staged_changes();
   }
 
   get #is_enabled(): boolean {
@@ -62,17 +62,5 @@ export class CommitStatusPrompt extends Runnable {
 
     if (p.isCancel(selected_for_staging)) process.exit(0);
     return selected_for_staging;
-  }
-
-  #ensure_staged_changes(): void {
-    const updated_status = git_status();
-    if (updated_status.index.length) return;
-
-    p.log.error(
-      color.red(
-        'no changes added to commit (use "git add" and/or "git commit -a")',
-      ),
-    );
-    process.exit(0);
   }
 }

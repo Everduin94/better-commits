@@ -44,14 +44,8 @@ export class CommitBodyPrompt extends Runnable {
     }
   }
 
-  #split_by_period(value: string): string {
-    if (!this.config.commit_body.split_by_period) return value;
-    const sentences = value.split(/\.\s+/).map((sentence) => sentence.trim());
-    return sentences.join(".\n");
-  }
-
   #run_post_effects(prompt_result: string): void {
     set_value_cache(this.prompt_cache, "commit_body", prompt_result);
-    this.commit_state.body = this.#split_by_period(prompt_result);
+    this.commit_state.body = prompt_result;
   }
 }

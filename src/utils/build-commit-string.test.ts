@@ -148,6 +148,26 @@ describe("build_commit_string", () => {
     expect(result).toBe("feat: add cli\n\nline 1\nline 2\n\nRefs: ABC-1");
   });
 
+  it("splits commit body sentences by period when enabled", () => {
+    const result = build_commit_string({
+      commit_state: make_state({
+        type: "feat",
+        title: "add cli",
+        body: "First sentence. Second sentence. Third sentence.",
+      }),
+      config: make_config({
+        commit_body: {
+          ...make_config().commit_body,
+          split_by_period: true,
+        },
+      }),
+    });
+
+    expect(result).toBe(
+      "feat: add cli\n\nFirst sentence.\nSecond sentence.\nThird sentence.",
+    );
+  });
+
   it("includes trailer only when include_trailer is true", () => {
     const state = make_state({
       type: "feat",

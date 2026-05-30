@@ -58,3 +58,15 @@ export function git_add(files: string[]) {
     }
   }
 }
+
+export function ensure_staged_changes(): void {
+  const updated_status = git_status();
+  if (updated_status.index.length) return;
+
+  p.log.error(
+    color.red(
+      'no changes added to commit (use "git add" and/or "git commit -a")',
+    ),
+  );
+  process.exit(0);
+}
