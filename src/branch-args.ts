@@ -23,9 +23,9 @@ const BRANCH_OPTIONS = [
   "checkout",
 ] as const;
 
-export const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
+const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
 
-export const BOOLEAN_FLAGS = [
+const BOOLEAN_FLAGS = [
   "interactive",
   "dry-run",
   "help",

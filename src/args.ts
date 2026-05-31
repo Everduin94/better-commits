@@ -13,7 +13,7 @@ type ParsedRuntimeFlags = {
   commit_state: Partial<CommitStateRuntime>;
 };
 
-export const COMMIT_OPTIONS = [
+const COMMIT_OPTIONS = [
   "type",
   "scope",
   "title",
@@ -28,9 +28,9 @@ export const COMMIT_OPTIONS = [
   "custom-footer",
 ] as const;
 
-export const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
+const GIT_OPTIONS = ["git-dir", "work-tree"] as const;
 
-export const BOOLEAN_FLAGS = [
+const BOOLEAN_FLAGS = [
   "interactive",
   "dry-run",
   "help",

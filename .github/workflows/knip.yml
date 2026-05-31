@@ -1,0 +1,27 @@
+name: Knip
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  knip:
+    name: npm run knip
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Knip
+        run: npm run knip
