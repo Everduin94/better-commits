@@ -50,6 +50,17 @@ describe("parse_branch_runtime_flags", () => {
     });
   });
 
+  it("normalizes description whitespace like the interactive prompt", () => {
+    const parsed = parse_branch_runtime_flags([
+      "--description",
+      "Add Parser Support",
+    ]);
+
+    expect(parsed.branch_state).toEqual({
+      description: "add-parser-support",
+    });
+  });
+
   it("honors interactive flag semantics", () => {
     const default_flags = parse_branch_runtime_flags([]);
     const explicit_interactive = parse_branch_runtime_flags(["--interactive"]);
