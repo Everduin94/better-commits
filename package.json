@@ -14,7 +14,7 @@
   ],
   "main": "dist/index.js",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0"
   },
   "files": [
     "dist",
@@ -46,21 +46,19 @@
     "start": "tsx ./src/index.ts",
     "branch": "tsx ./src/branch.ts",
     "init": "tsx ./src/init.ts",
-    "build": "tsup",
+    "build": "tsdown",
     "commit": "tsx ./src/index.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "knip": "knip"
   },
   "devDependencies": {
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/npm": "^13.1.5",
-    "@types/configstore": "^6.0.0",
-    "@types/node": "^24.10.1",
-    "jiti": "^1.17.0",
-    "prettier": "3.2.5",
+    "@types/node": "^24.12.4",
+    "knip": "^6.15.0",
     "semantic-release": "^25.0.3",
-    "tsup": "^8.0.2",
+    "tsdown": "^0.21.10",
     "tsx": "^3.12.3",
-    "typescript": "^5.4.5",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
   "release": {

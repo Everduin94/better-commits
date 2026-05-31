@@ -11,7 +11,7 @@ import { flags } from "./args";
 import Configstore from "configstore";
 import { DEFAULT_CONFIG_TEMPLATE } from "./default-config-template";
 
-export const CONFIG_FILE_NAMES = [
+const CONFIG_FILE_NAMES = [
   ".better-commits.jsonc",
   ".better-commits.json",
 ] as const;
@@ -163,7 +163,7 @@ export function get_git_root(git_args = flags.git_args): string {
   return path;
 }
 
-export function get_default_config_path(): string {
+function get_default_config_path(): string {
   return get_config_path(homedir()) ?? homedir() + "/" + CONFIG_FILE_NAME;
 }
 
