@@ -85,6 +85,8 @@ export function parse_branch_runtime_flags(argv: string[]): ParsedRuntimeFlags {
       if (str === "checkout")
         branch_state[str] =
           (cli_value as "worktree" | "branch" | undefined) ?? "branch";
+      else if (str === "description")
+        branch_state[str] = cli_value.replace(/\s+/g, "-").toLowerCase();
       else branch_state[str] = cli_value;
     }
   });
