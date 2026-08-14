@@ -5,6 +5,10 @@ export default defineConfig({
   format: ["esm"],
   minify: true,
   dts: false,
+  deps: {
+    alwaysBundle: ["valibot"],
+    onlyBundle: ["valibot"],
+  },
   outDir: "./dist",
   outExtensions: () => ({ js: ".js" }),
 });

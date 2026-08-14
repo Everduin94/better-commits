@@ -2,14 +2,14 @@ import * as p from "@clack/prompts";
 import { execSync } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
-import { parse as parse_jsonc } from "jsonc-parser";
 import color from "picocolors";
 import { InferOutput, ValiError, parse } from "valibot";
 import { Config } from "./valibot-state";
 import { V_BRANCH_ACTIONS } from "./valibot-consts";
 import { flags } from "./args";
-import Configstore from "configstore";
+import { PromptCache } from "./prompt-cache";
 import { DEFAULT_CONFIG_TEMPLATE } from "./default-config-template";
+import { stripJsonComments } from "./utils/strip-json-comments";
 
 const CONFIG_FILE_NAMES = [
   ".better-commits.jsonc",
@@ -44,11 +44,11 @@ export const BRANCH_ACTION_OPTIONS: {
   { value: "worktree", label: "Worktree" },
 ];
 
-export const NOOP_PROMPT_CACHE = {
+export const NOOP_PROMPT_CACHE: PromptCache = {
   get: () => "",
-  set: (key: string, value: string) => {},
+  set: () => {},
   clear: () => {},
-} as unknown as Configstore;
+};
 
 export type ConfigSource = "repository" | "global" | "none";
 
@@ -113,7 +113,12 @@ export function load_setup(
 function read_config_from_path(config_path: string) {
   let res = null;
   try {
-    res = parse_jsonc(fs.readFileSync(config_path, "utf8"));
+    const config_text = fs.readFileSync(config_path, "utf8");
+    const jsonc =
+      config_text.charCodeAt(0) === 0xfeff
+        ? config_text.slice(1)
+        : config_text;
+    res = JSON.parse(stripJsonComments(jsonc, { trailingCommas: true }));
   } catch (err) {
     p.log.error(
       `Invalid JSON/JSONC config file at ${config_path}. Exiting.\n` + err,
@@ -206,7 +211,7 @@ export function clean_commit_title(title: string): string {
 }
 
 export function get_value_from_cache(
-  config_store: Configstore,
+  config_store: PromptCache,
   key: string,
 ): string {
   try {
@@ -221,7 +226,7 @@ export function get_value_from_cache(
 }
 
 export function set_value_cache(
-  config_store: Configstore,
+  config_store: PromptCache,
   key: string,
   value: string,
 ): void {

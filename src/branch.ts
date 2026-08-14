@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import Configstore from "configstore";
+import { FilePromptCache, PromptCache } from "./prompt-cache";
 import { chdir } from "process";
 import { InferOutput, ValiError, parse } from "valibot";
 import { BranchState, CommitState, Config } from "./valibot-state";
@@ -28,7 +28,7 @@ import * as p from "@clack/prompts";
 type PromptCtor = new (
   config: InferOutput<typeof Config>,
   commit_state: InferOutput<typeof BranchState>,
-  prompt_cache: Configstore,
+  prompt_cache: PromptCache,
 ) => BranchRunnable;
 
 const promptCtors: PromptCtor[] = [
@@ -82,7 +82,7 @@ async function main(
   }
 
   const prompt_cache = config.cache_last_value
-    ? new Configstore("better-commits")
+    ? new FilePromptCache()
     : NOOP_PROMPT_CACHE;
   const prompts_to_run = branch_flags.interactive
     ? promptCtors

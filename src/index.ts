@@ -11,7 +11,7 @@ import {
   ConfigSource,
 } from "./utils";
 import { create_strict_commit_state } from "./utils/no-interactive-validation";
-import Configstore from "configstore";
+import { FilePromptCache, PromptCache } from "./prompt-cache";
 import { CommitTypePrompt } from "./prompts/commit-type.prompt";
 import { Runnable } from "./prompts/runnable";
 import { CommitScopePrompt } from "./prompts/commit-scope.prompt";
@@ -29,7 +29,7 @@ import { print_help_text } from "./help";
 type PromptCtor = new (
   config: InferOutput<typeof Config>,
   commit_state: InferOutput<typeof CommitState>,
-  prompt_cache: Configstore,
+  prompt_cache: PromptCache,
 ) => Runnable;
 
 const promptCtors: PromptCtor[] = [
@@ -88,7 +88,7 @@ export async function main(
   }
 
   const prompt_cache = config.cache_last_value
-    ? new Configstore("better-commits")
+    ? new FilePromptCache()
     : NOOP_PROMPT_CACHE;
 
   const prompts_to_run = flags.interactive
