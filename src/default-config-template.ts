@@ -183,6 +183,8 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
 
   /* BRANCH FIELDS */
   // Optional shell commands to run before / after creating branches or worktrees
+  // - Variables: {{USER}}, {{TYPE}}, {{SCOPE}}, {{DESCRIPTION}}, {{TICKET}}, {{BRANCH-VERSION}}, {{CHECKOUT}}
+  // - Values are shell-quoted automatically: {{TICKET}} --> 'JIRA-123'
   "branch_pre_commands": [],
   "branch_post_commands": [],
   "worktree_pre_commands": [],

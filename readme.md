@@ -19,13 +19,13 @@ A CLI for writing better commits, following the conventional commits specificati
 - Generate conventional commits through a series of prompts
 - Highly configurable with sane defaults
 - Infers ticket, commit scope, and commit-type from branch for consistent & fast commits
-- Consistent branch creation with flexible workflow hooks via `better-branch`
+- Consistent branch / worktree creation with flexible workflow hooks via `better-branch`
 - Interactive git status/add on commit
 - Preview commit messages in color
 - Support for git emojis per commit-type
 - Configure globally or per repository
 - Config validation and error messaging
-- [Lightweight](https://bundlejs.com/?q=better-commits&treeshake=%5B*%5D) (17kb)
+- [Lightweight](https://bundlejs.com/?q=better-commits&treeshake=%5B*%5D) (34kb)
 
 As a side-effect of formatting messages
 
@@ -48,7 +48,7 @@ To run the CLI in your terminal:
 
 ```sh
 better-commits # Create a new commit
-better-branch # Create a new branch
+better-branch # Create a new branch / worktree
 ```
 
 `better-commits` will prompt a series of questions. These prompts will build a commit message, which you can preview, before confirming the commit. - To better understand these prompts and their intention, read [Conventional Commits Summary](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary)
@@ -271,6 +271,8 @@ To create a **repository-specific config**, navigate to the root of your project
 
   /* BRANCH FIELDS */
   // Optional shell commands to run before / after creating branches or worktrees
+  // - Variables: {{USER}}, {{TYPE}}, {{SCOPE}}, {{DESCRIPTION}}, {{TICKET}}, {{BRANCH-VERSION}}, {{CHECKOUT}}
+  // - Values are shell-quoted automatically: {{TICKET}} --> 'JIRA-123'
   "branch_pre_commands": [],
   "branch_post_commands": [],
   "worktree_pre_commands": [],
@@ -371,7 +373,7 @@ Better branch is a secondary feature that works with better commits
 - Uses same type-list/prompt from your config
 - Enables better-commits to infer type, scope, and ticket
 - Caches your username for speedy branching
-- Convenient worktree creation
+- Convenient worktree creation and hooks
 
 To run the CLI in your terminal:
 
@@ -389,15 +391,25 @@ better-branch
 > [!TIP]
 > By default, `better-branch` will create **worktrees** as a sibling folder. To change this, see `worktrees.base_path`.
 
+> [!TIP]
+> Use worktrees in a repository often?
+>
+> You can target your **main** folder for **worktree creation** from any folder (root or sibling)
+>
+> alias create_worktree='better-branch --checkout worktree --git-dir="MAIN_FOLDER/.git" --work-tree="MAIN_FOLDER"'
+
 ### Pre/Post Branch Checkout Hooks
 
-Optionally configure pre and post checkout commands, for example:
+Configure commands to run before or after creating a branch or worktree:
 
-- checkout and rebase main before branching
-- run `npm install` before branching
-- run `npm run dev` after branching
-
-See _branch_pre_commands_ and _branch_post_commands_ in default config. (or _worktree_pre_commands_ and _worktree_post_commands_ for creating worktrees)
+```jsonc
+{
+  "branch_pre_commands": ["git pull -r origin main"],
+  "branch_post_commands": ["npm install"],
+  "worktree_pre_commands": ["echo Creating {{TYPE}} for {{TICKET}}"],
+  "worktree_post_commands": ["npm run setup -- --ticket={{TICKET}}"],
+}
+```
 
 ## 💡 Tips & Tricks
 
@@ -445,6 +457,7 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 - Use `--dry-run` to validate the generated `git commit` command without creating a commit.
 - Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
 - Supported branch field flags: `--user`, `--type`, `--scope`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
+- Values like ticket, scope, and type will still attempt to be inferred where possible when using `--no-interactive`
 
 **Examples**
 
