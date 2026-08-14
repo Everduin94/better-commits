@@ -8,6 +8,7 @@ import { render_hook_command } from "./utils/render-hook-command";
 export class BranchHooks {
   #pre_commands: string[];
   #post_commands: string[];
+  #shell?: string;
 
   constructor(
     config: InferOutput<typeof Config>,
@@ -21,6 +22,7 @@ export class BranchHooks {
       ? config.worktree_post_commands
       : config.branch_post_commands;
 
+    this.#shell = config.overrides.shell;
     this.#pre_commands = this.#render_commands(pre_commands, branch_state);
     this.#post_commands = this.#render_commands(post_commands, branch_state);
   }
@@ -56,7 +58,7 @@ export class BranchHooks {
       }
 
       try {
-        execSync(command, { stdio: "inherit" });
+        execSync(command, { stdio: "inherit", shell: this.#shell });
       } catch (err) {
         p.log.error(`${error_message}${command}\n${err}`);
         throw err;
