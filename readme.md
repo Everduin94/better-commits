@@ -25,6 +25,7 @@ A CLI for writing better commits, following the conventional commits specificati
 - Support for git emojis per commit-type
 - Configure globally or per repository
 - Config validation and error messaging
+- Scriptable and works with agents via CLI flags
 - [Lightweight](https://bundlejs.com/?q=better-commits&treeshake=%5B*%5D) (34kb)
 
 As a side-effect of formatting messages
