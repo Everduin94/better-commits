@@ -218,7 +218,7 @@ export function get_value_from_cache(
     return config_store.get(key) ?? "";
   } catch (err) {
     p.log.warn(
-      `Could not access ${key} from cache. Check that "~/.config" exists. Set "cache_last_value" to false to disable.`,
+      `Could not access ${key} from cache. Check that the cache directory (defaults to "~/.config", or "$XDG_CONFIG_HOME" if set) exists. Set "cache_last_value" to false to disable.`,
     );
   }
 
@@ -234,7 +234,7 @@ export function set_value_cache(
     config_store.set(key, value);
   } catch (err) {
     p.log.warn(
-      `Could not access ${key} from cache. Check that "~/.config" exists. Set "cache_last_value" to false to disable.`,
+      `Could not access ${key} from cache. Check that the cache directory (defaults to "~/.config", or "$XDG_CONFIG_HOME" if set) exists. Set "cache_last_value" to false to disable.`,
     );
   }
 }

@@ -29,7 +29,12 @@ export class FilePromptCache implements PromptCache {
 
   private read(): Record<string, string> {
     try {
-      return JSON.parse(fs.readFileSync(this.path, "utf8"));
+      const parsed = JSON.parse(fs.readFileSync(this.path, "utf8"));
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        this.write({});
+        return {};
+      }
+      return parsed;
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === "ENOENT") return {};
       if (error instanceof SyntaxError) {

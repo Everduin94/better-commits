@@ -1,5 +1,5 @@
 // Adapted from strip-json-comments v5.0.3 by Sindre Sorhus.
-// Licensed under the MIT License. See THIRD_PARTY_NOTICES.md.
+// Licensed under the MIT License
 
 const singleComment = Symbol("singleComment");
 const multiComment = Symbol("multiComment");
@@ -73,10 +73,7 @@ export function stripJsonComments(
       isInsideComment = false;
       buffer += strip(jsonString, offset, index);
       offset = index;
-    } else if (
-      !isInsideComment &&
-      currentCharacter + nextCharacter === "/*"
-    ) {
+    } else if (!isInsideComment && currentCharacter + nextCharacter === "/*") {
       buffer += jsonString.slice(offset, index);
       offset = index;
       isInsideComment = multiComment;
