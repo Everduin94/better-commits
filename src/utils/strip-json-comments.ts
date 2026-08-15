@@ -34,12 +34,6 @@ export function stripJsonComments(
   jsonString: string,
   { whitespace = true, trailingCommas = false }: StripJsonCommentsOptions = {},
 ): string {
-  if (typeof jsonString !== "string") {
-    throw new TypeError(
-      `Expected argument \`jsonString\` to be a \`string\`, got \`${typeof jsonString}\``,
-    );
-  }
-
   const strip = whitespace ? stripWithWhitespace : stripWithoutWhitespace;
 
   let isInsideString = false;
