@@ -8,6 +8,7 @@ type ParsedRuntimeFlags = {
   help: boolean;
   version: boolean;
   git_args: string;
+  git_options: string[];
   no_interactive: boolean;
   dry_run: boolean;
   branch_state: Partial<BranchStateRuntime>;
@@ -59,6 +60,10 @@ class BranchFlags {
     return this.#runtime.git_args;
   }
 
+  get git_options(): string[] {
+    return this.#runtime.git_options;
+  }
+
   get branch_state(): Partial<BranchStateRuntime> {
     return this.#runtime.branch_state;
   }
@@ -91,19 +96,28 @@ export function parse_branch_runtime_flags(argv: string[]): ParsedRuntimeFlags {
     }
   });
 
+  const git_options = get_git_options(
+    parsed["git-dir"],
+    parsed["work-tree"],
+  );
+
   return {
     help: parsed["help"] === true,
     version: parsed["version"] === true,
-    git_args: get_git_args(parsed["git-dir"], parsed["work-tree"]),
+    git_args: git_options.join(" "),
+    git_options,
     no_interactive: parsed["interactive"] === false,
     dry_run: parsed["dry-run"] === true,
     branch_state: branch_state,
   };
 }
 
-function get_git_args(
+function get_git_options(
   git_dir: string | undefined,
   work_tree: string | undefined,
-): string {
-  return `${git_dir ? `--git-dir=${git_dir}` : ""} ${work_tree ? `--work-tree=${work_tree}` : ""}`.trim();
+): string[] {
+  return [
+    ...(git_dir ? [`--git-dir=${git_dir}`] : []),
+    ...(work_tree ? [`--work-tree=${work_tree}`] : []),
+  ];
 }

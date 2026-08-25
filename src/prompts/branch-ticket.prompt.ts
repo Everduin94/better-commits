@@ -1,5 +1,6 @@
 import * as p from "@clack/prompts";
 import { optional_message } from "../utils/messages";
+import { validate_branch_name } from "../utils/validate-branch-name";
 import { BranchRunnable } from "./branch-runnable";
 
 export class BranchTicketPrompt extends BranchRunnable {
@@ -33,6 +34,7 @@ export class BranchTicketPrompt extends BranchRunnable {
 
   #validate(value: string | undefined): string | undefined {
     if (this.#is_required && !value) return "Please enter a ticket / issue";
+    return validate_branch_name(value);
   }
 
   #run_post_effects(prompt_result: string): void {

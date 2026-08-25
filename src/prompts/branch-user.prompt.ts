@@ -1,6 +1,7 @@
 import * as p from "@clack/prompts";
 import { get_value_from_cache, set_value_cache } from "../utils";
 import { optional_message } from "../utils/messages";
+import { validate_branch_name } from "../utils/validate-branch-name";
 import { BranchRunnable } from "./branch-runnable";
 
 export class BranchUserPrompt extends BranchRunnable {
@@ -41,6 +42,7 @@ export class BranchUserPrompt extends BranchRunnable {
 
   #validate(value: string | undefined): string | undefined {
     if (this.#is_required && !value) return "Please enter a username";
+    return validate_branch_name(value?.replace(/\s+/g, "-").toLowerCase());
   }
 
   #run_post_effects(prompt_result: string): void {

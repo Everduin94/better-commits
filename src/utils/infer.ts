@@ -1,9 +1,10 @@
-import { execSync } from "child_process";
+import { execFileSync, execSync } from "child_process";
 import { flags } from "../args";
 import { InferOutput } from "valibot";
 import { Config } from "../valibot-state";
 import { CUSTOM_SCOPE_KEY } from "../valibot-consts";
 
+type GitArgs = string | string[];
 type PrependHashtag = "Never" | "Always" | "Prompt";
 
 const REGEX_SLASH_TAG = /\/(\w+-\d+)/;
@@ -52,7 +53,7 @@ export function infer_not_interactive(config: InferOutput<typeof Config>) {
 
 export function infer_type_from_git(
   options: { value: string }[],
-  git_args: string,
+  git_args: GitArgs,
 ): string {
   const branch = get_current_branch(git_args);
   if (!branch) return "";
@@ -65,7 +66,7 @@ export function infer_type_from_git(
 
 export function infer_ticket_from_git(
   options: { append_hashtag: boolean; prepend_hashtag: PrependHashtag },
-  git_args: string,
+  git_args: GitArgs,
 ): string {
   const branch = get_current_branch(git_args);
   if (!branch) return "";
@@ -75,7 +76,7 @@ export function infer_ticket_from_git(
 
 export function infer_scope_from_git(
   options: { value: string }[],
-  git_args: string,
+  git_args: GitArgs,
 ): string {
   const branch = get_current_branch(git_args);
   if (!branch) return "";
@@ -147,13 +148,16 @@ function infer_scope_from_branch(
   return found ?? "";
 }
 
-function get_current_branch(git_args: string): string {
+function get_current_branch(git_args: GitArgs): string {
   try {
-    return execSync(`git ${git_args} branch --show-current`, {
-      stdio: "pipe",
-    })
-      .toString()
-      .trim();
+    const branch = Array.isArray(git_args)
+      ? execFileSync("git", [...git_args, "branch", "--show-current"], {
+          stdio: "pipe",
+        })
+      : execSync(`git ${git_args} branch --show-current`, {
+          stdio: "pipe",
+        });
+    return branch.toString().trim();
   } catch {
     return "";
   }

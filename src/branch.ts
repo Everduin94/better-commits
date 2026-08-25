@@ -44,7 +44,7 @@ const promptCtors: PromptCtor[] = [
 
 const { config, config_source } = load_setup(
   " better-branch ",
-  branch_flags.git_args,
+  branch_flags.git_options,
 );
 
 main(config, config_source);
@@ -53,7 +53,7 @@ async function main(
   config: InferOutput<typeof Config>,
   config_source: ConfigSource,
 ) {
-  chdir(get_git_root(branch_flags.git_args));
+  chdir(get_git_root(branch_flags.git_options));
 
   if (branch_flags.version) {
     const version = get_package_version();
@@ -77,7 +77,7 @@ async function main(
       } else {
         p.log.error(`Failed to validate branch input: ${err}`);
       }
-      process.exit(0);
+      process.exit(1);
     }
   }
 

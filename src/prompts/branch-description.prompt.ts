@@ -1,4 +1,5 @@
 import * as p from "@clack/prompts";
+import { validate_branch_name } from "../utils/validate-branch-name";
 import { BranchRunnable } from "./branch-runnable";
 
 export class BranchDescriptionPrompt extends BranchRunnable {
@@ -27,6 +28,7 @@ export class BranchDescriptionPrompt extends BranchRunnable {
     if (value.length > this.#max_length) {
       return `Exceeded max length. Description max [${this.#max_length}]`;
     }
+    return validate_branch_name(value.replace(/\s+/g, "-").toLowerCase());
   }
 
   #run_post_effects(prompt_result: string): void {

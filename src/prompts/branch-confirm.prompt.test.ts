@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { parse } from "valibot";
 import { BranchState, Config } from "../valibot-state";
 
@@ -12,13 +12,18 @@ const sq = (value: string): string => `'${value.replaceAll("'", `'\\''`)}'`;
 
 const mocked = vi.hoisted(() => ({
   dry_run: true,
+  git_options: [] as string[],
+  execFileSync: vi.fn(),
   execSync: vi.fn(),
+  spawnSync: vi.fn(),
   info: vi.fn(),
   error: vi.fn(),
 }));
 
 vi.mock("child_process", () => ({
+  execFileSync: mocked.execFileSync,
   execSync: mocked.execSync,
+  spawnSync: mocked.spawnSync,
 }));
 
 vi.mock("@clack/prompts", () => ({
@@ -41,6 +46,9 @@ vi.mock("picocolors", () => ({
 vi.mock("../branch-args", () => ({
   branch_flags: {
     git_args: "",
+    get git_options() {
+      return mocked.git_options;
+    },
     get dry_run() {
       return mocked.dry_run;
     },
@@ -56,9 +64,25 @@ vi.mock("../utils", async () => {
 });
 
 describe("BranchConfirmPrompt", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   beforeEach(() => {
     mocked.dry_run = true;
+    mocked.git_options = [];
+    mocked.execFileSync.mockReset();
+    mocked.execFileSync.mockImplementation((_file, args: string[]) => {
+      if (args.includes("show-ref")) throw new Error("branch missing");
+      return Buffer.from("");
+    });
     mocked.execSync.mockReset();
+    mocked.spawnSync.mockReset();
+    mocked.spawnSync.mockImplementation((_file, args: string[]) => ({
+      status: 0,
+      stdout: args.at(-1),
+      stderr: "",
+    }));
     mocked.info.mockReset();
     mocked.error.mockReset();
   });
@@ -85,15 +109,19 @@ describe("BranchConfirmPrompt", () => {
 
     await new BranchConfirmPrompt(config, branch_state, {} as never).run();
 
-    expect(mocked.execSync).toHaveBeenCalledTimes(1);
-    expect(mocked.execSync).toHaveBeenCalledWith(
-      "git  show-ref feat/TAC-123-cli-add-parser",
-      {
-        encoding: "utf-8",
-      },
+    expect(mocked.execFileSync).toHaveBeenCalledTimes(1);
+    expect(mocked.execFileSync).toHaveBeenCalledWith(
+      "git",
+      [
+        "show-ref",
+        "--verify",
+        "--quiet",
+        "refs/heads/feat/TAC-123-cli-add-parser",
+      ],
+      { encoding: "utf-8" },
     );
     expect(mocked.info).toHaveBeenCalledWith(
-      "Dry run: git  worktree add ../worktrees/repo-TAC-123-add-parser -b feat/TAC-123-cli-add-parser",
+      "Dry run: git worktree add -b feat/TAC-123-cli-add-parser ../worktrees/repo-TAC-123-add-parser",
     );
   });
 
@@ -124,12 +152,12 @@ describe("BranchConfirmPrompt", () => {
     await new BranchConfirmPrompt(config, branch_state, {} as never).run();
 
     // Only the show-ref check runs a real command; everything else is dry-run logged.
-    expect(mocked.execSync).toHaveBeenCalledTimes(1);
+    expect(mocked.execFileSync).toHaveBeenCalledTimes(1);
     expect(mocked.info).toHaveBeenCalledWith(
       `Dry run: echo pre ${sq("TAC-123")}`,
     );
     expect(mocked.info).toHaveBeenCalledWith(
-      "Dry run: git  checkout -b feat/TAC-123-cli-add-parser",
+      "Dry run: git checkout -b feat/TAC-123-cli-add-parser",
     );
     expect(mocked.info).toHaveBeenCalledWith(
       `Dry run: echo post ${sq("feat")}/${sq("TAC-123")}`,
@@ -326,5 +354,123 @@ describe("BranchConfirmPrompt", () => {
       "echo {{ticket}} {{ TICKET }}",
       { stdio: "inherit" },
     );
+  });
+
+  it("passes git-dir and work-tree as literal arguments", async () => {
+    mocked.dry_run = false;
+    mocked.git_options = [
+      "--git-dir=/tmp/my repo/.git",
+      "--work-tree=/tmp/my repo",
+    ];
+    const { BranchConfirmPrompt } = await import("./branch-confirm.prompt");
+    const config = parse(Config, {});
+    const branch_state = parse(BranchState, {
+      type: "feat",
+      description: "safe-branch",
+      checkout: "branch",
+    });
+
+    await new BranchConfirmPrompt(config, branch_state, {} as never).run();
+
+    expect(mocked.execFileSync).toHaveBeenNthCalledWith(
+      2,
+      "git",
+      [
+        "--git-dir=/tmp/my repo/.git",
+        "--work-tree=/tmp/my repo",
+        "checkout",
+        "-b",
+        "feat/safe-branch",
+      ],
+      { stdio: "inherit" },
+    );
+  });
+
+  it("exits non-zero when branch validation fails", async () => {
+    mocked.spawnSync.mockReturnValue({
+      status: 128,
+      stdout: "",
+      stderr: "fatal: 'feat/a..b' is not a valid branch name",
+    });
+    const exit = vi
+      .spyOn(process, "exit")
+      .mockImplementation((code): never => {
+        throw new Error(`exit ${code}`);
+      });
+    const { BranchConfirmPrompt } = await import("./branch-confirm.prompt");
+    const config = parse(Config, {});
+    const branch_state = parse(BranchState, {
+      type: "feat",
+      description: "a..b",
+      checkout: "branch",
+    });
+
+    await expect(
+      new BranchConfirmPrompt(config, branch_state, {} as never).run(),
+    ).rejects.toThrow("exit 1");
+
+    expect(exit).toHaveBeenCalledWith(1);
+    expect(mocked.execFileSync).not.toHaveBeenCalled();
+    exit.mockRestore();
+  });
+
+  it("exits non-zero when checkout fails", async () => {
+    mocked.dry_run = false;
+    mocked.execFileSync.mockImplementation(() => {
+      throw new Error("checkout failed");
+    });
+    const exit = vi
+      .spyOn(process, "exit")
+      .mockImplementation((code): never => {
+        throw new Error(`exit ${code}`);
+      });
+    const { BranchConfirmPrompt } = await import("./branch-confirm.prompt");
+    const config = parse(Config, {});
+    const branch_state = parse(BranchState, {
+      type: "feat",
+      description: "safe-branch",
+      checkout: "branch",
+    });
+
+    await expect(
+      new BranchConfirmPrompt(config, branch_state, {} as never).run(),
+    ).rejects.toThrow("exit 1");
+
+    expect(exit).toHaveBeenCalledWith(1);
+    expect(mocked.error).toHaveBeenCalledWith(
+      "Failed to checkout branch 'feat/safe-branch'",
+    );
+    exit.mockRestore();
+  });
+
+  it("exits non-zero when worktree creation fails", async () => {
+    mocked.dry_run = false;
+    mocked.execFileSync.mockImplementation(() => {
+      throw new Error("worktree failed");
+    });
+    const exit = vi
+      .spyOn(process, "exit")
+      .mockImplementation((code): never => {
+        throw new Error(`exit ${code}`);
+      });
+    const { BranchConfirmPrompt } = await import("./branch-confirm.prompt");
+    const config = parse(Config, {
+      worktrees: { base_path: "../worktrees" },
+    });
+    const branch_state = parse(BranchState, {
+      type: "feat",
+      description: "safe-worktree",
+      checkout: "worktree",
+    });
+
+    await expect(
+      new BranchConfirmPrompt(config, branch_state, {} as never).run(),
+    ).rejects.toThrow("exit 1");
+
+    expect(exit).toHaveBeenCalledWith(1);
+    expect(mocked.error).toHaveBeenCalledWith(
+      "Failed to create worktree '../worktrees/repo-safe-worktree'",
+    );
+    exit.mockRestore();
   });
 });

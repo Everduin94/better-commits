@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { InferOutput } from "valibot";
 import { branch_flags } from "./branch-args";
 import { get_package_version } from "./utils";
@@ -56,17 +56,17 @@ export function print_help_text(
   let branch = "(none)";
   try {
     branch =
-      execSync(`git ${branch_flags.git_args} branch --show-current`, {
-        stdio: "pipe",
-      })
+      execFileSync(
+        "git",
+        [...branch_flags.git_options, "branch", "--show-current"],
+        { stdio: "pipe" },
+      )
         .toString()
         .trim() || "(none)";
-  } catch {
-    // noop
-  }
+  } catch {}
 
   const inferred_type =
-    infer_type_from_git(config.commit_type.options, branch_flags.git_args) ||
+    infer_type_from_git(config.commit_type.options, branch_flags.git_options) ||
     "Unknown";
   const inferred_ticket = config.check_ticket.infer_ticket
     ? infer_ticket_from_git(
@@ -74,13 +74,13 @@ export function print_help_text(
           append_hashtag: config.check_ticket.append_hashtag,
           prepend_hashtag: config.check_ticket.prepend_hashtag,
         },
-        branch_flags.git_args,
+        branch_flags.git_options,
       ) || "Unknown"
     : "Infer Disabled";
   const inferred_scope = config.commit_scope.infer_scope_from_branch
     ? infer_scope_from_git(
         config.commit_scope.options,
-        branch_flags.git_args,
+        branch_flags.git_options,
       ) || "Unknown"
     : "Infer Disabled";
 

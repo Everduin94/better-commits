@@ -82,5 +82,23 @@ describe("parse_branch_runtime_flags", () => {
     expect(parsed.git_args).toBe(
       "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
     );
+    expect(parsed.git_options).toEqual([
+      "--git-dir=/tmp/repo/.git",
+      "--work-tree=/tmp/repo",
+    ]);
+  });
+
+  it("preserves spaces in git-dir and work-tree options", () => {
+    const parsed = parse_branch_runtime_flags([
+      "--git-dir",
+      "/tmp/my repo/.git",
+      "--work-tree",
+      "/tmp/my repo",
+    ]);
+
+    expect(parsed.git_options).toEqual([
+      "--git-dir=/tmp/my repo/.git",
+      "--work-tree=/tmp/my repo",
+    ]);
   });
 });

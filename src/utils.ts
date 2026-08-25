@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { execSync } from "child_process";
+import { execFileSync, execSync } from "child_process";
 import fs from "fs";
 import { homedir } from "os";
 import color from "picocolors";
@@ -60,7 +60,7 @@ export type LoadedSetup = {
 /* LOAD */
 export function load_setup(
   cli_name = " better-commits ",
-  git_args = flags.git_args,
+  git_args: string | string[] = flags.git_args,
 ): LoadedSetup {
   console.clear();
   p.intro(`${color.bgCyan(color.black(cli_name))}`);
@@ -154,12 +154,15 @@ function validate_config(config: unknown): InferOutput<typeof Config> {
 /*
 rev-parse will fail in a --bare repository root
 */
-export function get_git_root(git_args = flags.git_args): string {
+export function get_git_root(
+  git_args: string | string[] = flags.git_args,
+): string {
   let path = ".";
   try {
-    path = execSync(`git ${git_args} rev-parse --show-toplevel`)
-      .toString()
-      .trim();
+    const output = Array.isArray(git_args)
+      ? execFileSync("git", [...git_args, "rev-parse", "--show-toplevel"])
+      : execSync(`git ${git_args} rev-parse --show-toplevel`);
+    path = output.toString().trim();
   } catch (err) {
     p.log.warn(
       "Could not find git root. If in a --bare repository, ignore this warning.",

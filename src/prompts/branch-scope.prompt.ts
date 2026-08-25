@@ -1,4 +1,5 @@
 import * as p from "@clack/prompts";
+import { validate_branch_name } from "../utils/validate-branch-name";
 import { CUSTOM_SCOPE_KEY } from "../valibot-consts";
 import { BranchRunnable } from "./branch-runnable";
 
@@ -49,6 +50,7 @@ export class BranchScopePrompt extends BranchRunnable {
       const branch_scope = await p.text({
         message: "Write a custom scope",
         placeholder: "",
+        validate: validate_branch_name,
       });
       if (p.isCancel(branch_scope)) process.exit(0);
       branch_scope_value = branch_scope ?? "";
