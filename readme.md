@@ -233,7 +233,8 @@ To create a **repository-specific config**, navigate to the root of your project
   },
 
   "commit_title": {
-    // Includes total size of title + type + scope + ticket
+    // Includes total size of title + type + scope + ticket.
+    // The title prompt shows characters remaining under this limit as you type.
     "max_size": 70,
   },
 

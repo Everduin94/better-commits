@@ -22,3 +22,19 @@ export function get_commit_title_size(
 
   return commit_scope_size + commit_type_size + commit_ticket_size + title_size;
 }
+
+export function get_commit_title_remaining(
+  val: CommitTitleSizeInput,
+  options: CommitTitleSizeOptions & { max_size: number },
+): number {
+  return options.max_size - get_commit_title_size(val, options);
+}
+
+export function format_commit_title_remaining(remaining: number): string {
+  if (remaining >= 0) {
+    return `${remaining} character${remaining === 1 ? "" : "s"} remaining`;
+  }
+
+  const over = Math.abs(remaining);
+  return `${over} character${over === 1 ? "" : "s"} over limit`;
+}

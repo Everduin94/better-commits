@@ -5,17 +5,24 @@ import {
   set_value_cache,
 } from "../utils";
 import { cache_message } from "../utils/messages";
-import { get_commit_title_size } from "../utils/commit-title-size";
+import {
+  format_commit_title_remaining,
+  get_commit_title_remaining,
+  get_commit_title_size,
+} from "../utils/commit-title-size";
 import { Runnable } from "./runnable";
+import { textWithRemaining } from "./text-with-remaining";
 
 export class CommitTitlePrompt extends Runnable {
   async run(): Promise<void> {
     const { initial_value, message } = this.#get_initial_value();
-    const commit_title = await p.text({
+    const commit_title = await textWithRemaining({
       message,
       initialValue: initial_value,
       placeholder: "",
       validate: (value) => this.#validate(value),
+      getRemaining: (value) => this.#get_remaining(value),
+      formatRemaining: format_commit_title_remaining,
     });
 
     if (p.isCancel(commit_title)) process.exit(0);
@@ -50,18 +57,33 @@ export class CommitTitlePrompt extends Runnable {
     return this.config.commit_title.max_size;
   }
 
+  #title_size_parts(value: string) {
+    return {
+      type: this.commit_state.type,
+      scope: this.commit_state.scope,
+      ticket: this.commit_state.ticket,
+      title: value,
+    };
+  }
+
+  #size_options() {
+    return {
+      include_ticket: this.config.check_ticket.add_to_title,
+    };
+  }
+
   #get_size(value: string): number {
     return get_commit_title_size(
-      {
-        type: this.commit_state.type,
-        scope: this.commit_state.scope,
-        ticket: this.commit_state.ticket,
-        title: value,
-      },
-      {
-        include_ticket: this.config.check_ticket.add_to_title,
-      },
+      this.#title_size_parts(value),
+      this.#size_options(),
     );
+  }
+
+  #get_remaining(value: string): number {
+    return get_commit_title_remaining(this.#title_size_parts(value), {
+      ...this.#size_options(),
+      max_size: this.#max_size,
+    });
   }
 
   // TODO: Extract to a Runnable abstract function?
