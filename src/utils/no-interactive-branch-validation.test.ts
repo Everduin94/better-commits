@@ -60,6 +60,29 @@ describe("create_strict_branch_state", () => {
     ).toThrow(/Invalid --type "unknown"/);
   });
 
+  it("accepts branch_label as --type for better-branch", () => {
+    const config = make_config({
+      commit_type: {
+        options: [
+          { value: "feat", label: "feat", branch_label: "feature" },
+          { value: "fix", label: "fix", branch_label: "bugfix" },
+        ],
+        initial_value: "feat",
+      },
+    });
+    const schema = create_strict_branch_state(config);
+
+    const result = parse(
+      schema,
+      make_state({
+        type: "feature",
+        description: "add-parser",
+      }),
+    );
+
+    expect(result.type).toBe("feature");
+  });
+
   it("rejects scopes outside configured options when custom_scope is disabled", () => {
     const config = make_config({
       commit_scope: {

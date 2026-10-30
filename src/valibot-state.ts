@@ -32,6 +32,7 @@ const CommitTypeConfig = v.pipe(
             hint: v.optional(v.string()),
             emoji: v.optional(v.pipe(v.string(), v.emoji())),
             trailer: v.optional(v.string()),
+            branch_label: v.optional(v.string()),
           }),
         ),
         DEFAULT_TYPE_OPTIONS,

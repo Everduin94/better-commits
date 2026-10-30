@@ -52,16 +52,13 @@ export function infer_not_interactive(config: InferOutput<typeof Config>) {
 }
 
 export function infer_type_from_git(
-  options: { value: string }[],
+  options: { value: string; branch_label?: string }[],
   git_args: GitArgs,
 ): string {
   const branch = get_current_branch(git_args);
   if (!branch) return "";
 
-  return infer_type_from_branch(
-    branch,
-    options.map((option) => option.value),
-  );
+  return infer_type_from_branch(branch, options);
 }
 
 export function infer_ticket_from_git(
@@ -106,11 +103,24 @@ function infer_ticket_from_branch(
     : found[0];
 }
 
-function infer_type_from_branch(branch: string, types: string[]): string {
-  const found = types.find((type) => {
-    const start_dash = new RegExp(`^${type}-`);
-    const between_dash = new RegExp(`-${type}-`);
-    const before_slash = new RegExp(`${type}/`);
+function infer_type_from_branch(
+  branch: string,
+  options: { value: string; branch_label?: string }[],
+): string {
+  const sorted = [...options]
+    .filter((option) => (option.branch_label ?? option.value) !== "")
+    .sort((a, b) => {
+      const a_key = a.branch_label ?? a.value;
+      const b_key = b.branch_label ?? b.value;
+      return b_key.length - a_key.length;
+    });
+
+  const found = sorted.find((option) => {
+    const type = option.branch_label ?? option.value;
+    const escaped = escape_regexp(type);
+    const start_dash = new RegExp(`^${escaped}-`);
+    const between_dash = new RegExp(`-${escaped}-`);
+    const before_slash = new RegExp(`${escaped}/`);
 
     const matches = [
       branch.match(start_dash),
@@ -121,7 +131,7 @@ function infer_type_from_branch(branch: string, types: string[]): string {
     return matches.length > 0;
   });
 
-  return found ?? "";
+  return found?.value ?? "";
 }
 
 function escape_regexp(value: string): string {

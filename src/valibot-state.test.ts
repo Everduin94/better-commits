@@ -54,4 +54,21 @@ describe("Config", () => {
       }),
     ).toThrow(/must exist in options/);
   });
+
+  it("accepts optional branch_label on commit_type options", () => {
+    const config = parse(Config, {
+      commit_type: {
+        options: [
+          {
+            value: "feat",
+            label: "feat",
+            branch_label: "feature",
+          },
+        ],
+        initial_value: "feat",
+      },
+    });
+
+    expect(config.commit_type.options[0].branch_label).toBe("feature");
+  });
 });

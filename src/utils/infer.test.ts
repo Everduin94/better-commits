@@ -69,6 +69,36 @@ describe("infer", () => {
     expect(result).toBe("feat");
   });
 
+  it("maps branch_label segments back to commit type values", () => {
+    execSyncMock.mockReturnValue(
+      Buffer.from("everduin94/feature/ABC-123-add-parser\n"),
+    );
+
+    const result = infer_type_from_git(
+      [
+        { value: "feat", branch_label: "feature" },
+        { value: "fix", branch_label: "bugfix" },
+      ],
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
+
+    expect(result).toBe("feat");
+  });
+
+  it("prefers longer branch_label matches over shorter values", () => {
+    execSyncMock.mockReturnValue(Buffer.from("feature/ABC-123-add-parser\n"));
+
+    const result = infer_type_from_git(
+      [
+        { value: "feat", branch_label: "feature" },
+        { value: "fe" },
+      ],
+      "--git-dir=/tmp/repo/.git --work-tree=/tmp/repo",
+    );
+
+    expect(result).toBe("feat");
+  });
+
   it("infers commit scopes after ticket from branch descriptions", () => {
     execSyncMock.mockReturnValue(
       Buffer.from("everduin94/feat/CXP-12345-avf-fix-filters\n"),
