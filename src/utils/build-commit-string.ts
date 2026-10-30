@@ -143,6 +143,17 @@ export function build_commit_string({
     commit_string += `\n\n${res}`;
   }
 
+  if (commit_state.co_authors) {
+    const temp = commit_state.co_authors.split("\n");
+    const res = temp
+      .map((value) => (colorize ? color.reset(value.trim()) : value.trim()))
+      .filter(Boolean)
+      .join("\n");
+    if (res) {
+      commit_string += `\n\n${res}`;
+    }
+  }
+
   if (commit_state.closes && commit_state.ticket) {
     commit_string += colorize
       ? `\n\n${color.reset(commit_state.closes)} ${color.magenta(commit_state.ticket)}`

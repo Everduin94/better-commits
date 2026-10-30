@@ -258,6 +258,23 @@ describe("build_commit_string", () => {
     expect(result).toBe("PROJ-9: ship parser");
   });
 
+
+  it("appends Co-authored-by trailers from co_authors", () => {
+    const result = build_commit_string({
+      commit_state: make_state({
+        type: "feat",
+        title: "pair on parser",
+        co_authors:
+          "Co-authored-by: Jane Doe <jane@example.com>\nCo-authored-by: Alex <alex@example.com>",
+      }),
+      config: make_config(),
+    });
+
+    expect(result).toBe(
+      "feat: pair on parser\n\nCo-authored-by: Jane Doe <jane@example.com>\nCo-authored-by: Alex <alex@example.com>",
+    );
+  });
+
   it("escapes double quotes and backticks for shell-safe command composition", () => {
     const result = build_commit_string({
       commit_state: make_state({

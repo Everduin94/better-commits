@@ -35,6 +35,7 @@ const COMMIT_FLAG_DEFINITIONS: Record<string, string> = {
   "--deprecates-title": "Set deprecates footer title text.",
   "--deprecates-body": "Set deprecates footer body text.",
   "--custom-footer": "Set a custom footer line.",
+  "--co-author": "Add a Co-authored-by trailer (repeatable).",
 };
 
 const GIT_FLAG_DEFINITIONS: Record<string, string> = {

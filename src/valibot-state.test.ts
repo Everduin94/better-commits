@@ -54,4 +54,26 @@ describe("Config", () => {
       }),
     ).toThrow(/must exist in options/);
   });
+
+  it("defaults commit_co_authors.authors to an empty list", () => {
+    const config = parse(Config, {});
+    expect(config.commit_co_authors.authors).toEqual([]);
+  });
+
+  it("includes co-authored-by in default commit_footer options", () => {
+    const config = parse(Config, {});
+    expect(config.commit_footer.options).toContain("co-authored-by");
+  });
+
+  it("accepts configured commit_co_authors", () => {
+    const config = parse(Config, {
+      commit_co_authors: {
+        authors: [{ name: "Jane Doe", email: "jane@example.com" }],
+      },
+    });
+    expect(config.commit_co_authors.authors).toEqual([
+      { name: "Jane Doe", email: "jane@example.com" },
+    ]);
+  });
+
 });

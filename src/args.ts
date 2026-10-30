@@ -1,6 +1,10 @@
 import { parse } from "@bomb.sh/args";
 import { InferOutput } from "valibot";
 import { CommitState } from "./valibot-state";
+import {
+  join_co_author_trailers,
+  normalize_co_author_inputs,
+} from "./utils/co-authors";
 
 type CommitStateRuntime = InferOutput<typeof CommitState>;
 
@@ -76,6 +80,7 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
     alias: { h: "help", v: "version" },
     boolean: BOOLEAN_FLAGS,
     string: [...COMMIT_OPTIONS, ...GIT_OPTIONS],
+    array: ["co-author"],
   });
 
   const commit_state: Partial<CommitStateRuntime> = {};
@@ -87,6 +92,16 @@ export function parse_runtime_flags(argv: string[]): ParsedRuntimeFlags {
       commit_state[str] = normalized_value;
     }
   });
+
+  const co_author_values = parsed["co-author"];
+  if (Array.isArray(co_author_values) && co_author_values.length > 0) {
+    const trailers = normalize_co_author_inputs(
+      co_author_values.map((value) => String(value)),
+    );
+    if (trailers.length > 0) {
+      commit_state.co_authors = join_co_author_trailers(trailers);
+    }
+  }
 
   return {
     help: parsed["help"] === true,

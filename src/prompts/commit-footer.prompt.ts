@@ -7,6 +7,11 @@ import {
   set_value_cache,
 } from "../utils";
 import {
+  format_co_authored_by,
+  format_co_author_label,
+  join_co_author_trailers,
+} from "../utils/co-authors";
+import {
   cache_message,
   optional_message,
   space_to_select_message,
@@ -26,6 +31,7 @@ type FooterSelection = {
   includes_closes: boolean;
   includes_custom: boolean;
   includes_trailer: boolean;
+  includes_co_authored_by: boolean;
 };
 
 type FooterInputs = {
@@ -34,6 +40,7 @@ type FooterInputs = {
   deprecated_title: string;
   deprecated_body: string;
   custom_footer: string;
+  co_authors: string;
 };
 
 export class CommitFooterPrompt extends Runnable {
@@ -108,6 +115,7 @@ export class CommitFooterPrompt extends Runnable {
       includes_closes: commit_footer.includes("closes"),
       includes_custom: commit_footer.includes("custom"),
       includes_trailer: commit_footer.includes("trailer"),
+      includes_co_authored_by: commit_footer.includes("co-authored-by"),
     };
   }
 
@@ -118,6 +126,7 @@ export class CommitFooterPrompt extends Runnable {
       deprecated_title: "",
       deprecated_body: "",
       custom_footer: "",
+      co_authors: "",
     };
 
     if (selection.includes_breaking_change) {
@@ -146,19 +155,91 @@ export class CommitFooterPrompt extends Runnable {
       );
     }
 
+    if (selection.includes_co_authored_by) {
+      footer_inputs.co_authors = await this.#get_co_authors();
+    }
+
     return footer_inputs;
   }
 
-  async #required_text(message: string): Promise<string> {
+  async #get_co_authors(): Promise<string> {
+    const trailers: string[] = [];
+    const configured = this.config.commit_co_authors.authors;
+
+    if (configured.length > 0) {
+      const selected = (await p.multiselect({
+        message: space_to_select_message(
+          optional_message("Select configured co-authors"),
+        ),
+        options: configured.map((author) => ({
+          value: format_co_authored_by(author.name, author.email),
+          label: format_co_author_label(author),
+          hint: author.email,
+        })),
+        required: false,
+      })) as string[];
+      if (p.isCancel(selected)) process.exit(0);
+      trailers.push(...selected);
+    }
+
+    let add_manual = configured.length === 0;
+    if (configured.length > 0) {
+      const should_add = await p.confirm({
+        message: optional_message("Add another co-author manually?"),
+        initialValue: false,
+      });
+      if (p.isCancel(should_add)) process.exit(0);
+      add_manual = should_add === true;
+    }
+
+    while (add_manual) {
+      const name = await this.#required_text(
+        "Co-author name",
+        "Please enter a co-author name",
+      );
+      const email = await this.#required_email("Co-author email");
+      const trailer = format_co_authored_by(name, email);
+      if (!trailers.includes(trailer)) {
+        trailers.push(trailer);
+      }
+
+      const another = await p.confirm({
+        message: optional_message("Add another co-author?"),
+        initialValue: false,
+      });
+      if (p.isCancel(another)) process.exit(0);
+      add_manual = another === true;
+    }
+
+    return join_co_author_trailers(trailers);
+  }
+
+  async #required_text(
+    message: string,
+    empty_message = "Please enter a title / summary",
+  ): Promise<string> {
     const response = await p.text({
       message,
       placeholder: "",
       validate: (value) => {
-        if (!value) return "Please enter a title / summary";
+        if (!value) return empty_message;
       },
     });
     if (p.isCancel(response)) process.exit(0);
     return response ?? "";
+  }
+
+  async #required_email(message: string): Promise<string> {
+    const response = await p.text({
+      message,
+      placeholder: "name@example.com",
+      validate: (value) => {
+        if (!value?.trim()) return "Please enter an email";
+        if (!value.includes("@")) return "Please enter a valid email";
+      },
+    });
+    if (p.isCancel(response)) process.exit(0);
+    return response?.trim() ?? "";
   }
 
   async #optional_text(message: string): Promise<string> {
@@ -186,6 +267,7 @@ export class CommitFooterPrompt extends Runnable {
     this.commit_state.deprecates_title = footer_inputs.deprecated_title;
     this.commit_state.deprecates_body = footer_inputs.deprecated_body;
     this.commit_state.custom_footer = footer_inputs.custom_footer;
+    this.commit_state.co_authors = footer_inputs.co_authors;
 
     this.commit_state.closes = selection.includes_closes ? "Closes:" : "";
     if (!selection.includes_trailer) {

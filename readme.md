@@ -249,8 +249,15 @@ To create a **repository-specific config**, navigate to the root of your project
     "enable": true,
     "initial_value": [],
 
-    // "closes", "trailer", "breaking-change", "deprecated", "custom"
-    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom"],
+    // "closes", "trailer", "breaking-change", "deprecated", "custom", "co-authored-by"
+    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom", "co-authored-by"],
+  },
+
+  // Optional saved co-authors for the co-authored-by footer prompt
+  "commit_co_authors": {
+    "authors": [
+      // { "name": "Jane Doe", "email": "jane@example.com" }
+    ],
   },
 
   "breaking_change": {
@@ -456,7 +463,7 @@ Use CLI flags to pass commit values directly instead of answering prompts.
 
 - Use `--no-interactive` to skip prompts, confirmation, and editor flows. This is the recommended mode for OpenCode, Claude Code, and other coding agents.
 - Use `--dry-run` to validate the generated `git commit` command without creating a commit.
-- Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`.
+- Supported commit field flags: `--type`, `--scope`, `--title`, `--body`, `--ticket`, `--closes`, `--deprecates`, `--breaking-title`, `--breaking-body`, `--deprecates-title`, `--deprecates-body`, `--custom-footer`, `--trailer`, `--co-author` (repeatable, `Name <email>`).
 - Supported branch field flags: `--user`, `--type`, `--scope`, `--description`, `--ticket`, `--branch-version`, `--checkout`.
 - Values like ticket, scope, and type will still attempt to be inferred where possible when using `--no-interactive`
 

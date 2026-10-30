@@ -34,6 +34,11 @@ export const COMMIT_FOOTER_OPTIONS = [
   },
   { value: "deprecated", label: "deprecated", hint: "Add deprecated change" },
   { value: "custom", label: "custom", hint: "Add a custom footer" },
+  {
+    value: "co-authored-by",
+    label: "co-authored-by",
+    hint: "Add one or more Co-authored-by trailers",
+  },
 ];
 export const BRANCH_ACTION_OPTIONS: {
   value: InferOutput<typeof V_BRANCH_ACTIONS>;
