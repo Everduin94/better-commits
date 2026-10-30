@@ -122,6 +122,8 @@ To create a **repository-specific config**, navigate to the root of your project
         "hint": "A new feature",
         "emoji": "🌟",
         "trailer": "Changelog: feature",
+        // Optional: better-branch type segment (maps back to value for inference)
+        // "branch_label": "feature"
       },
       {
         "value": "fix",
@@ -359,6 +361,7 @@ To create a **repository-specific config**, navigate to the root of your project
 **Commit Type**
 
 - If a type is at the start of the branch or is followed by a `/`
+- Matches `commit_type.options[].branch_label` when set, otherwise `value`, and selects the option's `value`
 
 **Commit Scope**
 
@@ -371,7 +374,7 @@ To create a **repository-specific config**, navigate to the root of your project
 Better branch is a secondary feature that works with better commits
 
 - Supports consistent branch naming conventions
-- Uses same type-list/prompt from your config
+- Uses same type-list/prompt from your config (`branch_label` overrides the branch segment when set)
 - Enables better-commits to infer type, scope, and ticket
 - Caches your username for speedy branching
 - Convenient worktree creation and hooks

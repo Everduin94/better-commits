@@ -32,7 +32,9 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
         "label": "feat",
         "hint": "A new feature",
         "emoji": "🌟",
-        "trailer": "Changelog: feature"
+        "trailer": "Changelog: feature",
+        // Optional: better-branch type segment (maps back to value for inference)
+        // "branch_label": "feature"
       },
       {
         "value": "fix",

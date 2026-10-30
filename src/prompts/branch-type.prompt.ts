@@ -27,7 +27,14 @@ export class BranchTypePrompt extends BranchRunnable {
   }
 
   get #initial_value(): string {
-    return this.branch_state.type || this.config.commit_type.initial_value;
+    if (this.branch_state.type) return this.branch_state.type;
+
+    const initial = this.config.commit_type.initial_value;
+    const option = this.config.commit_type.options.find(
+      (entry) => entry.value === initial || entry.branch_label === initial,
+    );
+
+    return option ? (option.branch_label ?? option.value) : initial;
   }
 
   get #options(): {
@@ -37,7 +44,13 @@ export class BranchTypePrompt extends BranchRunnable {
     hint?: string;
     trailer?: string;
   }[] {
-    return this.config.commit_type.options;
+    return this.config.commit_type.options.map((option) => ({
+      label: option.label,
+      value: option.branch_label ?? option.value,
+      emoji: option.emoji,
+      hint: option.hint,
+      trailer: option.trailer,
+    }));
   }
 
   #run_post_effects(prompt_result: string): void {

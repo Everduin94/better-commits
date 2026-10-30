@@ -121,7 +121,15 @@ export function create_strict_commit_state(
 export function create_strict_branch_state(
   config: v.InferOutput<typeof Config>,
 ) {
-  const type_values = config.commit_type.options.map((option) => option.value);
+  const type_values = [
+    ...new Set(
+      config.commit_type.options.flatMap((option) =>
+        option.branch_label
+          ? [option.value, option.branch_label]
+          : [option.value],
+      ),
+    ),
+  ];
   const scope_values = config.commit_scope.options.map(
     (option) => option.value,
   );
