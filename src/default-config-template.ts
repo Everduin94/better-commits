@@ -160,8 +160,15 @@ export const DEFAULT_CONFIG_TEMPLATE = `{
     "enable": true,
     "initial_value": [],
 
-    // "closes", "trailer", "breaking-change", "deprecated", "custom"
-    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom"]
+    // "closes", "trailer", "breaking-change", "deprecated", "custom", "co-authored-by"
+    "options": ["closes", "trailer", "breaking-change", "deprecated", "custom", "co-authored-by"]
+  },
+
+  // Optional saved co-authors for the co-authored-by footer prompt
+  "commit_co_authors": {
+    "authors": [
+      // { "name": "Jane Doe", "email": "jane@example.com" }
+    ]
   },
 
   "breaking_change": {

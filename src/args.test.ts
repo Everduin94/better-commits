@@ -116,6 +116,38 @@ describe("parse_runtime_flags", () => {
     });
   });
 
+
+  it("maps repeating --co-author flags into co_authors trailers", () => {
+    const parsed = parse_runtime_flags([
+      "--co-author",
+      "Jane Doe <jane@example.com>",
+      "--co-author",
+      "Alex <alex@example.com>",
+    ]);
+
+    expect(parsed.commit_state).toEqual({
+      co_authors:
+        "Co-authored-by: Jane Doe <jane@example.com>\nCo-authored-by: Alex <alex@example.com>",
+    });
+  });
+
+  it("normalizes prefixed --co-author values", () => {
+    const parsed = parse_runtime_flags([
+      "--co-author",
+      "Co-authored-by: Jane Doe <jane@example.com>",
+    ]);
+
+    expect(parsed.commit_state).toEqual({
+      co_authors: "Co-authored-by: Jane Doe <jane@example.com>",
+    });
+  });
+
+  it("ignores invalid --co-author values", () => {
+    const parsed = parse_runtime_flags(["--co-author", "not-an-email"]);
+
+    expect(parsed.commit_state).toEqual({});
+  });
+
   it("honors interactive flag semantics", () => {
     const default_flags = parse_runtime_flags([]);
     const explicit_interactive = parse_runtime_flags(["--interactive"]);

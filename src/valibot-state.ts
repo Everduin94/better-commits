@@ -162,6 +162,20 @@ export const Config = v.object({
     }),
     {},
   ),
+  commit_co_authors: v.optional(
+    v.object({
+      authors: v.optional(
+        v.array(
+          v.object({
+            name: v.string(),
+            email: v.string(),
+          }),
+        ),
+        [],
+      ),
+    }),
+    {},
+  ),
   breaking_change: v.optional(
     v.object({
       add_exclamation_to_title: v.optional(v.boolean(), true),
@@ -258,6 +272,7 @@ export const COMMIT_STATE_ENTRIES = {
   deprecates_title: v.optional(v.string(), ""),
   deprecates_body: v.optional(v.string(), ""),
   custom_footer: v.optional(v.string(), ""),
+  co_authors: v.optional(v.string(), ""),
   trailer: v.optional(v.string(), ""),
 };
 

@@ -7,6 +7,7 @@ export const FOOTER_OPTION_VALUES: v.InferOutput<typeof V_FOOTER_OPTIONS>[] = [
   "breaking-change",
   "deprecated",
   "custom",
+  "co-authored-by",
 ];
 export const V_BRANCH_ACTIONS = v.picklist(["branch", "worktree"]);
 export const V_FOOTER_OPTIONS = v.picklist([
@@ -15,6 +16,7 @@ export const V_FOOTER_OPTIONS = v.picklist([
   "breaking-change",
   "deprecated",
   "custom",
+  "co-authored-by",
 ]);
 export const V_BRANCH_FIELDS = v.picklist([
   "user",
